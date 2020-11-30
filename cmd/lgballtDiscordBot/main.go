@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"time"
@@ -15,27 +15,19 @@ import (
 
 const (
 	version = "1.0.0"
-	botPrefix = "*"
 )
 
 func main() {
 
 	fmt.Printf("LGballT bot v%s\n\n", version)
 
-	tokenFileName := "token.txt"
-	tokenBytes, err := ioutil.ReadFile(tokenFileName)
-	if err != nil {
-		logging.Error(err, fmt.Sprintf("Failed to read %s", tokenFileName))
-		os.Exit(1)
-	}
-
-	client, err := harmony.NewClient(string(tokenBytes))
+	client, err := harmony.NewClient(config.Config.Token)
 	if err != nil {
 		fmt.Printf("Failed to initialise a new Harmony client\n\n")
 		os.Exit(1)
 	}
 
-	b := bot.New(client, botPrefix)
+	b := bot.New(client, config.Config.Prefix)
 
 	if err := bios.Register(b, "bio"); err != nil {
 		logging.Error(err, "Failed to register component bio")
@@ -48,11 +40,22 @@ func main() {
 	}
 	defer client.Disconnect()
 
-	_ = client.CurrentUser().SetStatus(&harmony.Status{
-		Game: &harmony.Activity{
-			Name: fmt.Sprintf("v%s - ping 0x5444#8669 if something breaks", version),
-		},
-	})
+	go func() {
+		f := func(text string) {
+			_ = client.CurrentUser().SetStatus(&harmony.Status{
+				Game: &harmony.Activity{
+					Name: text,
+				},
+			})
+		}
+		for {
+			for _, text := range config.Config.Statuses {
+				f(fmt.Sprintf(text, version))
+				time.Sleep(time.Second * 15)
+			}
+		}
+	}()
+
 
 	fmt.Println("Bot is running, press ctrl+C to exit.")
 
