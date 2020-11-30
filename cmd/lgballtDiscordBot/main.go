@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
-const version = "1.0.0"
+const (
+	version = "1.0.0"
+	botPrefix = "*"
+)
 
 func main() {
 
@@ -32,7 +35,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	b := bot.New(client, "*")
+	b := bot.New(client, botPrefix)
 
 	if err := bios.Register(b, "bio"); err != nil {
 		logging.Error(err, "Failed to register component bio")
