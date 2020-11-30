@@ -23,6 +23,11 @@ func (b *bios) onMessageCreate(m *harmony.Message) {
 		return
 	}
 
+	// ignore bots
+	if m.Author.Bot {
+		return
+	}
+
 	if strings.HasPrefix(m.Content, b.commandPrefix) {
 
 		command := tools.GetCommand(m.Content, b.commandPrefix)
