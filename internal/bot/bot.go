@@ -1,36 +1,131 @@
 package bot
 
 import (
-	"context"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
-	"github.com/skwair/harmony/embed"
+	"strings"
 )
 
-type Bot struct {
-	Client *harmony.Client
-	Prefix string
-}
 
-func New(client *harmony.Client, prefix string) *Bot {
-	b := new(Bot)
-	b.Client = client
-	b.Prefix = prefix
-
-	return b
-}
-
-func (b *Bot) SendMessage(channelID, content string) (*harmony.Message, error) {
-	return b.Client.Channel(channelID).SendMessage(context.Background(), content)
-}
-
-func (b *Bot) SendEmbed(channelID string, e *embed.Embed) (*harmony.Message, error) {
-	return b.Client.Channel(channelID).Send(context.Background(), harmony.WithEmbed(e))
-}
-
-func (b *Bot) IsSelf(id string) (bool, error) {
-	botUser, err := b.Client.CurrentUser().Get(context.Background())
+func RegisterHandlers(b *core.Bot) error {
+	// Load components
+	bioComponent, err := bios.New(b)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return id == botUser.ID, nil
+
+	infoComponent, err := info.New(b)
+	if err != nil {
+		return err
+	}
+
+	// Register handler functions
+	b.Client.OnMessageCreate(func(m *harmony.Message) {
+
+		// Ignore own messages
+		if isSelf, err := b.IsSelf(m.Author.ID); err != nil {
+			logging.Error(err)
+			return
+		} else if isSelf {
+			return
+		}
+
+		// ignore bots
+		if m.Author.Bot {
+			return
+		}
+
+		if !strings.HasPrefix(m.Content, b.Prefix) {
+			return
+		}
+
+		// TODO: Command parsing, but actually make it decent this time
+
+		// Remove prefix and split by spaces
+		messageComponents := strings.Split(
+			strings.TrimPrefix(m.Content, b.Prefix),
+			" ")
+
+		// strings.Split will never return a empty slice - this can lead to a slice with a single empty string in it
+		// being returned, signifying that the input string was the prefix alone.
+		// in this case, we just empty the message components slice
+		if len(messageComponents) == 1 {
+			if messageComponents[0] == "" {
+				messageComponents = []string{}
+			}
+		}
+
+		// There's nothing in the command, so we should ignore it
+		if len(messageComponents) < 1 {
+			return
+		}
+
+		if strings.EqualFold(messageComponents[0], "bio") {
+
+			// ---------- BIOS ----------
+
+			bioComponents := messageComponents[1:]
+
+			if len(bioComponents) == 0 {
+				// This is someone requesting their own bio
+				err := bioComponent.ReadBio([]string{m.Author.ID}, m)
+				if err != nil {
+					logging.Error(err)
+				}
+			} else if len(bioComponents) == 1 {
+
+				// This is either someone clearing a field from their bio OR someone requesting a user's bio by ID
+				// OR someone requesting the help menu
+
+				if strings.EqualFold(bioComponents[0], "help") {
+					err := bioComponent.Help(bioComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				} else if _, isFieldName := bioComponent.ValidateFieldName(bioComponents[0]); isFieldName {
+					// This is someone trying to clear a bio field
+					err := bioComponent.ClearField(bioComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				} else {
+					// This is someone trying to get the bio of another user
+					err := bioComponent.ReadBio(bioComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				}
+			} else {
+				// This is triggered where there are two or more arguments
+				// The only command that satisfies this is the set bio field command
+
+				err := bioComponent.SetField(bioComponents, m)
+				if err != nil {
+					logging.Error(err)
+				}
+			}
+
+		} else if strings.EqualFold(messageComponents[0], "info") {
+
+			// ---------- INFO ----------
+
+			infoComponents := messageComponents[1:]
+
+			if len(infoComponents) == 1 {
+				if strings.EqualFold(infoComponents[0], "ping") {
+					err := infoComponent.Ping(infoComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				}
+			}
+
+		}
+
+	})
+
+	return nil
 }

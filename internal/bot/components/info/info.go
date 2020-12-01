@@ -1,20 +1,16 @@
 package info
 
 import (
-	"github.com/codemicro/lgballtDiscordBot/internal/bot"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 )
 
-type info struct {
-	b *bot.Bot
-	commandPrefix string
+type Info struct {
+	b *core.Bot
 }
 
-func Register(bot *bot.Bot, commandName string) error {
-	b := new(info)
+func New(bot *core.Bot) (*Info, error) {
+	b := new(Info)
 	b.b = bot
-	b.commandPrefix = bot.Prefix + commandName
 
-	bot.Client.OnMessageCreate(b.onMessageCreate)
-
-	return nil
+	return b, nil
 }

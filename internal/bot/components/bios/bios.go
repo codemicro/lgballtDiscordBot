@@ -1,30 +1,27 @@
 package bios
 
 import (
-	"github.com/codemicro/lgballtDiscordBot/internal/bot"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony/embed"
+	"strings"
 	"time"
 )
 
-type bios struct {
-	b *bot.Bot
+type Bios struct {
+	b *core.Bot
 	data biosData
-	commandPrefix string
 }
 
-func Register(bot *bot.Bot, commandName string) error {
-	b := new(bios)
+func New(bot *core.Bot) (*Bios, error) {
+	b := new(Bios)
 	b.b = bot
-	b.commandPrefix = bot.Prefix + commandName
 
 	dt, err := loadBiosFile()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	b.data = dt
-
-	bot.Client.OnMessageCreate(b.onMessageCreate)
 
 	go func() {
 		for {
@@ -37,7 +34,7 @@ func Register(bot *bot.Bot, commandName string) error {
 
 	}()
 
-	return nil
+	return b, nil
 }
 
 var biosHelpEmbed = embed.New().
@@ -51,3 +48,16 @@ var biosHelpEmbed = embed.New().
 		embed.NewField().Name("Anything else I should know?").Value("- You don't need to wipe a field to put in new info. Just run `$bio [field] [text]` to overwrite it.").Build(),
 		embed.NewField().Name("TL;DR/Commands").Value("- View your own Bio with `$bio`, another user's with `$bio [user id or mention`\n- Fill in a field with `$bio [field] [text]`. Fields can be overwritten with the same command.\n- Wipe a field with `$bio [field]`\n- View only a specific field on a Bio with `$bio [user id or mention] [field]`").Build(),
 	).Build()
+
+// ValidateFieldName performs a case insensitive compare of the provided field name and those used in the data file
+// If a match is found, the properly capitalised version is returned.
+func (b *Bios) ValidateFieldName(inputName string) (properFieldName string, found bool) {
+	for _, f := range b.data.Fields {
+		if strings.EqualFold(f, inputName) {
+			found = true
+			properFieldName = f
+			break
+		}
+	}
+	return
+}
