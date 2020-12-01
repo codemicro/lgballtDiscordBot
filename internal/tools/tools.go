@@ -3,9 +3,14 @@ package tools
 import "strings"
 
 func GetCommand(commandString, prefix string) []string {
-	fullCommand := strings.TrimPrefix(commandString, prefix)
-	fullCommand = strings.Trim(fullCommand, " ")
-	command := strings.Split(fullCommand, " ")
+	command := strings.Split(strings.Trim(commandString, " "), " ")
+
+	if len(command) >= 1 {
+		if command[0] == prefix {
+			command = command[1:]
+		}
+	}
+
 	if len(command) == 1 && command[0] == "" {
 		command = []string{}
 	}
