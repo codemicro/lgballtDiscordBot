@@ -1,6 +1,7 @@
 package info
 
 import (
+	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
@@ -23,8 +24,6 @@ func (b *info) onMessageCreate(m *harmony.Message) {
 		return
 	}
 
-	fmt.Println("processed here")
-
 	if strings.HasPrefix(m.Content, b.commandPrefix) {
 		command := tools.GetCommand(m.Content, b.commandPrefix)
 
@@ -33,12 +32,14 @@ func (b *info) onMessageCreate(m *harmony.Message) {
 
 				// Run ping command
 
+				_ = b.b.Client.Channel(m.ChannelID).TriggerTyping(context.Background())
+
 				pinger, err := ping.NewPinger("www.discord.com")
-				pinger.SetPrivileged(true)
 				if err != nil {
 					logging.Error(err)
 					return
 				}
+				pinger.SetPrivileged(true)
 				pinger.Count = 3
 				err = pinger.Run() // blocks until finished
 				if err != nil {
@@ -50,7 +51,7 @@ func (b *info) onMessageCreate(m *harmony.Message) {
 					return
 				}
 				stats := pinger.Statistics() // get send/receive/rtt stats
-				_, err = b.b.SendMessage(m.ChannelID, fmt.Sprintf("Pong! Average response time was `%dms`", stats.AvgRtt.Milliseconds()))
+				_, err = b.b.SendMessage(m.ChannelID, fmt.Sprintf("Pong! Average ping time was `%dms`", stats.AvgRtt.Milliseconds()))
 
 			}
 		}
