@@ -51,6 +51,50 @@ func (b *bios) onMessageCreate(m *harmony.Message) {
 				return
 			}
 
+			if tools.IsStringInSlice(command[0], b.data.Fields) {
+				// Remove the specified field from the user's bio
+				// Syntax <field>
+
+				var properFieldName string
+				{
+					for _, f := range b.data.Fields {
+						if strings.EqualFold(f, command[0]) {
+							properFieldName = f
+							break
+						}
+					}
+				}
+
+				b.data.Lock.RLock()
+				bioData, hasBio := b.data.UserBios[m.Author.ID]
+				b.data.Lock.RUnlock()
+				if !hasBio {
+					_, err := b.b.SendMessage(m.ChannelID, "You have not created a bio, hence there is nothing to delete anything from.")
+					if err != nil {
+						logging.Error(err)
+					}
+					return
+				}
+
+				delete(bioData, properFieldName)
+
+				b.data.Lock.Lock()
+				b.data.UserBios[m.Author.ID] = bioData
+				b.data.Lock.Unlock()
+
+				// react to message with a check mark to signify it worked
+				for _, v := range []string{"🗑", "✅"} {
+					err := b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, v)
+					if err != nil {
+						logging.Error(err)
+						return
+					}
+				}
+
+				return
+
+			}
+
 			// Get bio of user with ID of first argument
 			// Syntax: <uid>
 

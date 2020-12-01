@@ -16,3 +16,13 @@ func GetCommand(commandString, prefix string) []string {
 	}
 	return command
 }
+
+func IsStringInSlice(needle string, haystack []string) (found bool) {
+	for _, v := range haystack {
+		if strings.EqualFold(needle, v) {
+			found = true
+			break
+		}
+	}
+	return
+}
