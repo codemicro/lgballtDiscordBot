@@ -48,6 +48,12 @@ func main() {
 				},
 			})
 		}
+
+		if len(config.Config.Statuses) == 1 {
+			f(fmt.Sprintf(config.Config.Statuses[0], version))
+			return
+		}
+
 		for {
 			for _, text := range config.Config.Statuses {
 				f(fmt.Sprintf(text, version))
