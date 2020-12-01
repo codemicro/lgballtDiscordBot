@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
@@ -31,6 +32,11 @@ func main() {
 
 	if err := bios.Register(b, "bio"); err != nil {
 		logging.Error(err, "Failed to register component bio")
+		os.Exit(1)
+	}
+
+	if err := info.Register(b, "info"); err != nil {
+		logging.Error(err, "Failed to register component info")
 		os.Exit(1)
 	}
 
