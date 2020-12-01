@@ -55,3 +55,9 @@ func Warn(e string) {
 	fmt.Println(e)
 	toFile(e)
 }
+
+func Info(e string) {
+	e = "INFO: " + e
+	fmt.Println(e)
+	toFile(e)
+}

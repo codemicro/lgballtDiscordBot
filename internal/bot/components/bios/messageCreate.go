@@ -10,6 +10,7 @@ import (
 	"github.com/skwair/harmony/embed"
 	"regexp"
 	"strings"
+	"time"
 )
 
 var idFromPingRegex = regexp.MustCompile(`(?m)<@!(.+)>`)
@@ -27,6 +28,8 @@ func (b *bios) onMessageCreate(m *harmony.Message) {
 	if m.Author.Bot {
 		return
 	}
+
+	logging.Info(fmt.Sprintf("Processed message ID %s in channel %s at %d", m.ID, m.ChannelID, time.Now().Unix()))
 
 	if strings.HasPrefix(m.Content, b.commandPrefix) {
 
