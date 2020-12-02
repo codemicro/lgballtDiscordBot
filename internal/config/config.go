@@ -13,6 +13,7 @@ const configFileName = "botConfig.json"
 type Info struct {
 	Token    string   `json:"token"`
 	Prefix   string   `json:"prefix"`
+	DbFileName string `json:"dbFileName"`
 	Statuses []string `json:"statuses"`
 }
 
@@ -29,5 +30,9 @@ func init() {
 	if err != nil {
 		logging.Error(err, fmt.Sprintf("Failed to parse %s", configFileName))
 		os.Exit(1)
+	}
+
+	if Config.DbFileName == "" {
+		Config.DbFileName = "lgballtBot.db"
 	}
 }
