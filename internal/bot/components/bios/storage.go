@@ -2,11 +2,35 @@ package bios
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	_ "github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"gorm.io/gorm"
 	"io/ioutil"
 	"sync"
 )
+
+func getUserBioData(userId string) (found bool, bio db.UserBio, err error) {
+
+	bio.UserId = userId
+	conn := db.Conn
+
+	err = conn.Take(&bio).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return found, bio, nil
+		} else {
+			return
+		}
+	}
+
+	found = true
+
+	err = json.Unmarshal([]byte(bio.RawBioData), &bio.BioData)
+	return
+}
 
 const biosFile = "biosData.json"
 
