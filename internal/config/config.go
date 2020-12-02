@@ -11,8 +11,8 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
-	Token string `json:"token"`
-	Prefix string `json:"prefix"`
+	Token    string   `json:"token"`
+	Prefix   string   `json:"prefix"`
 	Statuses []string `json:"statuses"`
 }
 

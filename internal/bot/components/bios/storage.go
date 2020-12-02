@@ -9,10 +9,11 @@ import (
 )
 
 const biosFile = "biosData.json"
+
 var biosFileLock sync.RWMutex
 
 type biosData struct {
-	Lock *sync.RWMutex                     `json:"-"`
+	Lock     *sync.RWMutex                `json:"-"`
 	Fields   []string                     `json:"bioFields"`
 	UserBios map[string]map[string]string `json:"userBios"`
 }

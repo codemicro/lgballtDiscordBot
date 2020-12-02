@@ -9,7 +9,6 @@ import (
 	"strings"
 )
 
-
 func RegisterHandlers(b *core.Bot) error {
 	// Load components
 	bioComponent, err := bios.New(b)

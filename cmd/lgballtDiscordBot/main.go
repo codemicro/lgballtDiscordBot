@@ -62,7 +62,6 @@ func main() {
 		}
 	}()
 
-
 	fmt.Println("Bot is running, press ctrl+C to exit.")
 
 	// Wait for ctrl-C, then exit.

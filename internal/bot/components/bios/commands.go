@@ -66,8 +66,8 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	properFieldName, validFieldName := b.ValidateFieldName(command[0])
 
 	if !validFieldName {
-		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the " +
-			"following: " + strings.Join(b.data.Fields, ", "))
+		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the "+
+			"following: "+strings.Join(b.data.Fields, ", "))
 
 		return err
 	}
