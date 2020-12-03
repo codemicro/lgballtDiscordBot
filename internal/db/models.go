@@ -55,3 +55,7 @@ func (bio *UserBio) Create() error {
 	bio.RawBioData = rb
 	return Conn.Create(bio).Error
 }
+
+func (bio *UserBio) Delete() error {
+	return Conn.Delete(bio).Error
+}
