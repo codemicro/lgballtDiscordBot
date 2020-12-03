@@ -133,7 +133,14 @@ func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 
 	delete(bdt.BioData, properFieldName)
 
-	err = bdt.Save()
+	if len(bdt.BioData) == 0 {
+		// There are no fields left in the bio, so we shall delete it
+		err = bdt.Delete()
+	} else {
+		// Else save as normal
+		err = bdt.Save()
+	}
+
 	if err != nil {
 		return err
 	}
