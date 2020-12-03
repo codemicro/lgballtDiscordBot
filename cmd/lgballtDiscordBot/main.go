@@ -21,13 +21,13 @@ func main() {
 
 	fmt.Printf("LGballT bot v%s\n\n", version)
 
-	client, err := harmony.NewClient(config.Config.Token)
+	client, err := harmony.NewClient(config.Token)
 	if err != nil {
 		fmt.Printf("Failed to initialise a new Harmony client\n\n")
 		os.Exit(1)
 	}
 
-	b := core.New(client, config.Config.Prefix)
+	b := core.New(client, config.Prefix)
 	err = bot.RegisterHandlers(b)
 	if err != nil {
 		logging.Error(err, "Failed to register command handlers")
@@ -49,13 +49,13 @@ func main() {
 			})
 		}
 
-		if len(config.Config.Statuses) == 1 {
-			f(fmt.Sprintf(config.Config.Statuses[0], version))
+		if len(config.Statuses) == 1 {
+			f(fmt.Sprintf(config.Statuses[0], version))
 			return
 		}
 
 		for {
-			for _, text := range config.Config.Statuses {
+			for _, text := range config.Statuses {
 				f(fmt.Sprintf(text, version))
 				time.Sleep(time.Second * 15)
 			}

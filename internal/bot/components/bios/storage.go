@@ -3,6 +3,7 @@ package bios
 import (
 	"encoding/json"
 	"fmt"
+	_ "github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"io/ioutil"
 	"sync"

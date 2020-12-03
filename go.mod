@@ -12,4 +12,7 @@ require (
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/sys v0.0.0-20201202213521-69691e467435 // indirect
 	golang.org/x/tools v0.0.0-20201202200335-bef1c476418a // indirect
+	gorm.io/gorm v1.20.7
+	gorm.io/driver/mysql v1.0.3
+	gorm.io/driver/sqlite v1.1.4
 )
