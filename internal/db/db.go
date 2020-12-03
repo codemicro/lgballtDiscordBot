@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -27,8 +26,4 @@ func init() {
 	}
 
 	err = Conn.AutoMigrate(&UserBio{})
-}
-
-func RecordNotFound(g *gorm.DB) bool {
-	return errors.Is(g.Error, gorm.ErrRecordNotFound)
 }
