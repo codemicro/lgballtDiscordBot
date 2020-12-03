@@ -17,7 +17,12 @@ type Info struct {
 	Statuses []string `json:"statuses"`
 }
 
-var Config Info
+// var Config Info
+
+var Token string
+var Prefix string
+var DbFileName string
+var Statuses[]string
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -26,13 +31,25 @@ func init() {
 		os.Exit(1)
 	}
 
-	err = json.Unmarshal(configFileBytes, &Config)
+	cfg := struct {
+		Token    string   `json:"token"`
+		Prefix   string   `json:"prefix"`
+		DbFileName string `json:"dbFileName"`
+		Statuses []string `json:"statuses"`
+	}{}
+
+	err = json.Unmarshal(configFileBytes, &cfg)
 	if err != nil {
 		logging.Error(err, fmt.Sprintf("Failed to parse %s", configFileName))
 		os.Exit(1)
 	}
 
-	if Config.DbFileName == "" {
-		Config.DbFileName = "lgballtBot.db"
+	Token = cfg.Token
+	Prefix = cfg.Prefix
+	DbFileName = cfg.DbFileName
+	Statuses = cfg.Statuses
+
+	if DbFileName == "" {
+		DbFileName = "lgballtBot.db"
 	}
 }
