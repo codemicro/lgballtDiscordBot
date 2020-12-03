@@ -3,6 +3,7 @@ package bios
 import (
 	"context"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
 	"regexp"
@@ -33,9 +34,12 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		id = m.Author.ID
 	}
 
-	b.data.Lock.RLock()
-	bioData, ok := b.data.UserBios[id]
-	b.data.Lock.RUnlock()
+	bdt := new(db.UserBio)
+	ok, err := bdt.Populate(id)
+	if err != nil {
+		return err
+	}
+	bioData := bdt.BioData
 
 	if !ok {
 		// No bio for that user
@@ -72,9 +76,12 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 		return err
 	}
 
-	b.data.Lock.RLock()
-	bioData, hasBio := b.data.UserBios[m.Author.ID]
-	b.data.Lock.RUnlock()
+	bdt := new(db.UserBio)
+	hasBio, err := bdt.Populate(m.Author.ID)
+	if err != nil {
+		return err
+	}
+	bioData := bdt.BioData
 
 	newValue := strings.Join(command[1:], " ")
 
@@ -85,12 +92,20 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 		bioData[properFieldName] = newValue
 	}
 
-	b.data.Lock.Lock()
-	b.data.UserBios[m.Author.ID] = bioData
-	b.data.Lock.Unlock()
+	bdt.BioData = bioData
+
+	if !hasBio {
+		err = bdt.Create()
+	} else {
+		err = bdt.Save()
+	}
+
+	if err != nil {
+		return err
+	}
 
 	// react to message with a check mark to signify it worked
-	err := b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
+	err = b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
 	return err
 }
 
@@ -105,19 +120,23 @@ func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 		return err
 	}
 
-	b.data.Lock.RLock()
-	bioData, hasBio := b.data.UserBios[m.Author.ID]
-	b.data.Lock.RUnlock()
+	bdt := new(db.UserBio)
+	hasBio, err := bdt.Populate(m.Author.ID)
+	if err != nil {
+		return err
+	}
+
 	if !hasBio {
 		_, err := b.b.SendMessage(m.ChannelID, "You have not created a bio, hence there is nothing to delete anything from.")
 		return err
 	}
 
-	delete(bioData, properFieldName)
+	delete(bdt.BioData, properFieldName)
 
-	b.data.Lock.Lock()
-	b.data.UserBios[m.Author.ID] = bioData
-	b.data.Lock.Unlock()
+	err = bdt.Save()
+	if err != nil {
+		return err
+	}
 
 	// react to message with a check mark to signify it worked
 	for _, v := range []string{"🗑", "✅"} {
