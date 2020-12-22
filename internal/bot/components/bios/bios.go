@@ -2,12 +2,9 @@ package bios
 
 import (
 	"fmt"
-	"strings"
-	"time"
-
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony/embed"
+	"strings"
 )
 
 type Bios struct {
@@ -26,17 +23,6 @@ func New(bot *core.Bot) (*Bios, error) {
 		return nil, err
 	}
 	b.data = dt
-
-	go func() {
-		for {
-			time.Sleep(time.Second * 5)
-			err := saveBiosFile(b.data)
-			if err != nil {
-				logging.Error(err)
-			}
-		}
-
-	}()
 
 	biosHelpEmbed = embed.New().
 		Title("Bio help/FAQ").
