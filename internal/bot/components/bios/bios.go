@@ -41,7 +41,7 @@ func New(bot *core.Bot) (*Bios, error) {
 	biosHelpEmbed = embed.New().
 		Title("Bio help/FAQ").
 		Fields(
-			embed.NewField().Name("What are bios?").Value("Think of Bios like ID cards. Input responses for pre-defined fields such as a Pronouns field or a Sexuality field, and then your responses get put into a nice Bio card which can be viewed by anyone using `$bio [@username]`. \n\nIf you just want to get your own, run `$bio` with no other arguments.").Build(),
+			embed.NewField().Name("What are bios?").Value("Think of Bios like ID cards. Input responses for pre-defined fields such as a Pronouns field or a Sexuality field, and then your responses get put into a nice Bio card which can be viewed by anyone using `$bio [@username]`. \n\nIf you just want to get your own, start by filling in any of the below fields!").Build(),
 			embed.NewField().Name("How do I input responses for these fields?").Value("Run `$bio [field] [value]`. For example, `$bio Pronouns She/Her` would set the Pronouns field of your Bio to \"She/Her\".\n\nTo remove a field, run `$bio [field]` with no other arguments.").Build(),
 			embed.NewField().Name("What fields can I fill in?").Value(fmt.Sprintf("The current fields are:\n```yml\n%s\n```", strings.Join(b.data.Fields, "\n"))).Build(),
 			embed.NewField().Name("I think a new field should be added. How can I request one?").Value("Request new fields in <#698575463278313583>.").Build(),
