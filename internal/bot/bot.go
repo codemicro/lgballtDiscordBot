@@ -107,6 +107,27 @@ func RegisterHandlers(b *core.Bot) error {
 				}
 			}
 
+		} else if strings.EqualFold(messageComponents[0], "biof") {
+
+			if m.Author.ID == "289130374204751873" {
+				adminBioComponents := messageComponents[1:]
+
+				if len(adminBioComponents) == 1 {
+					// This is me getting the value of a user's bio
+					err := bioComponent.AdminReadRawBio(adminBioComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				} else {
+					// This is only triggered for two or more arguments
+					err := bioComponent.AdminSetRawBio(adminBioComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				}
+
+			}
+
 		} else if strings.EqualFold(messageComponents[0], "info") {
 
 			// ---------- INFO ----------

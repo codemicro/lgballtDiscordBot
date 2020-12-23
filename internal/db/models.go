@@ -44,6 +44,10 @@ func (bio *UserBio) Save() error {
 		return err
 	}
 	bio.RawBioData = rb
+	return bio.SaveRaw()
+}
+
+func (bio *UserBio) SaveRaw() error {
 	return Conn.Save(bio).Error
 }
 
@@ -53,6 +57,10 @@ func (bio *UserBio) Create() error {
 		return err
 	}
 	bio.RawBioData = rb
+	return bio.CreateRaw()
+}
+
+func (bio *UserBio) CreateRaw() error {
 	return Conn.Create(bio).Error
 }
 
