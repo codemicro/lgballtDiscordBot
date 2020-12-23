@@ -9,9 +9,9 @@ import (
 	"runtime"
 )
 
-func (b *Info) Ping(_ []string, m *harmony.Message) error {
+func (i *Info) Ping(_ []string, m *harmony.Message) error {
 
-	_ = b.b.Client.Channel(m.ChannelID).TriggerTyping(context.Background())
+	_ = i.b.Client.Channel(m.ChannelID).TriggerTyping(context.Background())
 
 	pinger, err := ping.NewPinger("www.discord.com")
 	if err != nil {
@@ -25,14 +25,14 @@ func (b *Info) Ping(_ []string, m *harmony.Message) error {
 	pinger.Count = 3
 	err = pinger.Run()
 	if err != nil {
-		_, mErr := b.b.SendMessage(m.ChannelID, "Unable to complete ping.")
+		_, mErr := i.b.SendMessage(m.ChannelID, "Unable to complete ping.")
 		if mErr != nil {
 			err = multierror.Append(err, mErr)
 		}
 		return err
 	}
 	stats := pinger.Statistics()
-	_, err = b.b.SendMessage(m.ChannelID, fmt.Sprintf("Pong! Average ping time was `%dms`",
+	_, err = i.b.SendMessage(m.ChannelID, fmt.Sprintf("Pong! Average ping time was `%dms`",
 		stats.AvgRtt.Milliseconds()))
 
 	return nil

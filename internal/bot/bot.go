@@ -109,7 +109,7 @@ func RegisterHandlers(b *core.Bot) error {
 
 		} else if strings.EqualFold(messageComponents[0], "biof") {
 
-			if m.Author.ID == "289130374204751873" {
+			if m.Author.ID == "289130374204751873" {  // 0x5444#8669
 				adminBioComponents := messageComponents[1:]
 
 				if len(adminBioComponents) == 1 {
@@ -143,6 +143,12 @@ func RegisterHandlers(b *core.Bot) error {
 				}
 			}
 
+		} else if strings.EqualFold(messageComponents[0], "roles") {
+
+			// ---------- ROLES ----------
+			// TODO: Test roles.TrackReaction (it's currently untested)
+			// TODO: Add authorisation check for the party role
+			
 		}
 
 	})
