@@ -11,17 +11,13 @@ import (
 
 const biosFile = "biosData.json"
 
-var biosFileLock sync.RWMutex
-
 type biosData struct {
 	Lock     *sync.RWMutex                `json:"-"`
 	Fields   []string                     `json:"bioFields"`
 }
 
 func loadBiosFile() (b biosData, err error) {
-	biosFileLock.RLock()
 	fCont, err := ioutil.ReadFile(biosFile)
-	biosFileLock.RUnlock()
 
 	if err != nil {
 		logging.Warn(fmt.Sprintf("Could not open %s - assuming does not exist, creating from scratch", biosFile))
