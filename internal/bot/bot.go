@@ -1,15 +1,17 @@
 package bot
 
 import (
-	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"strings"
 )
+
+const partyRoleId = "698570587567685703"
 
 func RegisterHandlers(b *core.Bot) error {
 	// Load components
@@ -43,8 +45,6 @@ func RegisterHandlers(b *core.Bot) error {
 		if m.Author.Bot {
 			return
 		}
-
-		fmt.Println(m.Content)
 
 		if !strings.HasPrefix(m.Content, b.Prefix) {
 			return
@@ -155,27 +155,34 @@ func RegisterHandlers(b *core.Bot) error {
 		} else if strings.EqualFold(messageComponents[0], "roles") {
 
 			// ---------- ROLES ----------
-			// TODO: Test roles.TrackReaction (it's currently untested)
-			// TODO: Add authorisation check for the party role
 
-			if len(messageComponents) >= 2 {  // required minimum of two arguments
-				instruction := messageComponents[1]
-				roleComponents := messageComponents[2:]
+			if tools.IsStringInSlice(partyRoleId, m.Member.Roles) {
 
-				if strings.EqualFold(instruction, "track") {
-					err := roleComponent.TrackReaction(roleComponents, m)
-					if err != nil {
-						logging.Error(err)
+				if len(messageComponents) >= 2 {  // required minimum of two arguments
+					instruction := messageComponents[1]
+					roleComponents := messageComponents[2:]
+
+					if strings.EqualFold(instruction, "track") {
+						err := roleComponent.TrackReaction(roleComponents, m)
+						if err != nil {
+							logging.Error(err)
+						}
+					} else if strings.EqualFold(instruction, "untrack") {
+						err := roleComponent.UntrackReaction(roleComponents, m)
+						if err != nil {
+							logging.Error(err)
+						}
 					}
-				} else if strings.EqualFold(instruction, "untrack") {
-					err := roleComponent.UntrackReaction(roleComponents, m)
-					if err != nil {
-						logging.Error(err)
-					}
+
 				}
 
 			}
 			
+		} else if strings.EqualFold(messageComponents[0], "broken") {
+			err := infoComponent.Broken([]string{}, m)
+			if err != nil {
+				logging.Error(err)
+			}
 		}
 
 	})

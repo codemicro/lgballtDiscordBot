@@ -62,3 +62,7 @@ func ParseEmojiToString(eString string) string {
 	}
 	return emoji
 }
+
+func MakePing(uid string) string {
+	return "<@!" + uid + ">"
+}
