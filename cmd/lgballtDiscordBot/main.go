@@ -69,10 +69,6 @@ func main() {
 	signal.Notify(sig, os.Interrupt)
 	<-sig
 
-	fmt.Println("Waiting 5 seconds to ensure data is saved...")
-
-	time.Sleep(time.Second * 5)
-
 	fmt.Println("Shutting down - bye-bye!")
 
 }
