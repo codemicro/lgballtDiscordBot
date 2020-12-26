@@ -162,12 +162,12 @@ func RegisterHandlers(b *core.Bot) error {
 					instruction := messageComponents[1]
 					roleComponents := messageComponents[2:]
 
-					if strings.EqualFold(instruction, "track") {
+					if strings.EqualFold(instruction, "track") && len(roleComponents) >= 3 {
 						err := roleComponent.TrackReaction(roleComponents, m)
 						if err != nil {
 							logging.Error(err)
 						}
-					} else if strings.EqualFold(instruction, "untrack") {
+					} else if strings.EqualFold(instruction, "untrack") && len(roleComponents) >= 2 {
 						err := roleComponent.UntrackReaction(roleComponents, m)
 						if err != nil {
 							logging.Error(err)
