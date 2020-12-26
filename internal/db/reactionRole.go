@@ -24,6 +24,8 @@ func (r *ReactionRole) Get() (bool, error) {
 }
 
 func (r *ReactionRole) Save() error {
+	// I don't think this function will ever really get much use, but it's here anyway.
+	// It also doesn't work because it needs where clauses
 	return Conn.Save(r).Error
 }
 
@@ -32,14 +34,14 @@ func (r *ReactionRole) Create() error {
 }
 
 func (r *ReactionRole) Delete() error {
-	return Conn.Delete(r).Error
+	return Conn.Where(r).Delete(r).Error
 }
 
 func GetAllReactionRolesForMessage(messageId string) ([]ReactionRole, error) {
 
 	var all []ReactionRole
 
-	err := Conn.Model(&ReactionRole{}).Where(&ReactionRole{MessageId: messageId}).Select(&all).Error
+	err := Conn.Where(&ReactionRole{MessageId: messageId}).Find(&all).Error
 	if err != nil {
 		return []ReactionRole{}, err
 	}

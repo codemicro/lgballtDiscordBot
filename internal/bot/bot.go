@@ -1,9 +1,11 @@
 package bot
 
 import (
+	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
 	"strings"
@@ -17,6 +19,11 @@ func RegisterHandlers(b *core.Bot) error {
 	}
 
 	infoComponent, err := info.New(b)
+	if err != nil {
+		return err
+	}
+
+	roleComponent, err := roles.New(b)
 	if err != nil {
 		return err
 	}
@@ -36,6 +43,8 @@ func RegisterHandlers(b *core.Bot) error {
 		if m.Author.Bot {
 			return
 		}
+
+		fmt.Println(m.Content)
 
 		if !strings.HasPrefix(m.Content, b.Prefix) {
 			return
@@ -148,9 +157,41 @@ func RegisterHandlers(b *core.Bot) error {
 			// ---------- ROLES ----------
 			// TODO: Test roles.TrackReaction (it's currently untested)
 			// TODO: Add authorisation check for the party role
+
+			if len(messageComponents) >= 2 {  // required minimum of two arguments
+				instruction := messageComponents[1]
+				roleComponents := messageComponents[2:]
+
+				if strings.EqualFold(instruction, "track") {
+					err := roleComponent.TrackReaction(roleComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				} else if strings.EqualFold(instruction, "untrack") {
+					err := roleComponent.UntrackReaction(roleComponents, m)
+					if err != nil {
+						logging.Error(err)
+					}
+				}
+
+			}
 			
 		}
 
+	})
+
+	b.Client.OnMessageReactionAdd(func (r *harmony.MessageReaction) {
+		err := roleComponent.ReactionAdd(r)
+		if err != nil {
+			logging.Error(err)
+		}
+	})
+
+	b.Client.OnMessageReactionRemove(func (r *harmony.MessageReaction) {
+		err := roleComponent.ReactionRemove(r)
+		if err != nil {
+			logging.Error(err)
+		}
 	})
 
 	return nil

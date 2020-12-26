@@ -5,42 +5,39 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
-	"regexp"
 	"strings"
 )
-
-var messageLinkRegexp = regexp.MustCompile(`(?m)https://(.+)?discord\.com/channels/(\d+)/(\d+)/(\d+)/?`)
 
 func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	// Syntax: <message link> <emoji> <role name>
 
-	// This is a message link: https://discord.com/channels/<guild ID>/<channel ID>/<message ID>
+	guildId, channelID, messageID, valid := tools.ParseMessageLink(command[0])
 
-	// Get channel ID and message ID from link
-	matches := messageLinkRegexp.FindAllStringSubmatch(command[0], -1)
-	if len(matches) == 0 {
+	if !valid {
 		_, err := r.b.SendMessage(m.ChannelID, "Unable to parse message link")
-		if err != nil {
-			return err
-		}
+		return err
 	}
-
-	guildId := matches[0][2]
-	channelID := matches[0][3]
-	messageID := matches[0][4]
 
 	// Check message exists
 	channelRes := r.b.Client.Channel(channelID)
 	_, err := channelRes.Message(context.Background(), messageID)
 	if err != nil {
-		if errors.Is(err, harmony.APIError{}) {
-			if err.(harmony.APIError).HTTPCode == 404 {
-				_, err := r.b.SendMessage(m.ChannelID, "Message link invalid")
-				return err
-			}
+		var respCode int
+		switch e := err.(type) {
+		case *harmony.APIError:
+			respCode = e.HTTPCode
+		case *harmony.ValidationError:
+			respCode = e.HTTPCode
+		default:
+			return err
 		}
-		return err
+
+		if respCode == 404 || respCode == 400 {
+			_, err := r.b.SendMessage(m.ChannelID, "Message link invalid")
+			return err
+		}
 	}
 
 	// Get role reactions for message
@@ -57,7 +54,7 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 		return err
 	}
 
-	// Search for and file role in guild
+	// Search for and find role in guild
 	guild := r.b.Client.Guild(guildId)
 	roles, err := guild.Roles(context.Background())
 	if err != nil {
@@ -83,10 +80,13 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 		return err
 	}
 
+	// Determine emoji string
+	emoji := tools.ParseEmojiToString(command[1])
+
 	// Check this role or emoji are not in use
 	var errMessage string
 	for _, rr := range reactionRoles {
-		if rr.Emoji == command[1] {
+		if rr.Emoji == emoji {
 			errMessage = "Emoji already in use on this message"
 			break
 		}
@@ -103,16 +103,58 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	// Create new object
 	rr := new(db.ReactionRole)
 	rr.MessageId = messageID
-	rr.Emoji = command[1]
+	rr.Emoji = emoji
 	rr.RoleId = roleID
 
 	// Save
-	err = rr.Save()
+	err = rr.Create()
 	if err != nil {
 		return err
 	}
 
 	// Confirmation
-	err = r.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
-	return err
+	return r.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
+}
+
+func (r *Roles) UntrackReaction(command []string, m *harmony.Message) error {
+	// Syntax: <message link> <emoji>
+
+	_, channelID, messageID, valid := tools.ParseMessageLink(command[0])
+
+	if !valid {
+		_, err := r.b.SendMessage(m.ChannelID, "Unable to parse message link")
+		return err
+	}
+
+	// Check message exists
+	channelRes := r.b.Client.Channel(channelID)
+	_, err := channelRes.Message(context.Background(), messageID)
+	if err != nil {
+		var respCode int
+		switch e := err.(type) {
+		case *harmony.APIError:
+			respCode = e.HTTPCode
+		case *harmony.ValidationError:
+			respCode = e.HTTPCode
+		default:
+			return err
+		}
+
+		if respCode == 404 || respCode == 400 {
+			_, err := r.b.SendMessage(m.ChannelID, "Message link invalid")
+			return err
+		}
+	}
+
+	// NUKE!
+	rr := &db.ReactionRole{
+		MessageId: messageID,
+		Emoji:     tools.ParseEmojiToString(command[1]),
+	}
+	err = rr.Delete()
+	if err != nil {
+		return err
+	}
+
+	return r.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
 }

@@ -22,5 +22,5 @@ func init() {
 		os.Exit(1)
 	}
 
-	err = Conn.AutoMigrate(&UserBio{})
+	err = Conn.AutoMigrate(&UserBio{}, &ReactionRole{})
 }
