@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"context"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
@@ -8,6 +9,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
+	harmonyChannel "github.com/skwair/harmony/channel"
 	"strings"
 )
 
@@ -47,6 +49,16 @@ func RegisterHandlers(b *core.Bot) error {
 		}
 
 		if !strings.HasPrefix(m.Content, b.Prefix) {
+			return
+		}
+
+		// ignore DMs and group DMs
+		channel, err := b.Client.Channel(m.ChannelID).Get(context.Background())
+		if err != nil {
+			logging.Error(err)
+			return
+		}
+		if channel.Type == harmonyChannel.TypeDM || channel.Type == harmonyChannel.TypeGroupDM {
 			return
 		}
 
