@@ -7,8 +7,8 @@ import (
 
 type ReactionRole struct {
 	MessageId string
-	RoleId string
-	Emoji string
+	RoleId    string
+	Emoji     string
 }
 
 func (r *ReactionRole) Get() (bool, error) {

@@ -51,4 +51,3 @@ func (b *Bios) ValidateFieldName(inputName string) (properFieldName string, foun
 	}
 	return
 }
-

@@ -12,8 +12,8 @@ import (
 const biosFile = "biosData.json"
 
 type biosData struct {
-	Lock     *sync.RWMutex                `json:"-"`
-	Fields   []string                     `json:"bioFields"`
+	Lock   *sync.RWMutex `json:"-"`
+	Fields []string      `json:"bioFields"`
 }
 
 func loadBiosFile() (b biosData, err error) {

@@ -49,7 +49,7 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	// Check there are less than 20
 
 	if len(reactionRoles) >= 20 {
-		_, err := r.b.SendMessage(m.ChannelID, "This message has too many reaction roles assigned to it " +
+		_, err := r.b.SendMessage(m.ChannelID, "This message has too many reaction roles assigned to it "+
 			"already (maximum 20)")
 		return err
 	}

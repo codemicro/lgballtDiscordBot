@@ -7,9 +7,9 @@ import (
 )
 
 type UserBio struct {
-	UserId string `gorm:"primarykey"`
+	UserId     string `gorm:"primarykey"`
 	RawBioData string
-	BioData map[string]string `gorm:"-"`
+	BioData    map[string]string `gorm:"-"`
 }
 
 func marshalBioData(raw map[string]string) (string, error) {

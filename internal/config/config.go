@@ -11,10 +11,10 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
-	Token    string   `json:"token"`
-	Prefix   string   `json:"prefix"`
-	DbFileName string `json:"dbFileName"`
-	Statuses []string `json:"statuses"`
+	Token      string   `json:"token"`
+	Prefix     string   `json:"prefix"`
+	DbFileName string   `json:"dbFileName"`
+	Statuses   []string `json:"statuses"`
 }
 
 // var Config Info
@@ -22,7 +22,7 @@ type Info struct {
 var Token string
 var Prefix string
 var DbFileName string
-var Statuses[]string
+var Statuses []string
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -32,10 +32,10 @@ func init() {
 	}
 
 	cfg := struct {
-		Token    string   `json:"token"`
-		Prefix   string   `json:"prefix"`
-		DbFileName string `json:"dbFileName"`
-		Statuses []string `json:"statuses"`
+		Token      string   `json:"token"`
+		Prefix     string   `json:"prefix"`
+		DbFileName string   `json:"dbFileName"`
+		Statuses   []string `json:"statuses"`
 	}{}
 
 	err = json.Unmarshal(configFileBytes, &cfg)
