@@ -10,17 +10,36 @@ import (
 	"github.com/skwair/harmony/embed"
 	"github.com/wcharczuk/go-chart/v2"
 	"sort"
+	"strings"
 )
 
 const (
 	maxMessages = 5000
 	perGroup    = 100
 	percentThreshold = 1
+	usernameMaxLen = 17
 )
 
 type percentageWithLabel struct {
 	Label      string
 	Percentage float64
+}
+
+func magicalUsernameTrim(in string) string {
+	// magic!!1!
+	x := strings.Split(in, "#")
+	ix := usernameMaxLen
+	var app string
+	if len(x[0]) < ix {
+		ix = len(x[0])
+	} else {
+		app = "..."
+	}
+	o := x[0][:ix] + app
+	if len(x) >= 2 {
+		return o + "#" + x[1]
+	}
+	return o
 }
 
 func (c *ChatChart) collectMessages(intent collectionIntent) {
@@ -75,11 +94,8 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	}
 
 	// delete own message
-	err = channel.DeleteMessage(context.Background(), msg.ID)
-	if err != nil {
-		logging.Error(err, "unable to delete own ID collection messages from collectMessages")
-		return
-	}
+	_ = channel.DeleteMessage(context.Background(), msg.ID) // error ignored in case someone has already deleted the
+	// message
 
 	// filter out groups that are < 5 percent of the total
 	var otherTotal int
@@ -97,12 +113,16 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// find percentages
 	var messageUserPercentages []percentageWithLabel
-	// messageUserPercentages := make(map[string]float64)
+	var chartValues []chart.Value
 	for user, val := range messageUserCount {
 		percentage := (float64(val) / float64(messageCount)) * 100
 		messageUserPercentages = append(messageUserPercentages, percentageWithLabel{
 			Label:      user,
 			Percentage: percentage,
+		})
+		chartValues = append(chartValues, chart.Value{
+			Label: magicalUsernameTrim(user),
+			Value: percentage,
 		})
 	}
 
@@ -110,15 +130,6 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		return messageUserPercentages[i].Percentage > messageUserPercentages[j].Percentage
 	})
 
-	// make graph
-
-	var chartValues []chart.Value
-	for key, val := range messageUserCount {
-		chartValues = append(chartValues, chart.Value{
-			Label: key,
-			Value: float64(val),
-		})
-	}
 
 	// get channel
 	crx, err := channel.Get(context.Background())
@@ -126,10 +137,18 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		logging.Error(err, "failed to get source channel info")
 	}
 
-	pie := chart.PieChart{
-		Width:  1024,
-		Height: 1024,
-		Values: chartValues,
+	// make graph
+	pie := chart.BarChart{
+		// Width:  1024,
+		// Height: 1024,
+		Background: chart.Style{
+			Padding: chart.Box{
+				Bottom: 100,
+			},
+		},
+		BarWidth: 20,
+		Bars: chartValues,
+		XAxis: chart.Style{TextRotationDegrees: 90},
 	}
 
 	buffer := &tools.ClosingBuffer{Buffer: bytes.NewBuffer([]byte{})}
