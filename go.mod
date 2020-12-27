@@ -7,6 +7,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/klauspost/compress v1.11.3 // indirect
 	github.com/skwair/harmony v0.18.0
+	github.com/wcharczuk/go-chart/v2 v2.1.0
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392 // indirect
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect

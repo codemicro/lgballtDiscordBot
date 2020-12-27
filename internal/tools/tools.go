@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"bytes"
 	"regexp"
 	"strings"
 )
@@ -63,6 +64,31 @@ func ParseEmojiToString(eString string) string {
 	return emoji
 }
 
+var channelMentionRegex = regexp.MustCompile(`<#(\d+)>`)
+
+func ParseChannelMention(mString string) (string, bool) {
+	if channelMentionRegex.MatchString(mString) {
+		matches := channelMentionRegex.FindAllStringSubmatch(mString, -1)
+		return matches[0][1], true
+	} else {
+		return "", false
+	}
+}
+
+func MakeChannelMention(channelId string) string {
+	return "<#" + channelId + ">"
+}
+
 func MakePing(uid string) string {
 	return "<@!" + uid + ">"
+}
+
+// a byte buffer that implements the Close() method
+type ClosingBuffer struct {
+	*bytes.Buffer
+}
+
+func (cb *ClosingBuffer) Close() error {
+	// this is just memory, so all we need to do is return
+	return nil
 }

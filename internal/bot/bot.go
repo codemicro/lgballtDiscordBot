@@ -3,6 +3,7 @@ package bot
 import (
 	"context"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
@@ -28,6 +29,11 @@ func RegisterHandlers(b *core.Bot) error {
 	}
 
 	roleComponent, err := roles.New(b)
+	if err != nil {
+		return err
+	}
+
+	chartComponent, err := chatchart.New(b)
 	if err != nil {
 		return err
 	}
@@ -130,7 +136,7 @@ func RegisterHandlers(b *core.Bot) error {
 
 		} else if strings.EqualFold(messageComponents[0], "biof") {
 
-			if m.Author.ID == "289130374204751873" {  // 0x5444#8669
+			if m.Author.ID == "289130374204751873" { // 0x5444#8669
 				adminBioComponents := messageComponents[1:]
 
 				if len(adminBioComponents) == 1 {
@@ -170,7 +176,7 @@ func RegisterHandlers(b *core.Bot) error {
 
 			if tools.IsStringInSlice(partyRoleId, m.Member.Roles) {
 
-				if len(messageComponents) >= 2 {  // required minimum of two arguments
+				if len(messageComponents) >= 2 { // required minimum of two arguments
 					instruction := messageComponents[1]
 					roleComponents := messageComponents[2:]
 
@@ -189,24 +195,36 @@ func RegisterHandlers(b *core.Bot) error {
 				}
 
 			}
-			
+
 		} else if strings.EqualFold(messageComponents[0], "broken") {
 			err := infoComponent.Broken([]string{}, m)
 			if err != nil {
 				logging.Error(err)
 			}
+		} else if strings.EqualFold(messageComponents[0], "chatchart") {
+
+			// ---------- CHAT CHART ----------
+
+			ccComponents := messageComponents[1:]
+			if len(ccComponents) >= 1 {
+				err := chartComponent.TriggerCollection(ccComponents, m)
+				if err != nil {
+					logging.Error(err)
+				}
+			}
+
 		}
 
 	})
 
-	b.Client.OnMessageReactionAdd(func (r *harmony.MessageReaction) {
+	b.Client.OnMessageReactionAdd(func(r *harmony.MessageReaction) {
 		err := roleComponent.ReactionAdd(r)
 		if err != nil {
 			logging.Error(err)
 		}
 	})
 
-	b.Client.OnMessageReactionRemove(func (r *harmony.MessageReaction) {
+	b.Client.OnMessageReactionRemove(func(r *harmony.MessageReaction) {
 		err := roleComponent.ReactionRemove(r)
 		if err != nil {
 			logging.Error(err)
