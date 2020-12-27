@@ -2,6 +2,7 @@ package roles
 
 import (
 	"context"
+	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/skwair/harmony"
 )
@@ -19,7 +20,7 @@ func (r *Roles) ReactionAdd(e *harmony.MessageReaction) error {
 
 	var emoji string
 	if e.Emoji.ID != "" {
-		emoji = e.Emoji.ID
+		emoji = fmt.Sprintf("%s:%s", e.Emoji.Name, e.Emoji.ID)
 	} else {
 		emoji = e.Emoji.Name
 	}
@@ -58,7 +59,7 @@ func (r *Roles) ReactionRemove(e *harmony.MessageReaction) error {
 
 	var emoji string
 	if e.Emoji.ID != "" {
-		emoji = e.Emoji.ID
+		emoji = fmt.Sprintf("%s:%s", e.Emoji.Name, e.Emoji.ID)
 	} else {
 		emoji = e.Emoji.Name
 	}

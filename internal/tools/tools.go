@@ -49,10 +49,10 @@ func ParseMessageLink(link string) (guildId, channelId, messageId string, valid 
 
 }
 
-var customEmojiRegex = regexp.MustCompile(`<a?:.+:(\d+)>`)
+var customEmojiRegex = regexp.MustCompile(`<a?:(.+:\d+)>`)
 
 func ParseEmojiToString(eString string) string {
-	// Custom emojis look like this <a:whirleythonk:743765991464501260> and match this regex: <a?:.+:(\d+)>
+	// Custom emojis look like this <a:whirleythonk:743765991464501260> and match this regex: <a?:(.+:\d+)>
 	var emoji string
 	if customEmojiRegex.MatchString(eString) {
 		matches := customEmojiRegex.FindAllStringSubmatch(eString, -1)

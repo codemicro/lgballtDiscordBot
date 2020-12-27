@@ -113,8 +113,7 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	}
 
 	// React on message
-
-	err = r.b.Client.Channel(channelID).AddReaction(context.Background(), messageID, strings.TrimRight(strings.Join(strings.Split(command[1], ":")[1:3], ":"), ">"))
+	err = r.b.Client.Channel(channelID).AddReaction(context.Background(), messageID, emoji)
 	if err != nil {
 		return err
 	}
