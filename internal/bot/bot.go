@@ -218,6 +218,15 @@ func RegisterHandlers(b *core.Bot) error {
 	})
 
 	b.Client.OnMessageReactionAdd(func(r *harmony.MessageReaction) {
+
+		// Ignore own messages
+		if isSelf, err := b.IsSelf(r.UserID); err != nil {
+			logging.Error(err)
+			return
+		} else if isSelf {
+			return
+		}
+
 		err := roleComponent.ReactionAdd(r)
 		if err != nil {
 			logging.Error(err)
@@ -225,6 +234,15 @@ func RegisterHandlers(b *core.Bot) error {
 	})
 
 	b.Client.OnMessageReactionRemove(func(r *harmony.MessageReaction) {
+
+		// Ignore own messages
+		if isSelf, err := b.IsSelf(r.UserID); err != nil {
+			logging.Error(err)
+			return
+		} else if isSelf {
+			return
+		}
+
 		err := roleComponent.ReactionRemove(r)
 		if err != nil {
 			logging.Error(err)
