@@ -15,6 +15,7 @@ import (
 const (
 	maxMessages = 5000
 	perGroup    = 100
+	percentThreshold = 1
 )
 
 type percentageWithLabel struct {
@@ -82,9 +83,9 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// filter out groups that are < 5 percent of the total
 	var otherTotal int
-	fivePercent := (messageCount / 100) * 5
+	threshold := (messageCount / 100) * percentThreshold
 	for user, val := range messageUserCount {
-		if val < fivePercent {
+		if val < threshold {
 			otherTotal += val
 			delete(messageUserCount, user)
 		}
