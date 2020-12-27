@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
+	"sync"
 )
 
 type Bot struct {
@@ -28,10 +29,18 @@ func (b *Bot) SendEmbed(channelID string, e *embed.Embed) (*harmony.Message, err
 	return b.Client.Channel(channelID).Send(context.Background(), harmony.WithEmbed(e))
 }
 
+var ownId string
+var idOnce sync.Once
+
 func (b *Bot) IsSelf(id string) (bool, error) {
-	botUser, err := b.Client.CurrentUser().Get(context.Background())
+	var err error
+	idOnce.Do(func() {
+		var usr *harmony.User
+		usr, err = b.Client.CurrentUser().Get(context.Background())
+		ownId = usr.ID
+	})
 	if err != nil {
 		return false, err
 	}
-	return id == botUser.ID, nil
+	return id == ownId, nil
 }
