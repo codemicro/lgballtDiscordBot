@@ -55,6 +55,7 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	}
 
 	// Search for and find role in guild
+
 	guild := r.b.Client.Guild(guildId)
 	roles, err := guild.Roles(context.Background())
 	if err != nil {
@@ -100,6 +101,21 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 		return err
 	}
 
+	// Add reaction
+	// This will also act as a litmus test to see if the emoji is actually valid, since this will return an error if the
+	// emoji is not valid
+	err = r.b.Client.Channel(channelID).AddReaction(context.Background(), messageID, emoji)
+	if err != nil {
+		switch n := err.(type) {
+		case *harmony.APIError:
+			if n.HTTPCode == 400 && strings.Contains(strings.ToLower(n.Message), "unknown emoji") {
+				_, err := r.b.SendMessage(m.ChannelID, "That's not a valid emoji")
+				return err
+			}
+		}
+		return err
+	}
+
 	// Create new object
 	rr := new(db.ReactionRole)
 	rr.MessageId = messageID
@@ -108,12 +124,6 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 
 	// Save
 	err = rr.Create()
-	if err != nil {
-		return err
-	}
-
-	// React on message
-	err = r.b.Client.Channel(channelID).AddReaction(context.Background(), messageID, emoji)
 	if err != nil {
 		return err
 	}
