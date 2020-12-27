@@ -59,6 +59,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/skwair/harmony v0.18.0 h1:+jLfHVeeXEbGdYRQOUQ9wukBV9P9dtJ32gVwgD2tHms=
 github.com/skwair/harmony v0.18.0/go.mod h1:0LALx3aA06JlARUxaqtLCYOa4n5XprScK3RUBEYGG4s=
+github.com/skwair/harmony v0.18.1-0.20201226223038-d8b646116d44 h1:M8udC5HqMwO3OLkncVNmCaeRU4RyCRIZuW83eKdpcIo=
+github.com/skwair/harmony v0.18.1-0.20201226223038-d8b646116d44/go.mod h1:0LALx3aA06JlARUxaqtLCYOa4n5XprScK3RUBEYGG4s=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
