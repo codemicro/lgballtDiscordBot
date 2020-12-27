@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
@@ -174,7 +175,7 @@ func RegisterHandlers(b *core.Bot) error {
 
 			// ---------- ROLES ----------
 
-			if tools.IsStringInSlice(partyRoleId, m.Member.Roles) {
+			if tools.IsStringInSlice(partyRoleId, m.Member.Roles) || config.DebugMode {
 
 				if len(messageComponents) >= 2 { // required minimum of two arguments
 					instruction := messageComponents[1]

@@ -14,6 +14,7 @@ type Info struct {
 	Token      string   `json:"token"`
 	Prefix     string   `json:"prefix"`
 	DbFileName string   `json:"dbFileName"`
+	DebugMode  bool     `json:"debug"`
 	Statuses   []string `json:"statuses"`
 }
 
@@ -23,6 +24,7 @@ var Token string
 var Prefix string
 var DbFileName string
 var Statuses []string
+var DebugMode bool
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -31,12 +33,7 @@ func init() {
 		os.Exit(1)
 	}
 
-	cfg := struct {
-		Token      string   `json:"token"`
-		Prefix     string   `json:"prefix"`
-		DbFileName string   `json:"dbFileName"`
-		Statuses   []string `json:"statuses"`
-	}{}
+	var cfg Info
 
 	err = json.Unmarshal(configFileBytes, &cfg)
 	if err != nil {
@@ -48,6 +45,7 @@ func init() {
 	Prefix = cfg.Prefix
 	DbFileName = cfg.DbFileName
 	Statuses = cfg.Statuses
+	DebugMode = cfg.DebugMode
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"
