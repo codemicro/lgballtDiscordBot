@@ -6,6 +6,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -35,6 +36,11 @@ func RegisterHandlers(b *core.Bot) error {
 	}
 
 	chartComponent, err := chatchart.New(b)
+	if err != nil {
+		return err
+	}
+
+	miscComponent, err := misc.New(b)
 	if err != nil {
 		return err
 	}
@@ -214,6 +220,12 @@ func RegisterHandlers(b *core.Bot) error {
 				}
 			}
 
+		} else if strings.EqualFold(messageComponents[0], "avatar") {
+			// ---------- AVATAR -------------
+			err := miscComponent.Avatar(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "error from miscComponent.Avatar")
+			}
 		}
 
 	})
