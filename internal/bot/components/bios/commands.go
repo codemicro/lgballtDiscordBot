@@ -4,13 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
-	"regexp"
 	"strings"
 )
-
-var idFromPingRegex = regexp.MustCompile(`(?m)<@!(.+)>`)
 
 // Help sends the bios help embed message
 func (b *Bios) Help(_ []string, m *harmony.Message) error {
@@ -26,8 +24,8 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 	if len(command) >= 1 {
 		// If there's a ping as the argument, use the ID from that. Else, just use the plain argument
 		id = command[0]
-		if v := idFromPingRegex.FindStringSubmatch(command[0]); len(v) > 1 {
-			id = v[1]
+		if x, match := tools.ParsePing(id); match {
+			id = x
 		}
 	} else {
 		// Since no ID argument is provided, assume it's that of the message author

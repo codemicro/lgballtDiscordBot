@@ -79,6 +79,16 @@ func MakeChannelMention(channelId string) string {
 	return "<#" + channelId + ">"
 }
 
+var idFromPingRegex = regexp.MustCompile(`<@!(.+)>`)
+
+func ParsePing(ping string) (string, bool) {
+	if idFromPingRegex.MatchString(ping) {
+		matches := idFromPingRegex.FindAllStringSubmatch(ping, -1)
+		return matches[0][1], true
+	}
+	return "", false
+}
+
 func MakePing(uid string) string {
 	return "<@!" + uid + ">"
 }
