@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"strings"
 )
@@ -16,8 +17,8 @@ func (b *Bios) AdminReadRawBio(command []string, m *harmony.Message) error {
 	if len(command) >= 1 {
 		// If there's a ping as the argument, use the ID from that. Else, just use the plain argument
 		id = command[0]
-		if v := idFromPingRegex.FindStringSubmatch(command[0]); len(v) > 1 {
-			id = v[1]
+		if x, match := tools.ParsePing(id); match {
+			id = x
 		}
 	} else {
 		// Since no ID argument is provided, assume it's that of the message author
@@ -52,8 +53,8 @@ func (b *Bios) AdminSetRawBio(command []string, m *harmony.Message) error {
 
 	// If there's a ping as the argument, use the ID from that. Else, just use the plain argument
 	id := command[0]
-	if v := idFromPingRegex.FindStringSubmatch(command[0]); len(v) > 1 {
-		id = v[1]
+	if x, match := tools.ParsePing(id); match {
+		id = x
 	}
 
 	bdt := new(db.UserBio)
