@@ -31,7 +31,7 @@ func IsStringInSlice(needle string, haystack []string) (found bool) {
 	return
 }
 
-var messageLinkRegexp = regexp.MustCompile(`(?m)https://(.+)?discord\.com/channels/(\d+)/(\d+)/(\d+)/?`)
+var messageLinkRegexp = regexp.MustCompile(`(?m)https://(.+)?discord(?:app)?\.com/channels/(\d+)/(\d+)/(\d+)/?`)
 
 func ParseMessageLink(link string) (guildId, channelId, messageId string, valid bool) {
 
