@@ -16,7 +16,13 @@ import (
 	"strings"
 )
 
-const partyRoleId = "698570587567685703"
+var (
+	partyRoleId string
+)
+
+func init() {
+	partyRoleId = config.AdminRole
+}
 
 func RegisterHandlers(b *core.Bot) error {
 	// Load components

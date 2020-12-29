@@ -16,6 +16,14 @@ type Info struct {
 	DbFileName string   `json:"dbFileName"`
 	DebugMode  bool     `json:"debug"`
 	Statuses   []string `json:"statuses"`
+	AdminRole  string   `json:"adminRole"`
+	VerificationIDs VerificationIds `json:"verificationIds"`
+}
+
+type VerificationIds struct {
+	InputChannel string `json:"inputChannel"`
+	OutputChannel string `json:"outputChannel"`
+	RoleId string `json:"assignRoleId"`
 }
 
 // var Config Info
@@ -25,6 +33,8 @@ var Prefix string
 var DbFileName string
 var Statuses []string
 var DebugMode bool
+var AdminRole string
+var VerificationIDs VerificationIds
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -46,6 +56,8 @@ func init() {
 	DbFileName = cfg.DbFileName
 	Statuses = cfg.Statuses
 	DebugMode = cfg.DebugMode
+	AdminRole = cfg.AdminRole
+	VerificationIDs = cfg.VerificationIDs
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"
