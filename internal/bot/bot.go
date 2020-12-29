@@ -224,7 +224,15 @@ func RegisterHandlers(b *core.Bot) error {
 			// ---------- AVATAR -------------
 			err := miscComponent.Avatar(messageComponents[1:], m)
 			if err != nil {
-				logging.Error(err, "error from miscComponent.Avatar")
+				logging.Error(err, "miscComponent.Avatar")
+			}
+		} else if strings.EqualFold(messageComponents[0], "emoji") {
+			// ---------- EMOJI -------------
+			if len(messageComponents[1:]) >= 1 {
+				err := miscComponent.Emoji(messageComponents[1:], m)
+				if err != nil {
+					logging.Error(err, "miscComponent.Emoji")
+				}
 			}
 		}
 

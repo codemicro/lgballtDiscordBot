@@ -2,6 +2,7 @@ package misc
 
 import (
 	"context"
+	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 )
@@ -42,5 +43,26 @@ func (s *Misc) Avatar(command []string, m *harmony.Message) error {
 
 	// send message
 	_, err = s.b.SendMessage(m.ChannelID, img)
+	return err
+}
+
+func (s *Misc) Emoji(command []string, m *harmony.Message) error {
+	// Syntax: <emoji>
+
+	validEmoji, animated, _, emojiID := tools.ParseEmojiComponents(command[0])
+
+	if !validEmoji {
+		_, err := s.b.SendMessage(m.ChannelID, "That's not a valid (custom) emoji!")
+		return err
+	}
+
+	emojiUrl := "https://cdn.discordapp.com/emojis/" + emojiID
+	if animated {
+		emojiUrl += ".gif"
+	} else {
+		emojiUrl += ".png"
+	}
+
+	_, err := s.b.SendMessage(m.ChannelID, fmt.Sprintf("ID: `%s`\n%s", emojiID, emojiUrl))
 	return err
 }

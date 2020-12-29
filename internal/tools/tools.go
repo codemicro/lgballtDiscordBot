@@ -50,18 +50,34 @@ func ParseMessageLink(link string) (guildId, channelId, messageId string, valid 
 
 }
 
-var customEmojiRegex = regexp.MustCompile(`<a?:(.+:\d+)>`)
+var customEmojiRegex = regexp.MustCompile(`<(a?):(.+:\d+)>`)
 
+// ParseEmojiToString returns the emoji name and ID in a single string like name:id
 func ParseEmojiToString(eString string) string {
 	// Custom emojis look like this <a:whirleythonk:743765991464501260> and match this regex: <a?:(.+:\d+)>
 	var emoji string
 	if customEmojiRegex.MatchString(eString) {
 		matches := customEmojiRegex.FindAllStringSubmatch(eString, -1)
-		emoji = matches[0][1]
+		emoji = matches[0][2]
 	} else {
 		emoji = eString
 	}
 	return emoji
+}
+
+// ParseEmojiComponents returns if the emoji is animated, the emoji name and emoji ID
+func ParseEmojiComponents(eString string) (isValid bool, isAnimated bool, emojiName string, emojiID string) {
+	if customEmojiRegex.MatchString(eString) {
+		matches := customEmojiRegex.FindAllStringSubmatch(eString, -1)
+		aStr := matches[0][1]
+		combi := strings.Split(matches[0][2], ":")
+		var isAnimated bool
+		if aStr == "a" {
+			isAnimated = true
+		}
+		return true, isAnimated, combi[0], combi[1]
+	}
+	return false, false, eString, ""
 }
 
 var channelMentionRegex = regexp.MustCompile(`<#(\d+)>`)
