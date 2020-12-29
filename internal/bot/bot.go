@@ -8,6 +8,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
@@ -47,6 +48,11 @@ func RegisterHandlers(b *core.Bot) error {
 	}
 
 	miscComponent, err := misc.New(b)
+	if err != nil {
+		return err
+	}
+
+	verificationComponent, err := verification.New(b)
 	if err != nil {
 		return err
 	}
@@ -240,6 +246,21 @@ func RegisterHandlers(b *core.Bot) error {
 					logging.Error(err, "miscComponent.Emoji")
 				}
 			}
+		} else if strings.EqualFold(messageComponents[0], "verify") && (m.ChannelID == verification.InputChannelId ||
+			config.DebugMode) {
+
+			// ---------- VERIFICATION -------------
+
+			verificationMessage := messageComponents[1:]
+			if len(verificationMessage) < 1 {
+				_, _ = b.SendMessage(m.ChannelID, "You're missing your verification message! Try again.")
+			} else {
+				err := verificationComponent.Verify(verificationMessage, m)
+				if err != nil {
+					logging.Error(err, "verificationComponent.Verify")
+				}
+			}
+
 		}
 
 	})
@@ -252,6 +273,13 @@ func RegisterHandlers(b *core.Bot) error {
 			return
 		} else if isSelf {
 			return
+		}
+
+		if r.ChannelID == verification.OutputChannelId {
+			err := verificationComponent.AdminDecision(r)
+			if err != nil {
+				logging.Error(err, "verificationComponent.AdminDecision")
+			}
 		}
 
 		err := roleComponent.ReactionAdd(r)
@@ -275,6 +303,14 @@ func RegisterHandlers(b *core.Bot) error {
 			logging.Error(err)
 		}
 	})
+
+	//b.Client.OnGuildMemberRemove(func (m *harmony.GuildMemberRemove) {
+	//	fmt.Println("HELLO")
+	//	err := verificationComponent.OnMemberRemove(m)
+	//	if err != nil {
+	//		logging.Error(err, "verificationComponent.OnMemberRemove")
+	//	}
+	//})
 
 	return nil
 }
