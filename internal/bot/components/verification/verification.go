@@ -24,20 +24,21 @@ var (
 	roleId          string
 	InputChannelId  string
 	OutputChannelId string
-	// modlogChannelId = "793594879376490548"
+	modlogChannelId string
 )
 
 func init() {
 	roleId = config.VerificationIDs.RoleId
 	InputChannelId = config.VerificationIDs.InputChannel
 	OutputChannelId = config.VerificationIDs.OutputChannel
+	modlogChannelId = config.VerificationIDs.ModlogChannel
 }
 
 var (
 	dataExtractionRegex = regexp.MustCompile(fmt.Sprintf("%s(.+)%s", regexp.QuoteMeta(dataStartMarker), regexp.QuoteMeta(dataEndMarker)))
 	errorMissingData = errors.New("unable to find inline data data")
 
-	logHelpText = fmt.Sprintf("\n\n*React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.*", acceptReaction, rejectReaction)
+	logHelpText = fmt.Sprintf("*React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.*", acceptReaction, rejectReaction)
 )
 
 type Verification struct {

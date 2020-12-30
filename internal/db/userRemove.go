@@ -12,7 +12,7 @@ type UserRemove struct {
 }
 
 func (r *UserRemove) Get() (bool, error) {
-	err := Conn.Model(&ReactionRole{}).Take(r).Error
+	err := Conn.Where(r).First(r).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, nil

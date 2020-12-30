@@ -3,6 +3,7 @@ package verification
 import (
 	"context"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
@@ -23,24 +24,67 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 		return err
 	}
 
-	message := fmt.Sprintf("From: %s (%s#%s)\nContent: %s%s\n\n```%s```", tools.MakePing(m.Author.ID),
-		m.Author.Username, m.Author.Discriminator, verificationText, logHelpText, iu.toString())
+	var warning string
 
-	newMessage, err := v.b.SendMessage(OutputChannelId, message)
-	if err != nil {
+	// check for failed verifications and bans/kicks
+	var removal db.UserRemove
+	var failure db.VerificationFail
+	removal.UserId = m.Author.ID
+	failure.UserId = m.Author.ID
+
+	if found, err := removal.Get(); err != nil {
 		return err
+	} else if found {
+		rsn := removal.Reason
+		if rsn == "" {
+			rsn = "none provided"
+		}
+		warning += fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: *%s*\n", removal.Action,
+			rsn)
+	}
+
+	if found, err := failure.Get(); err != nil {
+		return err
+	} else if found {
+		warning += fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. See %s\n", failure.MessageLink)
+	}
+
+	if warning != "" {
+		warning = "\n\n" + warning
+	}
+
+	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(m.Author.ID), m.Author.Username, m.Author.Discriminator, verificationText)
+	messagePartTwo := fmt.Sprintf("%s\n%s\n\n```%s```", warning, logHelpText, iu.toString())
+
+	var newMessage *harmony.Message
+
+	if len(messagePartOne) + len(messagePartTwo) > 2000 {
+		_, err := v.b.SendMessage(OutputChannelId, messagePartOne)
+		if err != nil {
+			return err
+		}
+		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne)
+		if err != nil {
+			return err
+		}
+	} else {
+		var err error
+		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne + messagePartTwo)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Add sample reactions to that message
 	for _, reaction := range []string{acceptReaction, rejectReaction} {
-		err = v.b.Client.Channel(OutputChannelId).AddReaction(context.Background(), newMessage.ID, reaction)
+		err := v.b.Client.Channel(OutputChannelId).AddReaction(context.Background(), newMessage.ID, reaction)
 		if err != nil {
 			return err
 		}
 	}
 
 	// Delete user's message
-	err = v.b.Client.Channel(m.ChannelID).DeleteMessage(context.Background(), m.ID)
+	err := v.b.Client.Channel(m.ChannelID).DeleteMessage(context.Background(), m.ID)
 	if err != nil {
 		logging.Error(err, "failed to delete message in verification")
 	}

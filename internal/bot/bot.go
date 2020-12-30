@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
@@ -304,13 +305,13 @@ func RegisterHandlers(b *core.Bot) error {
 		}
 	})
 
-	//b.Client.OnGuildMemberRemove(func (m *harmony.GuildMemberRemove) {
-	//	fmt.Println("HELLO")
-	//	err := verificationComponent.OnMemberRemove(m)
-	//	if err != nil {
-	//		logging.Error(err, "verificationComponent.OnMemberRemove")
-	//	}
-	//})
+	b.Client.OnGuildMemberRemove(func (m *harmony.GuildMemberRemove) {
+		fmt.Println("HELLO")
+		err := verificationComponent.OnMemberRemove(m)
+		if err != nil {
+			logging.Error(err, "verificationComponent.OnMemberRemove")
+		}
+	})
 
 	return nil
 }

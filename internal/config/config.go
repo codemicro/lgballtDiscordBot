@@ -24,6 +24,7 @@ type VerificationIds struct {
 	InputChannel string `json:"inputChannel"`
 	OutputChannel string `json:"outputChannel"`
 	RoleId string `json:"assignRoleId"`
+	ModlogChannel string `json:"modlogChannel"`
 }
 
 // var Config Info

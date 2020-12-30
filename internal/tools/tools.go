@@ -2,6 +2,7 @@ package tools
 
 import (
 	"bytes"
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -48,6 +49,10 @@ func ParseMessageLink(link string) (guildId, channelId, messageId string, valid 
 
 	return
 
+}
+
+func MakeMessageLink(guildId, channelId, messageId string) string {
+	return fmt.Sprintf("https://discord.com/channels/%s/%s/%s", guildId, channelId, messageId)
 }
 
 var customEmojiRegex = regexp.MustCompile(`<(a?):(.+:\d+)>`)

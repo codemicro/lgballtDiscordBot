@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"regexp"
@@ -55,6 +56,24 @@ func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
 	} else if r.Emoji.Name == rejectReaction {
 		actionTaken = "rejected"
 		actionEmoji = rejectReaction
+
+		// add verification failure
+		var vf db.VerificationFail
+		vf.UserId = inlineUserData.UserID
+		found, err := vf.Get()
+		if err != nil {
+			return err
+		}
+		vf.MessageLink = tools.MakeMessageLink(r.GuildID, r.ChannelID, r.MessageID)
+		if found {
+			err = vf.Save()
+		} else {
+			err = vf.Create()
+		}
+		if err != nil {
+			return err
+		}
+
 	} else {
 		return err
 	}
