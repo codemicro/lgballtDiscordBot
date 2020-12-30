@@ -47,7 +47,7 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		}
 	} else {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(id, bioData)
+		e, err := b.formBioEmbed(id, m.GuildID, bioData)
 		if err != nil {
 			return err
 		}
@@ -155,17 +155,39 @@ func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 }
 
 // formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(uid string, bioData map[string]string) (*embed.Embed, error) {
+func (b *Bios) formBioEmbed(uid, guildId string, bioData map[string]string) (*embed.Embed, error) {
 
-	// Get user that owns this bio
-	bioUser, err := b.b.Client.User(context.Background(), uid)
+	var name string
+	var avatar string
+
+	// Attempt to get guild member
+	member, err := b.b.Client.Guild(guildId).Member(context.Background(), uid)
 	if err != nil {
-		return &embed.Embed{}, err
+		switch e := err.(type) {
+		case *harmony.APIError:
+			if e.HTTPCode == 404 {
+				// Can't get the member, so just get the user instead
+				user, err := b.b.Client.User(context.Background(), uid)
+				if err != nil {
+					return nil, err
+				}
+				avatar = user.AvatarURL()
+				name = user.Username
+			}
+		default:
+			return nil, err
+		}
+	} else {
+		name = member.Nick
+		if name == "" {
+			name = member.User.Username
+		}
+		avatar = member.User.AvatarURL()
 	}
 
 	e := embed.New()
-	e.Thumbnail(embed.NewThumbnail(bioUser.AvatarURL()))
-	e.Title(fmt.Sprintf("%s's bio", bioUser.Username))
+	e.Thumbnail(embed.NewThumbnail(avatar))
+	e.Title(fmt.Sprintf("%s's bio", name))
 
 	var fields []*embed.Field
 	for _, category := range b.data.Fields {
