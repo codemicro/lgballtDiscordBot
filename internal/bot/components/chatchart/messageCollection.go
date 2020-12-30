@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	maxMessages = 5000
-	perGroup    = 100
+	maxMessages      = 5000
+	perGroup         = 100
 	percentThreshold = 1
-	usernameMaxLen = 17
+	usernameMaxLen   = 17
 )
 
 type percentageWithLabel struct {
@@ -130,7 +130,6 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		return messageUserPercentages[i].Percentage > messageUserPercentages[j].Percentage
 	})
 
-
 	// get channel
 	crx, err := channel.Get(context.Background())
 	if err != nil {
@@ -147,8 +146,8 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 			},
 		},
 		BarWidth: 20,
-		Bars: chartValues,
-		XAxis: chart.Style{TextRotationDegrees: 90},
+		Bars:     chartValues,
+		XAxis:    chart.Style{TextRotationDegrees: 90},
 	}
 
 	buffer := &tools.ClosingBuffer{Buffer: bytes.NewBuffer([]byte{})}

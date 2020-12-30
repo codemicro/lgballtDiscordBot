@@ -13,13 +13,13 @@ import (
 func (v *Verification) Verify(command []string, m *harmony.Message) error {
 	// Copy message into output channel
 	iu := inlineData{
-		UserID:    m.Author.ID,
+		UserID: m.Author.ID,
 	}
 
 	verificationText := strings.Join(command, " ")
 
 	if len(verificationText) > 1500 {
-		_, err := v.b.SendMessage(m.ChannelID, "Sorry, that message is too long! Please keep your " +
+		_, err := v.b.SendMessage(m.ChannelID, "Sorry, that message is too long! Please keep your "+
 			"verification text to a *maximum* of 1500 characters.")
 		return err
 	}
@@ -58,7 +58,7 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 
 	var newMessage *harmony.Message
 
-	if len(messagePartOne) + len(messagePartTwo) > 2000 {
+	if len(messagePartOne)+len(messagePartTwo) > 2000 {
 		_, err := v.b.SendMessage(OutputChannelId, messagePartOne)
 		if err != nil {
 			return err
@@ -69,7 +69,7 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 		}
 	} else {
 		var err error
-		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne + messagePartTwo)
+		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne+messagePartTwo)
 		if err != nil {
 			return err
 		}
@@ -90,7 +90,7 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 	}
 
 	// Send confirmation message to user
-	_, err = v.b.SendMessage(m.ChannelID, fmt.Sprintf("Thanks %s - your verification request has been " +
+	_, err = v.b.SendMessage(m.ChannelID, fmt.Sprintf("Thanks %s - your verification request has been "+
 		"recieved. We'll check it as soon as possible.", tools.MakePing(m.Author.ID)))
 	return err
 }

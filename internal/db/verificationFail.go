@@ -6,8 +6,8 @@ import (
 )
 
 type VerificationFail struct {
-	UserId string `gorm:"primarykey"`
-	MessageLink    string
+	UserId      string `gorm:"primarykey"`
+	MessageLink string
 }
 
 func (vf *VerificationFail) Get() (bool, error) {

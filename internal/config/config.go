@@ -11,19 +11,19 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
-	Token      string   `json:"token"`
-	Prefix     string   `json:"prefix"`
-	DbFileName string   `json:"dbFileName"`
-	DebugMode  bool     `json:"debug"`
-	Statuses   []string `json:"statuses"`
-	AdminRole  string   `json:"adminRole"`
+	Token           string          `json:"token"`
+	Prefix          string          `json:"prefix"`
+	DbFileName      string          `json:"dbFileName"`
+	DebugMode       bool            `json:"debug"`
+	Statuses        []string        `json:"statuses"`
+	AdminRole       string          `json:"adminRole"`
 	VerificationIDs VerificationIds `json:"verificationIds"`
 }
 
 type VerificationIds struct {
-	InputChannel string `json:"inputChannel"`
+	InputChannel  string `json:"inputChannel"`
 	OutputChannel string `json:"outputChannel"`
-	RoleId string `json:"assignRoleId"`
+	RoleId        string `json:"assignRoleId"`
 	ModlogChannel string `json:"modlogChannel"`
 }
 

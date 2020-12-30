@@ -7,7 +7,7 @@ import (
 
 type UserRemove struct {
 	UserId string `gorm:"primarykey"`
-	Reason    string
+	Reason string
 	Action string
 }
 

@@ -14,7 +14,7 @@ import (
 
 const (
 	dataStartMarker = "[STA."
-	dataEndMarker = ".END]"
+	dataEndMarker   = ".END]"
 
 	acceptReaction = "☑️"
 	rejectReaction = "❌"
@@ -36,7 +36,7 @@ func init() {
 
 var (
 	dataExtractionRegex = regexp.MustCompile(fmt.Sprintf("%s(.+)%s", regexp.QuoteMeta(dataStartMarker), regexp.QuoteMeta(dataEndMarker)))
-	errorMissingData = errors.New("unable to find inline data data")
+	errorMissingData    = errors.New("unable to find inline data data")
 
 	logHelpText = fmt.Sprintf("*React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.*", acceptReaction, rejectReaction)
 )
@@ -53,7 +53,7 @@ func New(bot *core.Bot) (*Verification, error) {
 }
 
 type inlineData struct {
-	UserID    string `msg:"u"`
+	UserID string `msg:"u"`
 }
 
 func dataFromString(text string) (inlineData, error) {

@@ -65,7 +65,9 @@ func (v *Verification) OnMemberRemove(m *harmony.GuildMemberRemove) error {
 		err = ur.Create()
 	}
 
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 
 	// send log message
 	_, err = v.b.SendMessage(modlogChannelId, "Action logged.")
