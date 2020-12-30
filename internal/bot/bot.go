@@ -251,14 +251,9 @@ func RegisterHandlers(b *core.Bot) error {
 
 			// ---------- VERIFICATION -------------
 
-			verificationMessage := messageComponents[1:]
-			if len(verificationMessage) < 1 {
-				_, _ = b.SendMessage(m.ChannelID, "You're missing your verification message! Try again.")
-			} else {
-				err := verificationComponent.Verify(verificationMessage, m)
-				if err != nil {
-					logging.Error(err, "verificationComponent.Verify")
-				}
+			err := verificationComponent.Verify(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "verificationComponent.Verify")
 			}
 
 		}

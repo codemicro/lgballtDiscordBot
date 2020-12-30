@@ -11,6 +11,13 @@ import (
 )
 
 func (v *Verification) Verify(command []string, m *harmony.Message) error {
+
+	if len(command) < 1 {
+		_, err := v.b.SendMessage(m.ChannelID, "You're missing your verification message! Try again, silly! " +
+			tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
+		return err
+	}
+
 	// Copy message into output channel
 	iu := inlineData{
 		UserID: m.Author.ID,

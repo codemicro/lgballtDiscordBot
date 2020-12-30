@@ -85,6 +85,15 @@ func ParseEmojiComponents(eString string) (isValid bool, isAnimated bool, emojiN
 	return false, false, eString, ""
 }
 
+func MakeCustomEmoji(animated bool, name, id string) string {
+	o := "<"
+	if animated {
+		o += "a"
+	}
+	o += fmt.Sprintf(":%s:%s>", name, id)
+	return o
+}
+
 var channelMentionRegex = regexp.MustCompile(`<#(\d+)>`)
 
 func ParseChannelMention(mString string) (string, bool) {
