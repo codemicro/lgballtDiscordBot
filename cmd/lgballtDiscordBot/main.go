@@ -21,7 +21,7 @@ func main() {
 
 	fmt.Printf("LGballT bot v%s\n\n", version)
 
-	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged|harmony.GatewayIntentGuildMembers))
+	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged))
 	if err != nil {
 		fmt.Printf("Failed to initialise a new Harmony client\n\n")
 		os.Exit(1)

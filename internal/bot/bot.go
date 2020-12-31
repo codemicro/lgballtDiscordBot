@@ -155,6 +155,16 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "verificationComponent.Verify")
 			}
 
+		} else if strings.EqualFold("ban", messageComponents[0]) ||
+			strings.EqualFold("kick", messageComponents[0]) {
+
+			// ---------- KICK/BAN TRIGGER -------------
+
+			err := verificationComponent.RecordRemoval(messageComponents, m)
+			if err != nil {
+				logging.Error(err, "verificationComponent.RecordRemoval")
+			}
+
 		}
 
 	})
@@ -195,13 +205,6 @@ func RegisterHandlers(b *core.Bot) error {
 		err := roleComponent.ReactionRemove(r)
 		if err != nil {
 			logging.Error(err)
-		}
-	})
-
-	b.Client.OnGuildMemberRemove(func(m *harmony.GuildMemberRemove) {
-		err := verificationComponent.OnMemberRemove(m)
-		if err != nil {
-			logging.Error(err, "verificationComponent.OnMemberRemove")
 		}
 	})
 

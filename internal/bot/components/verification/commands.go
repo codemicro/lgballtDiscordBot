@@ -101,3 +101,42 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 		"recieved. We'll check it as soon as possible.", tools.MakePing(m.Author.ID)))
 	return err
 }
+
+func (v *Verification) RecordRemoval(command []string, m *harmony.Message) error {
+
+	if len(command) < 3 {
+		return nil
+	}
+
+	actionType := command[0]
+	uid := command[1]
+	reason := strings.Join(command[2:], " ")
+
+	ur := db.UserRemove{UserId: uid}
+
+	found, err := ur.Get()
+	if err != nil {
+		return err
+	}
+
+	if actionType == "ban" {
+		ur.Action = "banned"
+	} else {
+		ur.Action = "kicked"
+	}
+
+	ur.Reason = reason
+
+	if found {
+		err = ur.Save()
+	} else {
+		err = ur.Create()
+	}
+
+	if err != nil {
+		return err
+	}
+
+	_, err = v.b.SendMessage(m.ChannelID, "Action logged.")
+	return err
+}
