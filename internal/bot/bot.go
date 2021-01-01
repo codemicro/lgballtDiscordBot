@@ -118,13 +118,6 @@ func RegisterHandlers(b *core.Bot) error {
 		} else if strings.EqualFold(messageComponents[0], "roles") {
 			roleComponent.RouteMessage(messageComponents[1:], m)
 
-		} else if strings.EqualFold(messageComponents[0], "broken") {
-
-			err := infoComponent.Broken([]string{}, m)
-			if err != nil {
-				logging.Error(err)
-			}
-
 		} else if strings.EqualFold(messageComponents[0], "chatchart") {
 			chartComponent.RouteMessage(messageComponents[1:], m)
 

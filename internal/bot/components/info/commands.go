@@ -3,7 +3,6 @@ package info
 import (
 	"context"
 	"fmt"
-	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/go-ping/ping"
 	"github.com/hashicorp/go-multierror"
 	"github.com/skwair/harmony"
@@ -38,9 +37,4 @@ func (i *Info) Ping(_ []string, m *harmony.Message) error {
 
 	return nil
 
-}
-
-func (i *Info) Broken(_ []string, m *harmony.Message) error {
-	_, err := i.b.SendMessage(m.ChannelID, fmt.Sprintf("%s ||AAAAAA HELP I BROKE SADJFSD ASAAAAAAAAAA!!111!!!!A|| cw caps", tools.MakePing("289130374204751873")))
-	return err
 }
