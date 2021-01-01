@@ -11,6 +11,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	harmonyChannel "github.com/skwair/harmony/channel"
 	"strings"
@@ -86,8 +87,6 @@ func RegisterHandlers(b *core.Bot) error {
 			return
 		}
 
-		// TODO: Command parsing, but actually make it decent this time
-
 		// Remove prefix and split by spaces
 		messageComponents := strings.Split(
 			strings.TrimPrefix(m.Content, b.Prefix),
@@ -155,8 +154,9 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "verificationComponent.Verify")
 			}
 
-		} else if strings.EqualFold(messageComponents[0], "verifyf") && (m.ChannelID == verification.InputChannelId ||
-			config.DebugMode) {
+		} else if strings.EqualFold(messageComponents[0], "verifyf") &&
+			(m.ChannelID == verification.InputChannelId || config.DebugMode) &&
+			(tools.IsStringInSlice(config.AdminRole, m.Member.Roles) || config.DebugMode) {
 
 			// ---------- FORCE VERIFY -------------
 
