@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.7.2] - 2021-01-01
 ### Fixed
 * Users can now only press F once per message.
+* Kick/ban log trigger now only works for admin users
 
 ## [1.7.1] - 2021-01-01
 ### Changed
