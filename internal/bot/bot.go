@@ -165,6 +165,14 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "verificationComponent.RecordRemoval")
 			}
 
+		} else if strings.EqualFold("pressf", messageComponents[0]) {
+			// ---------- PRESSF -------------
+
+			err := miscComponent.PressF(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "miscComponent.PressF")
+			}
+
 		}
 
 	})
@@ -189,6 +197,11 @@ func RegisterHandlers(b *core.Bot) error {
 		err := roleComponent.ReactionAdd(r)
 		if err != nil {
 			logging.Error(err)
+		}
+
+		err = miscComponent.PressFReaction(r)
+		if err != nil {
+			logging.Error(err, "miscComponent.PressFReaction")
 		}
 	})
 
