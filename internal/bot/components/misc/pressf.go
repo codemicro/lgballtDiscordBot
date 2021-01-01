@@ -16,19 +16,19 @@ var activePressFs = make(map[string]*activePressF)
 var apfMux = new(sync.RWMutex)
 
 type activePressF struct {
-	Trigger chan *harmony.MessageReaction
-	Count int
+	Trigger      chan *harmony.MessageReaction
+	Count        int
 	ReactedUsers []string
-	Message *harmony.Message
-	Bot *core.Bot
+	Message      *harmony.Message
+	Bot          *core.Bot
 }
 
 func newPressFTracker(bot *core.Bot, message *harmony.Message, duration time.Duration) *activePressF {
 	apf := &activePressF{
-		Trigger:   make(chan *harmony.MessageReaction, 100),
-		Count:     0,
+		Trigger: make(chan *harmony.MessageReaction, 100),
+		Count:   0,
 		Message: message,
-		Bot: bot,
+		Bot:     bot,
 	}
 
 	go func() {

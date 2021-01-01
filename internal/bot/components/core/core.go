@@ -23,6 +23,7 @@ func New(client *harmony.Client, prefix string) *Bot {
 }
 
 var pingRegex = regexp.MustCompile(`(?m)@(?:everyone|here)`)
+
 const pingRegexSub = "`$0`"
 
 func (b *Bot) SendMessage(channelID, content string) (*harmony.Message, error) {
