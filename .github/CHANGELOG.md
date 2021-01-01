@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.7.1] - 2021-01-01
+### Changed
+* `core.Bot.SendMessage` now filters @everyone and @here pings... whoops.
+* `<p>verifyf` can now only be used by admins
+
 ## [1.7.0] - 2021-01-01
 ### Added
 * `<p>pressf` command
@@ -114,7 +119,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.6.1...v1.7.0
 [1.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.5.0...v1.6.0
