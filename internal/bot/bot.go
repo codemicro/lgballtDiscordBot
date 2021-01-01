@@ -165,8 +165,9 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "verificationComponent.FVerify")
 			}
 
-		} else if strings.EqualFold("ban", messageComponents[0]) ||
-			strings.EqualFold("kick", messageComponents[0]) {
+		} else if (strings.EqualFold("ban", messageComponents[0]) ||
+			strings.EqualFold("kick", messageComponents[0])) &&
+			(tools.IsStringInSlice(config.AdminRole, m.Member.Roles) || config.DebugMode) {
 
 			// ---------- KICK/BAN TRIGGER -------------
 
