@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"strings"
 	"sync"
@@ -17,6 +18,7 @@ var apfMux = new(sync.RWMutex)
 type activePressF struct {
 	Trigger chan *harmony.MessageReaction
 	Count int
+	ReactedUsers []string
 	Message *harmony.Message
 	Bot *core.Bot
 }
@@ -40,6 +42,13 @@ func newPressFTracker(bot *core.Bot, message *harmony.Message, duration time.Dur
 
 	go func() {
 		for v := range apf.Trigger {
+
+			if !tools.IsStringInSlice(v.UserID, apf.ReactedUsers) {
+				apf.ReactedUsers = append(apf.ReactedUsers, v.UserID)
+			} else {
+				continue
+			}
+
 			name, _, err := apf.Bot.GetNickname(v.UserID, v.GuildID)
 			if err != nil {
 				logging.Error(err, "activePressF runner (nickname get)")
