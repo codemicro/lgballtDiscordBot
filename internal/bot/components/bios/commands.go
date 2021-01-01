@@ -160,30 +160,11 @@ func (b *Bios) formBioEmbed(uid, guildId string, bioData map[string]string) (*em
 	var name string
 	var avatar string
 
-	// Attempt to get guild member
-	member, err := b.b.Client.Guild(guildId).Member(context.Background(), uid)
+	name, user, err := b.b.GetNickname(uid, guildId)
 	if err != nil {
-		switch e := err.(type) {
-		case *harmony.APIError:
-			if e.HTTPCode == 404 {
-				// Can't get the member, so just get the user instead
-				user, err := b.b.Client.User(context.Background(), uid)
-				if err != nil {
-					return nil, err
-				}
-				avatar = user.AvatarURL()
-				name = user.Username
-			}
-		default:
-			return nil, err
-		}
-	} else {
-		name = member.Nick
-		if name == "" {
-			name = member.User.Username
-		}
-		avatar = member.User.AvatarURL()
+		return nil, err
 	}
+	avatar = user.AvatarURL()
 
 	e := embed.New()
 	e.Thumbnail(embed.NewThumbnail(avatar))

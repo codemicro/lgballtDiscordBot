@@ -44,3 +44,30 @@ func (b *Bot) IsSelf(id string) (bool, error) {
 	}
 	return id == ownId, nil
 }
+
+func (b *Bot) GetNickname(uid, guildId string) (string, *harmony.User, error) {
+	// Attempt to get guild member
+	member, err := b.Client.Guild(guildId).Member(context.Background(), uid)
+	if err != nil {
+		switch e := err.(type) {
+		case *harmony.APIError:
+			if e.HTTPCode == 404 {
+				// Can't get the member, so just get the user instead
+				user, err := b.Client.User(context.Background(), uid)
+				if err != nil {
+					return "", nil, err
+				}
+				return user.Username, user, nil
+			}
+		default:
+			return "", nil, err
+		}
+	} else {
+		name := member.Nick
+		if name == "" {
+			name = member.User.Username
+		}
+		return name, member.User, nil
+	}
+	return "", nil, nil
+}
