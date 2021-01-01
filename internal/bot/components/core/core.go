@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
+	"regexp"
 	"sync"
 )
 
@@ -21,8 +22,12 @@ func New(client *harmony.Client, prefix string) *Bot {
 
 }
 
+var pingRegex = regexp.MustCompile(`(?m)@(?:everyone|here)`)
+const pingRegexSub = "`$0`"
+
 func (b *Bot) SendMessage(channelID, content string) (*harmony.Message, error) {
-	return b.Client.Channel(channelID).SendMessage(context.Background(), content)
+	return b.Client.Channel(channelID).SendMessage(context.Background(),
+		pingRegex.ReplaceAllString(content, pingRegexSub))
 }
 
 func (b *Bot) SendEmbed(channelID string, e *embed.Embed) (*harmony.Message, error) {
