@@ -155,6 +155,16 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "verificationComponent.Verify")
 			}
 
+		} else if strings.EqualFold(messageComponents[0], "verifyf") && (m.ChannelID == verification.InputChannelId ||
+			config.DebugMode) {
+
+			// ---------- FORCE VERIFY -------------
+
+			err := verificationComponent.FVerify(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "verificationComponent.FVerify")
+			}
+
 		} else if strings.EqualFold("ban", messageComponents[0]) ||
 			strings.EqualFold("kick", messageComponents[0]) {
 

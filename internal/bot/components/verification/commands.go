@@ -102,6 +102,37 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 	return err
 }
 
+func (v *Verification) FVerify(command []string, m *harmony.Message) error {
+	if len(command) != 1 {
+		_, err := v.b.SendMessage(m.ChannelID, "No message link supplied")
+		return err
+	}
+
+	_, channelId, messageId, valid := tools.ParseMessageLink(command[0])
+
+	if !valid {
+		_, err := v.b.SendMessage(m.ChannelID, "Invalid message link")
+		return err
+	}
+
+	mct, err := v.b.Client.Channel(channelId).Message(context.Background(), messageId)
+	if err != nil {
+		switch e := err.(type) {
+		case *harmony.APIError:
+			if e.HTTPCode == 404 {
+				_, err := v.b.SendMessage(m.ChannelID, "Message not found")
+				return err
+			}
+			return err
+		default:
+			return err
+		}
+	}
+
+	return v.Verify(strings.Split(mct.Content, " "), mct)
+
+}
+
 func (v *Verification) RecordRemoval(command []string, m *harmony.Message) error {
 
 	if len(command) < 3 {
