@@ -57,13 +57,19 @@ var rainbowColours = [...]int{
 func (i *Info) Info(_ []string, m *harmony.Message) error {
 	sinceStart := time.Since(buildInfo.StartTime)
 
+	hours := int64(sinceStart.Hours())
+	minutes := int64(sinceStart.Minutes()) % 60
+	seconds := int64(sinceStart.Seconds()) % 60
+
+	earthRotations := float64(hours) / 24
+
 	emb := embed.New().
 		Title(fmt.Sprintf("LGBallT bot v%s", buildInfo.Version)).
 		Fields(
 			embed.NewField().Name("Build date and time").Value(buildInfo.BuildDate).Build(),
 			embed.NewField().Name("Go version").Value(buildInfo.GoVersion).Build(),
 			embed.NewField().Name("Lines of code").Value(fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)).Build(),
-			embed.NewField().Name("Uptime").Value(fmt.Sprintf("%.0f hours, %.0f minutes and %.0f seconds since start", sinceStart.Hours(), sinceStart.Minutes(), sinceStart.Seconds())).Build(),
+			embed.NewField().Name("Uptime").Value(fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)).Build(),
 	).Build()
 
 	emb.Color = rainbowColours[0]

@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Added
+* Number of rotations of the earth since the start time to the info command
+
 
 ## [1.7.3] - 2021-01-02
 ### Added
