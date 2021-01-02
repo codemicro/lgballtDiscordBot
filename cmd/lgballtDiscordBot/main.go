@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
@@ -13,13 +14,12 @@ import (
 	"time"
 )
 
-const (
-	version = "1.7.2"
-)
+//go:generate python ../../scripts/prebuild.py ../.. ../../internal/buildInfo/buildInfo.go buildInfo 1.7.2
 
 func main() {
 
-	fmt.Printf("LGballT bot v%s\n\n", version)
+	fmt.Printf("LGballT bot v%s built on %s (%s)\n\n", buildInfo.Version, buildInfo.BuildDate,
+		buildInfo.GoVersion)
 
 	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged))
 	if err != nil {
@@ -50,13 +50,13 @@ func main() {
 		}
 
 		if len(config.Statuses) == 1 {
-			f(fmt.Sprintf(config.Statuses[0], version))
+			f(fmt.Sprintf(config.Statuses[0], buildInfo.Version))
 			return
 		}
 
 		for {
 			for _, text := range config.Statuses {
-				f(fmt.Sprintf(text, version))
+				f(fmt.Sprintf(text, buildInfo.Version))
 				time.Sleep(time.Second * 15)
 			}
 		}
