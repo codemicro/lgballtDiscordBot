@@ -30,7 +30,7 @@ func toFile(e string) {
 	if err != nil {
 		panic(err)
 	}
-	if _, err := file.WriteString(fmt.Sprintf("\n%s %s", cTime, e)); err != nil {
+	if _, err := file.WriteString(fmt.Sprintf("%s %s\n", cTime, e)); err != nil {
 		panic(err)
 	}
 	file.Close()
