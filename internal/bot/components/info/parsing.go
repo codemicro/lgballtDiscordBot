@@ -15,6 +15,11 @@ func (i *Info) RouteMessage(args []string, m *harmony.Message) {
 				logging.Error(err)
 			}
 		}
+	} else {
+		err := i.Info(args, m)
+		if err != nil {
+			logging.Error(err, "info.Info.Info")
+		}
 	}
 
 }
