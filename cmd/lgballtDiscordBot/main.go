@@ -1,14 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
-	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
-	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
-	"github.com/skwair/harmony"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"os"
 	"os/signal"
 	"time"
@@ -21,54 +18,28 @@ func main() {
 	fmt.Printf("LGballT bot v%s built on %s (%s)\n\n", buildInfo.Version, buildInfo.BuildDate,
 		buildInfo.GoVersion)
 
-	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged))
+	state := tools.NewState()
+
+	err := bot.Start(state)
 	if err != nil {
-		fmt.Printf("Failed to initialise a new Harmony client\n\n")
+		logging.Error(err, "Failed to start Harmony client")
 		os.Exit(1)
 	}
 
-	b := core.New(client, config.Prefix)
-	err = bot.RegisterHandlers(b)
-	if err != nil {
-		logging.Error(err, "Failed to register command handlers")
-		os.Exit(1)
-	}
+	fmt.Println("Running, press ctrl+C to exit.")
 
-	if err = client.Connect(context.Background()); err != nil {
-		logging.Error(err, "Failed to connect to Discord")
-		os.Exit(1)
-	}
-	defer client.Disconnect()
-
-	go func() {
-		f := func(text string) {
-			_ = client.CurrentUser().SetStatus(&harmony.Status{
-				Game: &harmony.Activity{
-					Name: text,
-				},
-			})
-		}
-
-		if len(config.Statuses) == 1 {
-			f(fmt.Sprintf(config.Statuses[0], buildInfo.Version))
-			return
-		}
-
-		for {
-			for _, text := range config.Statuses {
-				f(fmt.Sprintf(text, buildInfo.Version))
-				time.Sleep(time.Second * 15)
-			}
-		}
-	}()
-
-	fmt.Println("Bot is running, press ctrl+C to exit.")
-
-	// Wait for ctrl-C, then exit.
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	<-sig
 
-	fmt.Println("Shutting down - bye-bye!")
+	fmt.Print("Shutting down... ")
+
+	state.TriggerShutdown()
+	if state.WaitUntilAllComplete(time.Second * 10) {
+		fmt.Println()
+		logging.Warn("Shutdown timeout exceeded, forcibly terminating")
+	}
+
+	fmt.Println("bye-bye!")
 
 }
