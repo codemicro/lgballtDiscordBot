@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.8.3] - 2021-01-03
+### Fixed
+* Fixed message content filter
+
 ## [1.8.2] - 2021-01-03
 ### Changed
 * Add filter to new message content to strip extra stuff off the end
@@ -147,7 +151,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...HEAD
+[1.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.3...v1.8.0
