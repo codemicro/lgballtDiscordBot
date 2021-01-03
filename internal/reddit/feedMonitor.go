@@ -21,7 +21,7 @@ func subMonitorSequencer(state *tools.State, info config.RedditFeedInfo) {
 	state.AddGoroutine()
 
 	ticker := time.NewTicker(time.Duration(info.Interval) * time.Minute)
-	// ticker := time.NewTicker(time.Second * 15)
+	// ticker = time.NewTicker(time.Second * 10)
 	finished := make(chan bool)
 
 	go func() {
@@ -51,7 +51,7 @@ func subMonitorSequencer(state *tools.State, info config.RedditFeedInfo) {
 
 }
 
-var contentFilterRegex = regexp.MustCompile(` ?submitted by \/u\/.+ \[link\] \[comments\]`)
+var contentFilterRegex = regexp.MustCompile(`(?m) *submitted +by +\/u\/.+ +\[link\] +\[comments\] *`)
 
 func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 
