@@ -9,6 +9,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/mmcdole/gofeed"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -49,6 +50,8 @@ func subMonitorSequencer(state *tools.State, info config.RedditFeedInfo) {
 	state.FinishGoroutine()
 
 }
+
+var contentFilterRegex = regexp.MustCompile(` ?submitted by \/u\/.+ \[link\] \[comments\]`)
 
 func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 
@@ -113,7 +116,7 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 				logging.Error(err, "goquery initialisation failed")
 				return
 			}
-			content = doc.Text()
+			content = contentFilterRegex.ReplaceAllString(doc.Text(), "")
 
 			if len(content) > 70 {
 				content = content[:70] + "..."
