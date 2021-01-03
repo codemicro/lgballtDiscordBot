@@ -96,3 +96,9 @@ func ParsePing(ping string) (string, bool) {
 func MakePing(uid string) string {
 	return "<@!" + uid + ">"
 }
+
+var rolePingFilterRegex = regexp.MustCompile(`<@&\d+>`)
+
+func FilterRolePing(instr string) string {
+	return rolePingFilterRegex.ReplaceAllString(instr, "`$0`")
+}

@@ -87,7 +87,8 @@ func (s *Misc) PressF(command []string, m *harmony.Message) error {
 
 	payingRespectsTo := strings.Join(command, " ")
 
-	msg, err := s.b.SendMessage(m.ChannelID, fmt.Sprintf("React with 🇫 to pay your respects to **%s**", payingRespectsTo))
+	msg, err := s.b.SendMessage(m.ChannelID, fmt.Sprintf("React with 🇫 to pay your respects to **%s**",
+		tools.FilterRolePing(payingRespectsTo)))
 	if err != nil {
 		return err
 	}
