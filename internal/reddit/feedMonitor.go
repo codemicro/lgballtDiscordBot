@@ -52,8 +52,6 @@ func subMonitorSequencer(state *tools.State, info config.RedditFeedInfo) {
 
 func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 
-	fmt.Println("action run")
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	fp := gofeed.NewParser()
