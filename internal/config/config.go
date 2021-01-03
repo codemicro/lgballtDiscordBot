@@ -11,13 +11,14 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
-	Token           string          `json:"token"`
-	Prefix          string          `json:"prefix"`
-	DbFileName      string          `json:"dbFileName"`
-	DebugMode       bool            `json:"debug"`
-	Statuses        []string        `json:"statuses"`
-	AdminRole       string          `json:"adminRole"`
-	VerificationIDs VerificationIds `json:"verificationIds"`
+	Token           string           `json:"token"`
+	Prefix          string           `json:"prefix"`
+	DbFileName      string           `json:"dbFileName"`
+	DebugMode       bool             `json:"debug"`
+	Statuses        []string         `json:"statuses"`
+	AdminRole       string           `json:"adminRole"`
+	VerificationIDs VerificationIds  `json:"verificationIds"`
+	RedditFeeds     []RedditFeedInfo `json:"redditFeeds"`
 }
 
 type VerificationIds struct {
@@ -25,6 +26,12 @@ type VerificationIds struct {
 	OutputChannel string `json:"outputChannel"`
 	RoleId        string `json:"assignRoleId"`
 	ModlogChannel string `json:"modlogChannel"`
+}
+
+type RedditFeedInfo struct {
+	Webhook  string `json:"webhook"`
+	RssUrl   string `json:"rssUrl"`
+	Interval int    `json:"pollInterval"`
 }
 
 // var Config Info
@@ -36,6 +43,7 @@ var Statuses []string
 var DebugMode bool
 var AdminRole string
 var VerificationIDs VerificationIds
+var RedditFeeds []RedditFeedInfo
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -59,6 +67,7 @@ func init() {
 	DebugMode = cfg.DebugMode
 	AdminRole = cfg.AdminRole
 	VerificationIDs = cfg.VerificationIDs
+	RedditFeeds = cfg.RedditFeeds
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"

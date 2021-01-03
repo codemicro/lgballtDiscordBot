@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * Number of rotations of the earth since the start time to the info command
+* Added Reddit feed config options
 
 
 ## [1.7.3] - 2021-01-02
