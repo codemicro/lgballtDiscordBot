@@ -24,4 +24,3 @@ func (cb *ClosingBuffer) Close() error {
 	// this is just memory, so all we need to do is return
 	return nil
 }
-

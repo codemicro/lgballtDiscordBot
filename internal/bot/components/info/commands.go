@@ -70,7 +70,7 @@ func (i *Info) Info(_ []string, m *harmony.Message) error {
 			embed.NewField().Name("Go version").Value(buildInfo.GoVersion).Build(),
 			embed.NewField().Name("Lines of code").Value(fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)).Build(),
 			embed.NewField().Name("Uptime").Value(fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)).Build(),
-	).Build()
+		).Build()
 
 	emb.Color = rainbowColours[0]
 

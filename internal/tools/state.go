@@ -20,7 +20,7 @@ func (s *State) WaitUntilAllComplete(timeout time.Duration) (timedOut bool) {
 		time.Sleep(timeout)
 		c <- true
 	}()
-	return <- c
+	return <-c
 }
 
 func (s *State) AddGoroutine() {
