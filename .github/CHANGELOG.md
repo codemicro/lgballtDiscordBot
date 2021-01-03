@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.8.1] - 2021-01-03
+### Changed
+* Reddit feed watcher now respects defined interval
+### Fixed
+* Role pings are now filtered by `<p>pressf`
+
 ## [1.8.0] - 2021-01-03
 ### Added
 * Number of rotations of the earth since the start time to the info command
@@ -136,7 +142,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.3...v1.8.0
 [1.7.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.2...v1.7.3
 [1.7.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.7.1...v1.7.2
