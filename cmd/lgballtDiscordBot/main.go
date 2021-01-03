@@ -5,6 +5,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/reddit"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"os"
 	"os/signal"
@@ -23,6 +24,12 @@ func main() {
 	err := bot.Start(state)
 	if err != nil {
 		logging.Error(err, "Failed to start Harmony client")
+		os.Exit(1)
+	}
+
+	err = reddit.Start(state)
+	if err != nil {
+		logging.Error(err, "Failed to start Reddit feed monitor(s)")
 		os.Exit(1)
 	}
 

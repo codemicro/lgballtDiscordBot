@@ -31,7 +31,8 @@ type VerificationIds struct {
 type RedditFeedInfo struct {
 	Webhook  string `json:"webhook"`
 	RssUrl   string `json:"rssUrl"`
-	Interval int    `json:"pollInterval"`
+	Interval int    `json:"interval"`
+	IconUrl  string `json:"iconUrl"`
 }
 
 // var Config Info
