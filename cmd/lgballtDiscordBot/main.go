@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-//go:generate python ../../scripts/prebuild.py ../.. ../../internal/buildInfo/buildInfo.go buildInfo 1.8.1
+//go:generate python ../../scripts/prebuild.py ../.. ../../internal/buildInfo/buildInfo.go buildInfo 1.8.2
 
 func main() {
 
