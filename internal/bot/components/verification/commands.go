@@ -140,7 +140,7 @@ func (v *Verification) RecordRemoval(command []string, m *harmony.Message) error
 	}
 
 	actionType := command[0]
-	uid := command[1]
+	uid, _ := tools.ParsePing(command[1])
 	reason := strings.Join(command[2:], " ")
 
 	ur := db.UserRemove{UserId: uid}
