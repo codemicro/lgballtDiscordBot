@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"regexp"
+	"time"
 )
 
 //go:generate msgp -tests=false -io=false -unexported
@@ -18,6 +19,8 @@ const (
 
 	acceptReaction = "☑️"
 	rejectReaction = "❌"
+
+	ratelimitTimeout = time.Hour
 )
 
 var (
@@ -25,6 +28,8 @@ var (
 	InputChannelId  string
 	OutputChannelId string
 	modlogChannelId string
+
+	verificationRatelimit map[string]time.Time
 )
 
 func init() {
@@ -32,6 +37,8 @@ func init() {
 	InputChannelId = config.VerificationIDs.InputChannel
 	OutputChannelId = config.VerificationIDs.OutputChannel
 	modlogChannelId = config.VerificationIDs.ModlogChannel
+
+	verificationRatelimit = make(map[string]time.Time)
 }
 
 var (

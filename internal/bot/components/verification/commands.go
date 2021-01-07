@@ -8,9 +8,16 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"strings"
+	"time"
 )
 
-func (v *Verification) Verify(command []string, m *harmony.Message) error {
+func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelimit bool) error {
+
+	// check ratelimit
+	if val, found := verificationRatelimit[m.Author.ID]; found && time.Now().Before(val) && checkRatelimit {
+		_, err := v.b.SendMessage(m.ChannelID, "You've already submitted a verification request. Please wait.")
+		return err
+	}
 
 	if len(command) < 1 {
 		_, err := v.b.SendMessage(m.ChannelID, "You're missing your verification message! Try again, silly! "+
@@ -82,6 +89,11 @@ func (v *Verification) Verify(command []string, m *harmony.Message) error {
 		}
 	}
 
+	// track ratelimit
+	if checkRatelimit {
+		verificationRatelimit[m.Author.ID] = time.Now().Add(ratelimitTimeout)
+	}
+
 	// Add sample reactions to that message
 	for _, reaction := range []string{acceptReaction, rejectReaction} {
 		err := v.b.Client.Channel(OutputChannelId).AddReaction(context.Background(), newMessage.ID, reaction)
@@ -129,7 +141,7 @@ func (v *Verification) FVerify(command []string, m *harmony.Message) error {
 		}
 	}
 
-	return v.Verify(strings.Split(mct.Content, " "), mct)
+	return v.Verify(strings.Split(mct.Content, " "), mct, false)
 
 }
 

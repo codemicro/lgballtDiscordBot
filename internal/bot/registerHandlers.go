@@ -134,7 +134,7 @@ func RegisterHandlers(b *core.Bot) error {
 
 			// ---------- VERIFICATION -------------
 
-			err := verificationComponent.Verify(messageComponents[1:], m)
+			err := verificationComponent.Verify(messageComponents[1:], m, true)
 			if err != nil {
 				logging.Error(err, "verificationComponent.Verify")
 			}
