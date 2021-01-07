@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [1.8.4] - 2021-01-07
 ### Added
 * Verification ratelimiting
 ### Fixed
@@ -155,7 +157,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...HEAD
+[1.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.0...v1.8.1
