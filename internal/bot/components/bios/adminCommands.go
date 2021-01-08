@@ -26,7 +26,7 @@ func (b *Bios) AdminReadRawBio(command []string, m *harmony.Message) error {
 	}
 
 	bdt := new(db.UserBio)
-	ok, err := bdt.Populate(id)
+	ok, err := bdt.PopulateRaw(id)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (b *Bios) AdminSetRawBio(command []string, m *harmony.Message) error {
 	}
 
 	bdt := new(db.UserBio)
-	hasBio, err := bdt.Populate(id)
+	hasBio, err := bdt.PopulateRaw(id)
 	if err != nil {
 		return err
 	}

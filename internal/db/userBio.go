@@ -18,11 +18,17 @@ func marshalBioData(raw map[string]string) (string, error) {
 }
 
 func (bio *UserBio) Populate(userId string) (found bool, err error) {
+	if found, err = bio.PopulateRaw(userId); err != nil {
+		return false, err
+	} else if !found {
+		return false, nil
+	}
+	return true, json.Unmarshal([]byte(bio.RawBioData), &bio.BioData)
+}
 
+func (bio *UserBio) PopulateRaw(userId string) (found bool, err error) {
 	bio.UserId = userId
-	conn := Conn
-
-	err = conn.Take(&bio).Error
+	err = Conn.Take(&bio).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return found, nil
@@ -30,11 +36,7 @@ func (bio *UserBio) Populate(userId string) (found bool, err error) {
 			return
 		}
 	}
-
 	found = true
-
-	err = json.Unmarshal([]byte(bio.RawBioData), &bio.BioData)
-
 	return
 }
 

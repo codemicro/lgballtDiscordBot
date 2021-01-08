@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Bio JSON can now forcibly changed when the existing JSON is invalid ([#1](https://github.com/codemicro/lgballtDiscordBot/issues/1)) 
 
 ## [1.8.4] - 2021-01-07
 ### Added
