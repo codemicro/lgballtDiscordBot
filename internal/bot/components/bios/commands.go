@@ -77,7 +77,7 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	newValue := strings.Join(command[1:], " ")
 
 	if len(newValue) > maxBioFieldLen {
-		_, err := b.b.SendMessage(m.ChannelID, "Sorry - the new text you have entered is too long (this is a " +
+		_, err := b.b.SendMessage(m.ChannelID, "Sorry - the new text you have entered is too long (this is a "+
 			"Discord limitation). Please limit each field of your bio to `1024` characters.")
 		return err
 	}
