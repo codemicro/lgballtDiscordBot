@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const maxBioFieldLen = 1024
+
 type Bios struct {
 	b    *core.Bot
 	data biosData
