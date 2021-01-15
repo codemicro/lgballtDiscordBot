@@ -6,10 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [1.8.5] - 2021-01-15
+### Added
+* Bio fields now have a built in length limit that reflects that imposed by Discord ([#4](https://github.com/codemicro/lgballtDiscordBot/issues/4))
+* A config field for chat chart channel exclusions has been added ([#5](https://github.com/codemicro/lgballtDiscordBot/issues/5))
 ### Changed
 * Modified database schema (**BREAKING**)
+  * Migration script available - `migration/toV2.py`
+* Commands that are followed by a newline and then the rest of the command are now correctly parsed and processed
 ### Fixed
-* Bio JSON can now forcibly changed when the existing JSON is invalid ([#1](https://github.com/codemicro/lgballtDiscordBot/issues/1)) 
+* Bio JSON can now forcibly changed when the existing JSON is invalid ([#1](https://github.com/codemicro/lgballtDiscordBot/issues/1))
+* `<p>pressf` now only tracks reactions that are 🇫 ([#3](https://github.com/codemicro/lgballtDiscordBot/issues/3))
 
 ## [1.8.4] - 2021-01-07
 ### Added
@@ -161,7 +169,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.5...HEAD
+[1.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...v1.8.5
 [1.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.1...v1.8.2
