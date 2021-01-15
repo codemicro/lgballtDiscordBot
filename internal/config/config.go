@@ -11,14 +11,15 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
-	Token           string           `json:"token"`
-	Prefix          string           `json:"prefix"`
-	DbFileName      string           `json:"dbFileName"`
-	DebugMode       bool             `json:"debug"`
-	Statuses        []string         `json:"statuses"`
-	AdminRole       string           `json:"adminRole"`
-	VerificationIDs VerificationIds  `json:"verificationIds"`
-	RedditFeeds     []RedditFeedInfo `json:"redditFeeds"`
+	Token                      string           `json:"token"`
+	Prefix                     string           `json:"prefix"`
+	DbFileName                 string           `json:"dbFileName"`
+	DebugMode                  bool             `json:"debug"`
+	Statuses                   []string         `json:"statuses"`
+	AdminRole                  string           `json:"adminRole"`
+	VerificationIDs            VerificationIds  `json:"verificationIds"`
+	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
+	ChatChartChannelExclusions []string         `json:"ccExclusions"`
 }
 
 type VerificationIds struct {
@@ -45,6 +46,7 @@ var DebugMode bool
 var AdminRole string
 var VerificationIDs VerificationIds
 var RedditFeeds []RedditFeedInfo
+var ChatChartChannelExclusions []string
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -69,6 +71,7 @@ func init() {
 	AdminRole = cfg.AdminRole
 	VerificationIDs = cfg.VerificationIDs
 	RedditFeeds = cfg.RedditFeeds
+	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"
