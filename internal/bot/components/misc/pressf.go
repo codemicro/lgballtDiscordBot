@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const regionalFEmoji = "🇫"
+
 var activePressFs = make(map[string]*activePressF)
 var apfMux = new(sync.RWMutex)
 
@@ -111,7 +113,7 @@ func (s *Misc) PressFReaction(r *harmony.MessageReaction) error {
 	apfMux.RLock()
 	apf, found := activePressFs[r.MessageID]
 	apfMux.RUnlock()
-	if found {
+	if found && r.Emoji.Name == regionalFEmoji {
 		apf.Trigger <- r
 	}
 	return nil
