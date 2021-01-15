@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [2.1.0] - 2021-01-15
+## [2.0.1] - 2021-01-15
 ### Fixed
 * Fix command parsing when dealing with newlines
   * Newlines aren't randomly removed from the middle of a bio field now, for example
