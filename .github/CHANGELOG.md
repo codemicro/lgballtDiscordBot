@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-01-15
+### Fixed
+* Fix command parsing when dealing with newlines
+  * Newlines aren't randomly removed from the middle of a bio field now, for example
+
 ## [2.0.0] - 2021-01-15
 ### Added
 * Bio fields now have a built in length limit that reflects that imposed by Discord ([#4](https://github.com/codemicro/lgballtDiscordBot/issues/4))
@@ -169,7 +174,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...v2.0.0
 [1.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...v1.8.3

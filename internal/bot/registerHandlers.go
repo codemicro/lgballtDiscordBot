@@ -85,6 +85,8 @@ func RegisterHandlers(b *core.Bot) error {
 			" ")
 
 		// Replace at most one newline with a space so <p>cmd\nwords is registered as <p>cmd words
+		// This is based off the first item in the message when split by spaces only to prevent newlines being randomly
+		// replaced in the middle of a bio field, for example
 		modMessageComp := strings.Split(strings.Replace(messageComponents[0], "\n", " ", 1), " ")
 		if len(modMessageComp) > 1 {
 			messageComponents = append(modMessageComp, messageComponents[1:]...)

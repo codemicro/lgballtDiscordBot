@@ -1,18 +1,18 @@
 package buildInfo
 
 import (
-	"runtime"
-	"time"
+    "runtime"
+    "time"
 )
 
 const (
-	Version     = "2.0.0"
-	BuildDate   = "15/01/2021 at 16:12:33"
-	LinesOfCode = "2329"
-	NumFiles    = "40"
+    Version = "2.0.1"
+    BuildDate = "15/01/2021 at 16:31:03"
+    LinesOfCode = "2332"
+    NumFiles = "40"
 )
 
 var (
-	GoVersion = runtime.Version()
-	StartTime = time.Now()
+    GoVersion = runtime.Version()
+    StartTime = time.Now()
 )
