@@ -79,13 +79,17 @@ func RegisterHandlers(b *core.Bot) error {
 			return
 		}
 
-		// Replace at most one newline with a space so <p>cmd\nwords is registered as <p>cmd words
-		modMessageContent := strings.Replace(m.Content, "\n", " ", 1)
-
 		// Remove prefix and split by spaces
 		messageComponents := strings.Split(
-			strings.TrimPrefix(modMessageContent, b.Prefix),
+			strings.TrimPrefix(m.Content, b.Prefix),
 			" ")
+
+		// Replace at most one newline with a space so <p>cmd\nwords is registered as <p>cmd words
+		modMessageComp := strings.Split(strings.Replace(messageComponents[0], "\n", " ", 1), " ")
+		if len(modMessageComp) > 1 {
+			messageComponents = append(modMessageComp, messageComponents[1:]...)
+		}
+
 
 		// strings.Split will never return a empty slice - this can lead to a slice with a single empty string in it
 		// being returned, signifying that the input string was the prefix alone.
