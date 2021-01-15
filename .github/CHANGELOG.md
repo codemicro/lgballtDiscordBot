@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [1.8.5] - 2021-01-15
+## [2.0.0] - 2021-01-15
 ### Added
 * Bio fields now have a built in length limit that reflects that imposed by Discord ([#4](https://github.com/codemicro/lgballtDiscordBot/issues/4))
 * A config field for chat chart channel exclusions has been added ([#5](https://github.com/codemicro/lgballtDiscordBot/issues/5))
@@ -169,8 +169,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.5...HEAD
-[1.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...v1.8.5
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...v2.0.0
 [1.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.1...v1.8.2
