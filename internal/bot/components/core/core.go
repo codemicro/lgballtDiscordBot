@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
 	"regexp"
@@ -11,12 +12,15 @@ import (
 type Bot struct {
 	Client *harmony.Client
 	Prefix string
+
+	State *state.State
 }
 
-func New(client *harmony.Client, prefix string) *Bot {
+func New(client *harmony.Client, prefix string, state *state.State) *Bot {
 	b := new(Bot)
 	b.Client = client
 	b.Prefix = prefix
+	b.State = state
 
 	return b
 

@@ -18,7 +18,7 @@ func Start(state *state.State) error {
 		return err
 	}
 
-	b := core.New(client, config.Prefix)
+	b := core.New(client, config.Prefix, state)
 	err = RegisterHandlers(b)
 	if err != nil {
 		return err

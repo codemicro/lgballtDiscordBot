@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
@@ -11,6 +12,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	harmonyChannel "github.com/skwair/harmony/channel"
@@ -177,6 +179,19 @@ func RegisterHandlers(b *core.Bot) error {
 			if err != nil {
 				logging.Error(err, "miscComponent.PressF")
 			}
+
+		} else if strings.EqualFold("shutdown", messageComponents[0]) &&
+			(tools.IsStringInSlice(config.AdminRole, m.Member.Roles) || m.Author.ID == config.OwnerId ||
+				config.DebugMode) {
+
+			// Goodnight.
+
+			logging.Info(fmt.Sprintf("Shutting down from command by %s %s#%s", m.Author.ID, m.Author.Username,
+				m.Author.Discriminator))
+
+			_, _ = b.SendMessage(m.ChannelID, "Bye-bye!")
+
+			b.State.ShutdownSignal <- state.CustomShutdownSignal{}
 
 		}
 

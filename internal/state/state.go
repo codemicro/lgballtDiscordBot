@@ -49,3 +49,7 @@ func (s *State) WaitUntilShutdownTrigger() {
 func (s *State) TriggerShutdown() {
 	s.Notifier.Done()
 }
+
+type CustomShutdownSignal struct{}
+func (c CustomShutdownSignal) String() string {	return "requested shutdown" }
+func (c CustomShutdownSignal) Signal() {}
