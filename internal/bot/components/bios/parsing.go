@@ -69,31 +69,27 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 			if err != nil {
 				logging.Error(err, "bios.Bios.SetField")
 			}
-		} else if tools.IsStringInSlice(args[0], filterForMemberIds(accBios)) { // if member id found for this user
-
-			// Any functions called here *must* validate field names
-
-			if argLen == 2 {
-				err := b.ClearFieldSystem(args, m)
-				if err != nil {
-					logging.Error(err, "bios.Bios.ClearFieldSystem")
-				}
-			} else {
-				// This is assuming that because the first arg is not a valid field name, it is therefore a PK member ID
-				err := b.SetFieldSystem(args, m)
-				if err != nil {
-					logging.Error(err, "bios.Bios.SetFieldSystem")
-				}
-			}
-
-		} else {
-			// This either means that the field name was not recognised or the member ID was not found
-			_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name or a recognised PluralKit member " +
-				"ID. Available field names are " + strings.Join(b.data.Fields, ", "))
+		} else if argLen == 2 && tools.IsStringInSlice(args[0], filterForMemberIds(accBios)) {
+			err := b.ClearFieldSystem(args, m)
 			if err != nil {
-				logging.Error(err, "final parse fail message in bios.RouteMessage")
+				logging.Error(err, "bios.Bios.ClearFieldSystem")
+			}
+		} else {
+			// This is assuming that because the first arg is not a valid field name, it is therefore a PK member ID
+			err := b.SetFieldSystem(args, m)
+			if err != nil {
+				logging.Error(err, "bios.Bios.SetFieldSystem")
 			}
 		}
+		//} else {
+		//	// This either means that the field name was not recognised or the member ID was not found
+		//	// TODO: check this error message accurately describes the predicament
+		//	_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name or a recognised PluralKit member " +
+		//		"ID. Available field names are " + strings.Join(b.data.Fields, ", "))
+		//	if err != nil {
+		//		logging.Error(err, "final parse fail message in bios.RouteMessage")
+		//	}
+		//}
 	}
 
 }
