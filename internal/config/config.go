@@ -41,6 +41,8 @@ type RedditFeedInfo struct {
 type PkApiInfo struct {
 	ContactEmail string `json:"contactEmail"`
 	ApiUrl       string `json:"apiUrl"`
+	MinRequestDelay int `json:"minReqDelay"`
+	NumWorkers int `json:"numWorkers"`
 }
 
 var (
