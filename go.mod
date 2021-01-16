@@ -9,6 +9,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/klauspost/compress v1.11.3 // indirect
+	github.com/mattn/go-sqlite3 v1.14.6 // indirect
 	github.com/mmcdole/gofeed v1.1.0
 	github.com/skwair/harmony v0.18.1-0.20201226223038-d8b646116d44
 	github.com/tinylib/msgp v1.1.5
@@ -21,5 +22,5 @@ require (
 	golang.org/x/tools v0.0.0-20201229013931-929a8494cf60 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gorm.io/driver/sqlite v1.1.4
-	gorm.io/gorm v1.20.7
+	gorm.io/gorm v1.20.11
 )

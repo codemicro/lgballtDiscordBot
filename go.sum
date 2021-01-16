@@ -67,6 +67,8 @@ github.com/mattn/go-isatty v0.0.12 h1:wuysRhFDzyxgEmMf5xjvJ2M9dZoWAXNNr5LSBS7uHX
 github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
 github.com/mattn/go-sqlite3 v1.14.5 h1:1IdxlwTNazvbKJQSxoJ5/9ECbEeaTTyeU7sEAZ5KKTQ=
 github.com/mattn/go-sqlite3 v1.14.5/go.mod h1:WVKg1VTActs4Qso6iwGbiFih2UIHo0ENGwNd0Lj+XmI=
+github.com/mattn/go-sqlite3 v1.14.6 h1:dNPt6NO46WmLVt2DLNpwczCmdV5boIZ6g/tlDrlRUbg=
+github.com/mattn/go-sqlite3 v1.14.6/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/mmcdole/gofeed v1.1.0 h1:T2WrGLVJRV04PY2qwhEJLHCt9JiCtBhb6SmC8ZvJH08=
 github.com/mmcdole/gofeed v1.1.0/go.mod h1:PPiVwgDXLlz2N83KB4TrIim2lyYM5Zn7ZWH9Pi4oHUk=
 github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf h1:sWGE2v+hO0Nd4yFU/S/mDBM5plIU8v/Qhfz41hkDIAI=
@@ -172,6 +174,8 @@ gorm.io/driver/sqlite v1.1.4 h1:PDzwYE+sI6De2+mxAneV9Xs11+ZyKV6oxD3wDGkaNvM=
 gorm.io/driver/sqlite v1.1.4/go.mod h1:mJCeTFr7+crvS+TRnWc5Z3UvwxUN1BGBLMrf5LA9DYw=
 gorm.io/gorm v1.20.7 h1:rMS4CL3pNmYq1V5/X+nHHjh1Dx6dnf27+Cai5zabo+M=
 gorm.io/gorm v1.20.7/go.mod h1:0HFTzE/SqkGTzK6TlDPPQbAYCluiVvhzoA1+aVyzenw=
+gorm.io/gorm v1.20.11 h1:jYHQ0LLUViV85V8dM1TP9VBBkfzKTnuTXDjYObkI6yc=
+gorm.io/gorm v1.20.11/go.mod h1:0HFTzE/SqkGTzK6TlDPPQbAYCluiVvhzoA1+aVyzenw=
 layeh.com/gopus v0.0.0-20161224163843-0ebf989153aa/go.mod h1:AOef7vHz0+v4sWwJnr0jSyHiX/1NgsMoaxl+rEPz/I0=
 nhooyr.io/websocket v1.8.6 h1:s+C3xAMLwGmlI31Nyn/eAehUlZPwfYZu2JXM621Q5/k=
 nhooyr.io/websocket v1.8.6/go.mod h1:B70DZP8IakI65RVQ51MsWP/8jndNma26DVA/nFSCgW0=
