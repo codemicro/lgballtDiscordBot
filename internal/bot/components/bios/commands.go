@@ -35,7 +35,8 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 	}
 
 	bdt := new(db.UserBio)
-	ok, err := bdt.Populate(id)
+	bdt.UserId = id
+	ok, err := bdt.Populate()
 	if err != nil {
 		return err
 	}
@@ -85,7 +86,8 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	}
 
 	bdt := new(db.UserBio)
-	hasBio, err := bdt.Populate(m.Author.ID)
+	bdt.UserId = m.Author.ID
+	hasBio, err := bdt.Populate()
 	if err != nil {
 		return err
 	}
@@ -127,7 +129,8 @@ func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 	}
 
 	bdt := new(db.UserBio)
-	hasBio, err := bdt.Populate(m.Author.ID)
+	bdt.UserId = m.Author.ID
+	hasBio, err := bdt.Populate()
 	if err != nil {
 		return err
 	}
