@@ -20,6 +20,8 @@ func (b *Bios) Help(_ []string, m *harmony.Message) error {
 func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 	// Syntax: <user ID>
 
+	// TODO: carousel for systems
+
 	var id string
 	if len(command) >= 1 {
 		// If there's a ping as the argument, use the ID from that. Else, just use the plain argument
