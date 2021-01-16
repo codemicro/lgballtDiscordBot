@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/dishook"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/mmcdole/gofeed"
 	"regexp"
@@ -14,7 +15,7 @@ import (
 	"time"
 )
 
-func subMonitorSequencer(state *tools.State, info config.RedditFeedInfo) {
+func subMonitorSequencer(state *state.State, info config.RedditFeedInfo) {
 
 	var idCache []string
 

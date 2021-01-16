@@ -6,9 +6,8 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/reddit"
-	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"os"
-	"os/signal"
 	"time"
 )
 
@@ -19,15 +18,15 @@ func main() {
 	fmt.Printf("LGballT bot v%s built on %s (%s)\n\n", buildInfo.Version, buildInfo.BuildDate,
 		buildInfo.GoVersion)
 
-	state := tools.NewState()
+	runState := state.NewState()
 
-	err := bot.Start(state)
+	err := bot.Start(runState)
 	if err != nil {
 		logging.Error(err, "Failed to start Harmony client")
 		os.Exit(1)
 	}
 
-	err = reddit.Start(state)
+	err = reddit.Start(runState)
 	if err != nil {
 		logging.Error(err, "Failed to start Reddit feed monitor(s)")
 		os.Exit(1)
@@ -35,14 +34,12 @@ func main() {
 
 	fmt.Println("Running, press ctrl+C to exit.")
 
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt)
-	<-sig
+	<-runState.ShutdownSignal
 
 	fmt.Print("Shutting down... ")
 
-	state.TriggerShutdown()
-	if state.WaitUntilAllComplete(time.Second * 10) {
+	runState.TriggerShutdown()
+	if runState.WaitUntilAllComplete(time.Second * 10) {
 		fmt.Println()
 		logging.Warn("Shutdown timeout exceeded, forcibly terminating")
 	}

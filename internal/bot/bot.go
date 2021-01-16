@@ -6,12 +6,12 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/skwair/harmony"
 	"time"
 )
 
-func Start(state *tools.State) error {
+func Start(state *state.State) error {
 
 	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged))
 	if err != nil {

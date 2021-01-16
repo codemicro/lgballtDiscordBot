@@ -1,13 +1,24 @@
-package tools
+package state
 
 import (
+	"os"
+	"os/signal"
 	"sync"
 	"time"
 )
 
 type State struct {
-	Notifier sync.WaitGroup
-	Finishes sync.WaitGroup
+	Notifier       sync.WaitGroup
+	Finishes       sync.WaitGroup
+	ShutdownSignal chan os.Signal
+}
+
+func NewState() *State {
+	s := new(State)
+	s.ShutdownSignal = make(chan os.Signal, 1)
+	signal.Notify(s.ShutdownSignal, os.Interrupt)
+	s.Notifier.Add(1)
+	return s
 }
 
 func (s *State) WaitUntilAllComplete(timeout time.Duration) (timedOut bool) {
@@ -37,10 +48,4 @@ func (s *State) WaitUntilShutdownTrigger() {
 
 func (s *State) TriggerShutdown() {
 	s.Notifier.Done()
-}
-
-func NewState() *State {
-	s := new(State)
-	s.Notifier.Add(1)
-	return s
 }
