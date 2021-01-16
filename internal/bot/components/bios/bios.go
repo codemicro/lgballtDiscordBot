@@ -41,9 +41,9 @@ func New(bot *core.Bot) (*Bios, error) {
 	return b, nil
 }
 
-// ValidateFieldName performs a case insensitive compare of the provided field name and those used in the data file
+// validateFieldName performs a case insensitive compare of the provided field name and those used in the data file
 // If a match is found, the properly capitalised version is returned.
-func (b *Bios) ValidateFieldName(inputName string) (properFieldName string, found bool) {
+func (b *Bios) validateFieldName(inputName string) (properFieldName string, found bool) {
 	for _, f := range b.data.Fields {
 		if strings.EqualFold(f, inputName) {
 			found = true

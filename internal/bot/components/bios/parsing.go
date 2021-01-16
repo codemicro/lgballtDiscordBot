@@ -25,7 +25,7 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 			if err != nil {
 				logging.Error(err)
 			}
-		} else if _, isFieldName := b.ValidateFieldName(args[0]); isFieldName {
+		} else if _, isFieldName := b.validateFieldName(args[0]); isFieldName {
 			// This is someone trying to clear a bio field
 			err := b.ClearField(args, m)
 			if err != nil {

@@ -65,7 +65,7 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	// Syntax: <field name> <value>
 
-	properFieldName, validFieldName := b.ValidateFieldName(command[0])
+	properFieldName, validFieldName := b.validateFieldName(command[0])
 
 	if !validFieldName {
 		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the "+
@@ -117,7 +117,7 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 	// Syntax: <field name>
 
-	properFieldName, validFieldName := b.ValidateFieldName(command[0])
+	properFieldName, validFieldName := b.validateFieldName(command[0])
 
 	if !validFieldName {
 		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid bio field.")
