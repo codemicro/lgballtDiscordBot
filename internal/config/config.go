@@ -21,6 +21,7 @@ type Info struct {
 	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`
 	OwnerId                    string           `json:"ownerId"`
+	PkApi                      PkApiInfo        `json:"pkApi"`
 }
 
 type VerificationIds struct {
@@ -37,18 +38,24 @@ type RedditFeedInfo struct {
 	IconUrl  string `json:"iconUrl"`
 }
 
-// var Config Info
+type PkApiInfo struct {
+	ContactEmail string `json:"contactEmail"`
+	ApiUrl       string `json:"apiUrl"`
+}
 
-var Token string
-var Prefix string
-var DbFileName string
-var Statuses []string
-var DebugMode bool
-var AdminRole string
-var VerificationIDs VerificationIds
-var RedditFeeds []RedditFeedInfo
-var ChatChartChannelExclusions []string
-var OwnerId string
+var (
+	Token string
+	Prefix string
+	DbFileName string
+	Statuses []string
+	DebugMode bool
+	AdminRole string
+	VerificationIDs VerificationIds
+	RedditFeeds []RedditFeedInfo
+	ChatChartChannelExclusions []string
+	OwnerId string
+	PkApi PkApiInfo
+)
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -75,6 +82,11 @@ func init() {
 	RedditFeeds = cfg.RedditFeeds
 	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions
 	OwnerId = cfg.OwnerId
+	PkApi = cfg.PkApi
+
+	if PkApi.ApiUrl[len(PkApi.ApiUrl) - 1] == '/' {
+		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]
+	}
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"
