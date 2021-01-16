@@ -1,6 +1,7 @@
 package bios
 
 import (
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony"
 	"strings"
@@ -51,7 +52,7 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 
 func (b *Bios) RouteAdminMessage(args []string, m *harmony.Message) {
 
-	if m.Author.ID == "289130374204751873" { // 0x5444#8669
+	if m.Author.ID == config.OwnerId {
 		if len(args) == 1 {
 			// This is me getting the value of a user's bio
 			err := b.AdminReadRawBio(args, m)

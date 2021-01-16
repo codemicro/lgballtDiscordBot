@@ -20,6 +20,7 @@ type Info struct {
 	VerificationIDs            VerificationIds  `json:"verificationIds"`
 	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`
+	OwnerId                    string           `json:"ownerId"`
 }
 
 type VerificationIds struct {
@@ -47,6 +48,7 @@ var AdminRole string
 var VerificationIDs VerificationIds
 var RedditFeeds []RedditFeedInfo
 var ChatChartChannelExclusions []string
+var OwnerId string
 
 func init() {
 	configFileBytes, err := ioutil.ReadFile(configFileName)
@@ -72,6 +74,7 @@ func init() {
 	VerificationIDs = cfg.VerificationIDs
 	RedditFeeds = cfg.RedditFeeds
 	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions
+	OwnerId = cfg.OwnerId
 
 	if DbFileName == "" {
 		DbFileName = "lgballtBot.db"

@@ -3,6 +3,7 @@ package misc
 import (
 	"context"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 )
@@ -37,7 +38,7 @@ func (s *Misc) Avatar(command []string, m *harmony.Message) error {
 
 	img := user.AvatarURL()
 
-	if id == "289130374204751873" { // me, Abi
+	if id == config.OwnerId {
 		img = "https://cdn.discordapp.com/attachments/760238683415773217/792914659342024724/yeahaffsekjh.png"
 	}
 
