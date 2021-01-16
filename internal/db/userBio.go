@@ -7,9 +7,10 @@ import (
 )
 
 type UserBio struct {
-	UserId     string `gorm:"primarykey"`
-	RawBioData string
-	BioData    map[string]string `gorm:"-"`
+	UserId      string `gorm:"primarykey"`
+	SysMemberID string `gorm:"primarykey"`
+	RawBioData  string
+	BioData     map[string]string `gorm:"-"`
 }
 
 func marshalBioData(raw map[string]string) (string, error) {
@@ -68,4 +69,21 @@ func (bio *UserBio) CreateRaw() error {
 
 func (bio *UserBio) Delete() error {
 	return Conn.Delete(bio).Error
+}
+
+func GetBiosForAccount(uid string) ([]UserBio, error) {
+	var ubs []UserBio
+	err := Conn.Where(UserBio{UserId: uid}).Find(&ubs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for i, ub := range ubs {
+		err := json.Unmarshal([]byte(ub.RawBioData), &ubs[i].BioData)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return ubs, nil
 }
