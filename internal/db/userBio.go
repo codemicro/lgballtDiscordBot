@@ -67,7 +67,12 @@ func (bio *UserBio) CreateRaw() error {
 }
 
 func (bio *UserBio) Delete() error {
-	return Conn.Delete(bio).Error
+	// return Conn.Delete(bio).Error
+	return Conn.Exec(
+		"DELETE FROM `user_bios` WHERE (`user_bios`.`user_id`,`user_bios`.`sys_member_id`) IN (VALUES(?,?))",
+		bio.UserId,
+		bio.SysMemberID,
+	).Error
 }
 
 func GetBiosForAccount(uid string) ([]UserBio, error) {
