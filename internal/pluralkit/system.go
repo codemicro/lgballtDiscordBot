@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/skwair/harmony"
-	"net/http"
 )
 
 var (
@@ -17,6 +15,7 @@ var (
 		"(PK API returned a 404)")
 )
 
+// System represents a system object from the PluralKit API
 type System struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
@@ -25,50 +24,24 @@ type System struct {
 	AvatarUrl   string `json:"avatar_url"`
 }
 
+// SystemById fetches a system from the PluralKit API based on its PluralKit ID
 func SystemById(sid string) (*System, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf(systemByIdUrl, sid), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := makeRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode == 404 {
-		return nil, ErrorSystemNotFound
-	}
-
 	sys := new(System)
-	err = parseJsonResponse(resp, sys)
-	if err != nil {
-		return nil, err
-	}
-
-	return sys, nil
+	return sys, orchestrateRequest(
+		fmt.Sprintf(systemByIdUrl, sid),
+		sys,
+		func(i int) bool { return i == 200 },
+		map[int]error{404: ErrorSystemNotFound},
+	)
 }
 
-func SystemByDiscordAccount(m *harmony.User) (*System, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf(systemByDiscordAccountIdUrl, m.ID), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := makeRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode == 404 {
-		return nil, ErrorAccountHasNoSystem
-	}
-
+// SystemByDiscordAccount fetches a system linked to a Discord user ID from the PluralKit API
+func SystemByDiscordAccount(discordUid string) (*System, error) {
 	sys := new(System)
-	err = parseJsonResponse(resp, sys)
-	if err != nil {
-		return nil, err
-	}
-
-	return sys, nil
+	return sys, orchestrateRequest(
+		fmt.Sprintf(systemByDiscordAccountIdUrl, discordUid),
+		sys,
+		func(i int) bool { return i == 200 },
+		map[int]error{404: ErrorAccountHasNoSystem},
+	)
 }

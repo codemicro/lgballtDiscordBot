@@ -4,14 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"net/http"
 )
 
 var (
 	membersBySystemIdUrl = config.PkApi.ApiUrl + "/s/%s/members"
 	memberByMemberIdUrl  = config.PkApi.ApiUrl + "/m/%s"
 
-	ErrorMemberNotFound     = errors.New("pluralkit: member with specified ID not found (PK API returned a 404)")
+	ErrorMemberNotFound    = errors.New("pluralkit: member with specified ID not found (PK API returned a 404)")
+	ErrorMemberListPrivate = errors.New("pluralkit: target system found but member list is private (PK API " +
+		"returned a 403)")
 )
 
 type Member struct {
@@ -24,29 +25,21 @@ type Member struct {
 }
 
 func MembersBySystemId(sid string) ([]*Member, error) {
-	return nil, nil
+	var members []*Member
+	return members, orchestrateRequest(
+		fmt.Sprintf(membersBySystemIdUrl, sid),
+		&members,
+		func(i int) bool { return i == 200 },
+		map[int]error{404: ErrorSystemNotFound, 403: ErrorMemberListPrivate},
+	)
 }
 
 func MemberByMemberId(mid string) (*Member, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf(memberByMemberIdUrl, mid), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := makeRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode == 404 {
-		return nil, ErrorMemberNotFound
-	}
-
-	mem := new(Member)
-	err = parseJsonResponse(resp, mem)
-	if err != nil {
-		return nil, err
-	}
-
-	return mem, nil
+	member := new(Member)
+	return member, orchestrateRequest(
+		fmt.Sprintf(memberByMemberIdUrl, mid),
+		member,
+		func(i int) bool { return i == 200 },
+		map[int]error{404: ErrorMemberNotFound},
+	)
 }
