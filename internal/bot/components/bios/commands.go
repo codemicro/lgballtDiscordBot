@@ -68,53 +68,12 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	// Syntax: <field name> <value>
 
-	properFieldName, validFieldName := b.validateFieldName(command[0])
-
-	if !validFieldName {
-		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the "+
-			"following: "+strings.Join(b.data.Fields, ", "))
-
-		return err
-	}
-
+	fieldName := command[0]
 	newValue := strings.Join(command[1:], " ")
-
-	if len(newValue) > maxBioFieldLen {
-		_, err := b.b.SendMessage(m.ChannelID, "Sorry - the new text you have entered is too long (this is a "+
-			"Discord limitation). Please limit each field of your bio to `1024` characters.")
-		return err
-	}
-
 	bdt := new(db.UserBio)
 	bdt.UserId = m.Author.ID
-	hasBio, err := bdt.Populate()
-	if err != nil {
-		return err
-	}
-	bioData := bdt.BioData
 
-	if !hasBio {
-		bioData = make(map[string]string)
-		bioData[properFieldName] = newValue
-	} else {
-		bioData[properFieldName] = newValue
-	}
-
-	bdt.BioData = bioData
-
-	if !hasBio {
-		err = bdt.Create()
-	} else {
-		err = bdt.Save()
-	}
-
-	if err != nil {
-		return err
-	}
-
-	// react to message with a check mark to signify it worked
-	err = b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
-	return err
+	return b.setBioField(bdt, fieldName, newValue, m)
 }
 
 // ClearField runs the bio field clear command
