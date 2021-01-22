@@ -24,10 +24,11 @@ func init() {
 			log.New(os.Stdout, "\n", log.LstdFlags),
 			logger.Config{
 				LogLevel: logger.Info,
+				Colorful: true,
 			},
 		)
 	}
-	
+
 	var err error
 	Conn, err = gorm.Open(sqlite.Open(config.DbFileName), dbConfig)
 	if err != nil {
