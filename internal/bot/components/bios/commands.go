@@ -1,7 +1,6 @@
 package bios
 
 import (
-	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
@@ -68,60 +67,21 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	// Syntax: <field name> <value>
 
-	fieldName := command[0]
 	newValue := strings.Join(command[1:], " ")
 	bdt := new(db.UserBio)
 	bdt.UserId = m.Author.ID
 
-	return b.setBioField(bdt, fieldName, newValue, m)
+	return b.setBioField(bdt, command[0], newValue, m)
 }
 
 // ClearField runs the bio field clear command
 func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 	// Syntax: <field name>
 
-	properFieldName, validFieldName := b.validateFieldName(command[0])
-
-	if !validFieldName {
-		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid bio field.")
-		return err
-	}
-
 	bdt := new(db.UserBio)
 	bdt.UserId = m.Author.ID
-	hasBio, err := bdt.Populate()
-	if err != nil {
-		return err
-	}
 
-	if !hasBio {
-		_, err := b.b.SendMessage(m.ChannelID, "You have not created a bio, hence there is nothing to delete anything from.")
-		return err
-	}
-
-	delete(bdt.BioData, properFieldName)
-
-	if len(bdt.BioData) == 0 {
-		// There are no fields left in the bio, so we shall delete it
-		err = bdt.Delete()
-	} else {
-		// Else save as normal
-		err = bdt.Save()
-	}
-
-	if err != nil {
-		return err
-	}
-
-	// react to message with a check mark to signify it worked
-	for _, v := range []string{"🗑", "✅"} {
-		err := b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, v)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
+	return b.clearBioField(bdt, command[0], m)
 }
 
 // formBioEmbed creates an embed object based on a user's bio data
