@@ -2,7 +2,6 @@ package bios
 
 import (
 	"context"
-	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/skwair/harmony"
 	"strings"
@@ -34,10 +33,8 @@ func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, m *ha
 	bdt.BioData[fieldName] = newValue
 
 	if !hasBio {
-		fmt.Println("created")
 		err = bdt.Create()
 	} else {
-		fmt.Println("saved")
 		err = bdt.Save()
 	}
 
