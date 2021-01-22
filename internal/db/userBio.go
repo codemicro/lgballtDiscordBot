@@ -50,7 +50,12 @@ func (bio *UserBio) Save() error {
 }
 
 func (bio *UserBio) SaveRaw() error {
-	return Conn.Save(bio).Error
+	return Conn.Exec(
+		"UPDATE `user_bios` SET `raw_bio_data` = ? WHERE (`user_bios`.`user_id`,`user_bios`.`sys_member_id`) IN (VALUES(?,?))",
+		bio.RawBioData,
+		bio.UserId,
+		bio.SysMemberID,
+	).Error
 }
 
 func (bio *UserBio) Create() error {
