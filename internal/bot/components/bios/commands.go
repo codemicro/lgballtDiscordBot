@@ -1,11 +1,9 @@
 package bios
 
 import (
-	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
-	"github.com/skwair/harmony/embed"
 	"strings"
 )
 
@@ -84,31 +82,3 @@ func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 	return b.clearBioField(bdt, command[0], m)
 }
 
-// formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(uid, guildId string, bioData map[string]string) (*embed.Embed, error) {
-
-	var name string
-	var avatar string
-
-	name, user, err := b.b.GetNickname(uid, guildId)
-	if err != nil {
-		return nil, err
-	}
-	avatar = user.AvatarURL()
-
-	e := embed.New()
-	e.Thumbnail(embed.NewThumbnail(avatar))
-	e.Title(fmt.Sprintf("%s's bio", name))
-
-	var fields []*embed.Field
-	for _, category := range b.data.Fields {
-		fVal, ok := bioData[category]
-		if ok {
-			fields = append(fields, embed.NewField().Name(category).Value(fVal).Build())
-		}
-	}
-
-	e.Fields(fields...)
-
-	return e.Build(), nil
-}
