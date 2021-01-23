@@ -3,13 +3,15 @@ package misc
 import (
 	"context"
 	"fmt"
-	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
-	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/skwair/harmony"
 )
 
 const regionalFEmoji = "🇫"
@@ -56,7 +58,11 @@ func newPressFTracker(bot *core.Bot, message *harmony.Message, duration time.Dur
 				logging.Error(err, "activePressF runner (nickname get)")
 				return
 			}
-			newText := fmt.Sprintf("%s\n**%s** has paid their respects", message.Content, name)
+			pronoun := "their"
+			if v.UserID == config.OwnerId {
+				pronoun = "her"
+			}
+			newText := fmt.Sprintf("%s\n**%s** has paid %s respects", message.Content, name, pronoun)
 			_, err = apf.Bot.Client.Channel(apf.Message.ChannelID).EditMessage(context.Background(), apf.Message.ID, newText)
 			apf.Message.Content = newText
 			if err != nil {
