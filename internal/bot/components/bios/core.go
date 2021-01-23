@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
 	"strings"
@@ -95,20 +96,47 @@ func (b *Bios) clearBioField(bdt *db.UserBio, rawFieldName string, m *harmony.Me
 }
 
 // formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(uid, guildId string, bioData map[string]string) (*embed.Embed, error) {
+func (b *Bios) formBioEmbed(uid, guildId string, systemMemberId string, bioData map[string]string, hasMultiple bool, currentNum, totalNum int) (*embed.Embed, error) {
 
 	var name string
 	var avatar string
+	var footerText string
 
-	name, user, err := b.b.GetNickname(uid, guildId)
-	if err != nil {
-		return nil, err
+	if hasMultiple {
+		footerText += "This account has multiple bios associated with it.\n"
+		footerText += fmt.Sprintf("Currently viewing No. %d of %d", currentNum, totalNum)
 	}
-	avatar = user.AvatarURL()
+
+	if systemMemberId == "" { // main account
+		var user *harmony.User
+		var err error
+
+		name, user, err = b.b.GetNickname(uid, guildId)
+		if err != nil {
+			return nil, err
+		}
+		avatar = user.AvatarURL()
+	} else {
+		member, err := pluralkit.MemberByMemberId(systemMemberId)
+		if err != nil {
+			return nil, err
+		}
+
+		if member.Nickname == "" {
+			name = member.Name
+		} else {
+			name = member.Nickname
+		}
+
+		avatar = member.Avatar
+
+		footerText += fmt.Sprintf("\nPluralKit member ID: %s", systemMemberId)
+	}
 
 	e := embed.New()
 	e.Thumbnail(embed.NewThumbnail(avatar))
 	e.Title(fmt.Sprintf("%s's bio", name))
+	e.Footer(embed.NewFooter().Text(footerText).Build())
 
 	var fields []*embed.Field
 	for _, category := range b.data.Fields {
