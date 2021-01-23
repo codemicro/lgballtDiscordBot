@@ -3,15 +3,29 @@ package bios
 import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/skwair/harmony/embed"
 	"strings"
+	"sync"
 )
 
-const maxBioFieldLen = 1024
+const (
+	maxBioFieldLen = 1024
+	nextBioReaction = "➡️"
+	previousBioReaction = "⬅️"
+)
 
 type Bios struct {
 	b    *core.Bot
 	data biosData
+	trackerLock *sync.RWMutex
+	trackedEmbeds []trackedEmbed
+}
+
+type trackedEmbed struct {
+	messageId string
+	channelId string
+	bios []db.UserBio
 }
 
 var biosHelpEmbed *embed.Embed
@@ -19,6 +33,7 @@ var biosHelpEmbed *embed.Embed
 func New(bot *core.Bot) (*Bios, error) {
 	b := new(Bios)
 	b.b = bot
+	b.trackerLock = new(sync.RWMutex)
 
 	dt, err := loadBiosFile()
 	if err != nil {
