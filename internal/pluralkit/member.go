@@ -19,6 +19,7 @@ type Member struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Nickname    string `json:"display_name"`
+	Avatar      string `json:"avatar_url"`
 	Description string `json:"description"`
 	Pronouns    string `json:"pronouns"`
 	Birthday    string `json:"birthday"`
