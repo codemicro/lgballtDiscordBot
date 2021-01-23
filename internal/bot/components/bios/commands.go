@@ -17,8 +17,6 @@ func (b *Bios) Help(_ []string, m *harmony.Message) error {
 func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 	// Syntax: <user ID>
 
-	// TODO: carousel for systems
-
 	var id string
 	if len(command) >= 1 {
 		// If there's a ping as the argument, use the ID from that. Else, just use the plain argument
@@ -31,23 +29,36 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		id = m.Author.ID
 	}
 
-	bdt := new(db.UserBio)
-	bdt.UserId = id
-	ok, err := bdt.Populate()
+	// TODO: This is temporary, and needs properly updating. Perhaps also moving to core?
+
+	bios, err := db.GetBiosForAccount(id)
 	if err != nil {
 		return err
 	}
-	bioData := bdt.BioData
 
-	if !ok {
-		// No bio for that user
+	if len(bios) == 0 {
 		_, err := b.b.SendMessage(m.ChannelID, "This user hasn't created a bio, or just plain doesn't exist.")
 		if err != nil {
 			return err
 		}
-	} else {
+	}
+
+	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(id, m.GuildID, bioData)
+		e, err := b.formBioEmbed(id, m.GuildID, "", bios[0].BioData, false, 0, 0)
+		if err != nil {
+			return err
+		}
+
+		_, err = b.b.SendEmbed(m.ChannelID, e)
+		if err != nil {
+			return err
+		}
+	}
+
+	for i, bio := range bios {
+		// Found a bio, now to form an embed
+		e, err := b.formBioEmbed(id, m.GuildID, bio.SysMemberID, bio.BioData, true, i+1, len(bios))
 		if err != nil {
 			return err
 		}
