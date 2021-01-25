@@ -43,9 +43,11 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		}
 	}
 
+	// Show first bio
+
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(id, m.GuildID, "", bios[0].BioData, false, 0, 0)
+		e, err := b.formBioEmbed(newAccountName(id, m.GuildID, nil, b.b), bios[0].BioData)
 		if err != nil {
 			return err
 		}
@@ -54,20 +56,38 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		if err != nil {
 			return err
 		}
+	} else {
+
+		totalBios := len(bios)
+
+		for i, bio := range bios {
+			// Found a bio, now to form an embed
+
+			plurality := &pluralityInfo{
+				CurrentNumber: i+1,
+				TotalCount:    totalBios,
+			}
+
+			var nd nameDriver
+			if bio.SysMemberID != "" {
+				nd = newSystemName(bio.SysMemberID, plurality)
+			} else {
+				nd = newAccountName(id, m.GuildID, plurality, b.b)
+			}
+
+			e, err := b.formBioEmbed(nd, bio.BioData)
+			if err != nil {
+				return err
+			}
+
+			_, err = b.b.SendEmbed(m.ChannelID, e)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
-	for i, bio := range bios {
-		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(id, m.GuildID, bio.SysMemberID, bio.BioData, true, i+1, len(bios))
-		if err != nil {
-			return err
-		}
 
-		_, err = b.b.SendEmbed(m.ChannelID, e)
-		if err != nil {
-			return err
-		}
-	}
 
 	return nil
 }

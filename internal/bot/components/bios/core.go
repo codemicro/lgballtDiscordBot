@@ -3,11 +3,13 @@ package bios
 import (
 	"context"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	"github.com/skwair/harmony"
 	"github.com/skwair/harmony/embed"
 	"strings"
+	"sync"
 )
 
 func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, m *harmony.Message) error {
@@ -95,42 +97,184 @@ func (b *Bios) clearBioField(bdt *db.UserBio, rawFieldName string, m *harmony.Me
 	return nil
 }
 
-// formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(uid, guildId string, systemMemberId string, bioData map[string]string, hasMultiple bool, currentNum, totalNum int) (*embed.Embed, error) {
+type pluralityInfo struct {
+	CurrentNumber int
+	TotalCount int
+}
 
-	var name string
-	var avatar string
-	var footerText string
+type nameDriver interface {
+	Name() (string, error)
+	Avatar() (string, error)
 
-	if hasMultiple {
-		footerText += "This account has multiple bios associated with it.\n"
-		footerText += fmt.Sprintf("Currently viewing No. %d of %d", currentNum, totalNum)
+	SysMemberId() string
+	HasMultiple() bool
+	CurrentAndTotalCount() (int, int)
+}
+
+type systemName struct {
+	memberId string
+	plurality *pluralityInfo
+
+	member   *pluralkit.Member
+	once     *sync.Once
+}
+
+func newSystemName(memberId string, info *pluralityInfo) *systemName {
+	return &systemName{
+		memberId: memberId,
+		plurality: info,
+	}
+}
+
+func (sn *systemName) fetchInformation() error {
+	if sn.once == nil {
+		sn.once = new(sync.Once)
 	}
 
-	if systemMemberId == "" { // main account
-		var user *harmony.User
-		var err error
-
-		name, user, err = b.b.GetNickname(uid, guildId)
+	var err error
+	sn.once.Do(func() {
+		var member *pluralkit.Member
+		member, err = pluralkit.MemberByMemberId(sn.memberId)
 		if err != nil {
-			return nil, err
+			return
 		}
-		avatar = user.AvatarURL()
+		sn.member = member
+	})
+	return err
+}
+
+func (sn *systemName) Name() (string, error) {
+	if err := sn.fetchInformation(); err != nil {
+		return "", err
+	}
+
+	var name string
+	if sn.member.Nickname == "" {
+		name = sn.member.Name
 	} else {
-		member, err := pluralkit.MemberByMemberId(systemMemberId)
+		name = sn.member.Nickname
+	}
+
+	return name, nil
+}
+
+func (sn *systemName) Avatar() (string, error) {
+	if err := sn.fetchInformation(); err != nil {
+		return "", err
+	}
+	return sn.member.Avatar, nil
+}
+
+func (sn *systemName) SysMemberId() string {
+	return sn.memberId
+}
+
+func (sn *systemName) HasMultiple() bool {
+	return sn.plurality != nil
+}
+
+func (sn *systemName) CurrentAndTotalCount() (int, int) {
+	if sn.plurality != nil {
+		return sn.plurality.CurrentNumber, sn.plurality.TotalCount
+	}
+	return 0, 0
+}
+
+type accountName struct {
+	accountId string
+	guildId string
+
+	name string
+	avatar string
+
+	plurality *pluralityInfo
+
+	user *harmony.User
+	bot *core.Bot
+
+	once *sync.Once
+}
+
+func newAccountName(accountId, guildId string, info *pluralityInfo, bot *core.Bot) *accountName {
+	return &accountName{
+		accountId: accountId,
+		guildId:   guildId,
+		plurality: info,
+		bot: bot,
+	}
+}
+
+func (an *accountName) fetchInformation() error {
+	if an.once == nil {
+		an.once = new(sync.Once)
+	}
+
+	var err error
+	an.once.Do(func() {
+		var name string
+		var user *harmony.User
+		name, user, err = an.bot.GetNickname(an.accountId, an.guildId)
 		if err != nil {
-			return nil, err
+			return
 		}
+		an.name = name
+		an.avatar = user.AvatarURL()
+	})
+	return err
+}
 
-		if member.Nickname == "" {
-			name = member.Name
-		} else {
-			name = member.Nickname
+func (an *accountName) Name() (string, error) {
+	if err := an.fetchInformation(); err != nil {
+		return "", err
+	}
+	return an.name, nil
+}
+
+func (an *accountName) Avatar() (string, error) {
+	if err := an.fetchInformation(); err != nil {
+		return "", err
+	}
+	return an.avatar, nil
+}
+
+func (an *accountName) SysMemberId() string {
+	return ""
+}
+
+func (an *accountName) HasMultiple() bool {
+	return an.plurality != nil
+}
+
+func (an *accountName) CurrentAndTotalCount() (int, int) {
+	if an.plurality != nil {
+		return an.plurality.CurrentNumber, an.plurality.TotalCount
+	}
+	return 0, 0
+}
+
+// formBioEmbed creates an embed object based on a user's bio data
+func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*embed.Embed, error) {
+
+	name, err := nd.Name()
+	if err != nil {
+		return nil, err
+	}
+
+	avatar, err := nd.Avatar()
+	if err != nil {
+		return nil, err
+	}
+
+	var footerText string
+
+	if nd.HasMultiple() {
+		footerText += "This account has multiple bios associated with it.\n"
+		curr, total := nd.CurrentAndTotalCount()
+		footerText += fmt.Sprintf("Currently viewing No. %d of %d", curr, total)
+
+		if nd.SysMemberId() != "" {
+			footerText += fmt.Sprintf("\nPluralKit member ID: %s", nd.SysMemberId())
 		}
-
-		avatar = member.Avatar
-
-		footerText += fmt.Sprintf("\nPluralKit member ID: %s", systemMemberId)
 	}
 
 	e := embed.New()
