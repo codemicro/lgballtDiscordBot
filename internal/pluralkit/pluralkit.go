@@ -62,8 +62,8 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	errorsByStatusCode map[int]error) error {
 
 	if x, found := responseCache.Get(url); found {
-		apiResp := x.([]byte)
-		return json.Unmarshal(apiResp, output)
+		apiResp := x.(*[]byte)
+		return json.Unmarshal(*apiResp, output)
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -96,7 +96,7 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 
 	// if we get here, that means we probably got a request we can use back
 	// hence we can cache it
-	responseCache.Set(url, respBodyContent, cache.DefaultExpiration)
+	responseCache.Set(url, &respBodyContent, cache.DefaultExpiration)
 
 	// parse response and return error or nil
 	return json.Unmarshal(respBodyContent, output)
