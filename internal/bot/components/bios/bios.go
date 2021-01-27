@@ -16,8 +16,7 @@ const (
 	maxBioFieldLen = 1024
 	nextBioReaction = "➡️"
 	previousBioReaction = "⬅️"
-	// bioTimeoutDuration = time.Minute * 5 // DEBUG
-	bioTimeoutDuration = time.Second * 30
+	bioTimeoutDuration = time.Minute * 5
 )
 
 type Bios struct {
@@ -29,6 +28,7 @@ type Bios struct {
 
 type trackedEmbed struct {
 	current int
+	accountId string
 	channelId string
 	bios []db.UserBio
 	timeoutAt time.Time

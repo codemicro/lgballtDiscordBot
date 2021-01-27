@@ -47,7 +47,7 @@ func (b *Bios) ReactionAdd(e *harmony.MessageReaction) error {
 	if tracked.bios[newBioIndex].SysMemberID != "" { // account bios will have a blank system member ID
 		nd = newSystemName(tracked.bios[newBioIndex].SysMemberID, plurality)
 	} else {
-		nd = newAccountName(e.UserID, e.GuildID, plurality, b.b)
+		nd = newAccountName(tracked.accountId, e.GuildID, plurality, b.b)
 	}
 
 	newEmbed, err := b.formBioEmbed(nd, tracked.bios[newBioIndex].BioData)
