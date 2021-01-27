@@ -11,6 +11,7 @@ require (
 	github.com/klauspost/compress v1.11.3 // indirect
 	github.com/mattn/go-sqlite3 v1.14.6 // indirect
 	github.com/mmcdole/gofeed v1.1.0
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/skwair/harmony v0.18.1-0.20201226223038-d8b646116d44
 	github.com/tinylib/msgp v1.1.5
 	github.com/wcharczuk/go-chart/v2 v2.1.0

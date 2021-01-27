@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/patrickmn/go-cache"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -51,12 +52,19 @@ func newApiError(statusCode int, responseBody []byte) *ApiError {
 	}
 }
 
+var responseCache = cache.New(5*time.Minute, 10*time.Minute)
+
 // orchestrateRequest takes various parameters, makes a request and returns an error. output should be a variable that
 // can be used to unmarshal response JSON into. isStatusCode should be a function that returns true if a status code is
 // received that does not indicate a failed request. errorsByStatusCode is a map of errors that should be returned in
 // the event a specific status code is returned from the API.
 func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int) bool,
 	errorsByStatusCode map[int]error) error {
+
+	if x, found := responseCache.Get(url); found {
+		apiResp := x.([]byte)
+		return json.Unmarshal(apiResp, output)
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -85,6 +93,10 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	if !isStatusCodeOk(resp.StatusCode) {
 		return newApiError(resp.StatusCode, respBodyContent)
 	}
+
+	// if we get here, that means we probably got a request we can use back
+	// hence we can cache it
+	responseCache.Set(url, respBodyContent, cache.DefaultExpiration)
 
 	// parse response and return error or nil
 	return json.Unmarshal(respBodyContent, output)
