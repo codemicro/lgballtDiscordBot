@@ -19,7 +19,7 @@ func (b *Bios) SetFieldSystem(command []string, m *harmony.Message) error {
 	bdt.UserId = m.Author.ID
 	bdt.SysMemberID = command[0]
 
-	return b.setBioField(bdt, command[1], newValue, m)
+	return b.setBioField(bdt, command[1], newValue, true, m)
 }
 
 func (b *Bios) ClearFieldSystem(command []string, m *harmony.Message) error {

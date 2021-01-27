@@ -113,7 +113,7 @@ func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	bdt := new(db.UserBio)
 	bdt.UserId = m.Author.ID
 
-	return b.setBioField(bdt, command[0], newValue, m)
+	return b.setBioField(bdt, command[0], newValue, false, m)
 }
 
 // ClearField runs the bio field clear command

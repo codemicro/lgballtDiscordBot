@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, m *harmony.Message) error {
+func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, isSysmate bool, m *harmony.Message) error {
 	fieldName, validFieldName := b.validateFieldName(rawFieldName)
 	if !validFieldName {
 		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the "+
@@ -38,6 +38,11 @@ func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, m *ha
 	bdt.BioData[fieldName] = newValue
 
 	if !hasBio {
+		if isSysmate {
+			_, err := b.b.SendMessage(m.ChannelID, fmt.Sprintf("This member is not registered to your Discord " +
+				"account with the bot. Please import this member using `$bio import %s`", bdt.SysMemberID))
+			return err
+		}
 		err = bdt.Create()
 	} else {
 		err = bdt.Save()
