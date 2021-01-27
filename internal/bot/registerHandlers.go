@@ -94,7 +94,6 @@ func RegisterHandlers(b *core.Bot) error {
 			messageComponents = append(modMessageComp, messageComponents[1:]...)
 		}
 
-
 		// strings.Split will never return a empty slice - this can lead to a slice with a single empty string in it
 		// being returned, signifying that the input string was the prefix alone.
 		// in this case, we just empty the message components slice

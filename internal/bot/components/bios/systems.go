@@ -31,4 +31,3 @@ func (b *Bios) ClearFieldSystem(command []string, m *harmony.Message) error {
 
 	return b.clearBioField(bdt, command[1], m)
 }
-

@@ -39,24 +39,24 @@ type RedditFeedInfo struct {
 }
 
 type PkApiInfo struct {
-	ContactEmail string `json:"contactEmail"`
-	ApiUrl       string `json:"apiUrl"`
-	MinRequestDelay int `json:"minReqDelay"`
-	NumWorkers int `json:"numWorkers"`
+	ContactEmail    string `json:"contactEmail"`
+	ApiUrl          string `json:"apiUrl"`
+	MinRequestDelay int    `json:"minReqDelay"`
+	NumWorkers      int    `json:"numWorkers"`
 }
 
 var (
-	Token string
-	Prefix string
-	DbFileName string
-	Statuses []string
-	DebugMode bool
-	AdminRole string
-	VerificationIDs VerificationIds
-	RedditFeeds []RedditFeedInfo
+	Token                      string
+	Prefix                     string
+	DbFileName                 string
+	Statuses                   []string
+	DebugMode                  bool
+	AdminRole                  string
+	VerificationIDs            VerificationIds
+	RedditFeeds                []RedditFeedInfo
 	ChatChartChannelExclusions []string
-	OwnerId string
-	PkApi PkApiInfo
+	OwnerId                    string
+	PkApi                      PkApiInfo
 )
 
 func init() {
@@ -86,7 +86,7 @@ func init() {
 	OwnerId = cfg.OwnerId
 	PkApi = cfg.PkApi
 
-	if PkApi.ApiUrl[len(PkApi.ApiUrl) - 1] == '/' {
+	if PkApi.ApiUrl[len(PkApi.ApiUrl)-1] == '/' {
 		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]
 	}
 

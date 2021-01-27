@@ -13,24 +13,24 @@ import (
 )
 
 const (
-	maxBioFieldLen = 1024
-	nextBioReaction = "➡️"
+	maxBioFieldLen      = 1024
+	nextBioReaction     = "➡️"
 	previousBioReaction = "⬅️"
-	bioTimeoutDuration = time.Minute * 5
+	bioTimeoutDuration  = time.Minute * 5
 )
 
 type Bios struct {
-	b    *core.Bot
-	data biosData
-	trackerLock *sync.RWMutex
+	b             *core.Bot
+	data          biosData
+	trackerLock   *sync.RWMutex
 	trackedEmbeds map[string]*trackedEmbed // map of message IDs to tracked embed objects
 }
 
 type trackedEmbed struct {
-	current int
+	current   int
 	accountId string
 	channelId string
-	bios []db.UserBio
+	bios      []db.UserBio
 	timeoutAt time.Time
 }
 

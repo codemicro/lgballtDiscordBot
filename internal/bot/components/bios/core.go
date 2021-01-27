@@ -66,7 +66,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, rawFieldName string, m *harmony.Me
 		return err
 	}
 
-	if !hasBio {  // This theoretically will never happen because of the MID check on the route phase, but I'm leaving a
+	if !hasBio { // This theoretically will never happen because of the MID check on the route phase, but I'm leaving a
 		// check here anyway
 		_, err := b.b.SendMessage(m.ChannelID, "You have not created a bio, hence there is nothing to delete anything from.")
 		return err
@@ -99,7 +99,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, rawFieldName string, m *harmony.Me
 
 type pluralityInfo struct {
 	CurrentNumber int
-	TotalCount int
+	TotalCount    int
 }
 
 type nameDriver interface {
@@ -112,16 +112,16 @@ type nameDriver interface {
 }
 
 type systemName struct {
-	memberId string
+	memberId  string
 	plurality *pluralityInfo
 
-	member   *pluralkit.Member
-	once     *sync.Once
+	member *pluralkit.Member
+	once   *sync.Once
 }
 
 func newSystemName(memberId string, info *pluralityInfo) *systemName {
 	return &systemName{
-		memberId: memberId,
+		memberId:  memberId,
 		plurality: info,
 	}
 }
@@ -182,15 +182,15 @@ func (sn *systemName) CurrentAndTotalCount() (int, int) {
 
 type accountName struct {
 	accountId string
-	guildId string
+	guildId   string
 
-	name string
+	name   string
 	avatar string
 
 	plurality *pluralityInfo
 
 	user *harmony.User
-	bot *core.Bot
+	bot  *core.Bot
 
 	once *sync.Once
 }
@@ -200,7 +200,7 @@ func newAccountName(accountId, guildId string, info *pluralityInfo, bot *core.Bo
 		accountId: accountId,
 		guildId:   guildId,
 		plurality: info,
-		bot: bot,
+		bot:       bot,
 	}
 }
 
