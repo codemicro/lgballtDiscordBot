@@ -57,6 +57,7 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 		//  * normal field update
 		//  * sysmate field update
 		//  * sysmate field clear
+		//  * sysmate import
 
 		accBios, err := db.GetBiosForAccount(m.Author.ID)
 		if err != nil {
@@ -64,7 +65,12 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 			return
 		}
 
-		if _, isFieldName := b.validateFieldName(args[0]); isFieldName {
+		if strings.EqualFold(args[0], "import") {
+			err := b.ImportSystemMember(args[1:], m)
+			if err != nil {
+				logging.Error(err, "bios.Bios.ImportSystemMember")
+			}
+		} else if _, isFieldName := b.validateFieldName(args[0]); isFieldName {
 			err := b.SetField(args, m)
 			if err != nil {
 				logging.Error(err, "bios.Bios.SetField")
@@ -81,15 +87,6 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 				logging.Error(err, "bios.Bios.SetFieldSystem")
 			}
 		}
-		//} else {
-		//	// This either means that the field name was not recognised or the member ID was not found
-		//	// TODO: check this error message accurately describes the predicament
-		//	_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name or a recognised PluralKit member " +
-		//		"ID. Available field names are " + strings.Join(b.data.Fields, ", "))
-		//	if err != nil {
-		//		logging.Error(err, "final parse fail message in bios.RouteMessage")
-		//	}
-		//}
 	}
 
 }

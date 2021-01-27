@@ -31,8 +31,6 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		id = m.Author.ID
 	}
 
-	// TODO: This is temporary, and needs properly updating. Perhaps also moving to core?
-
 	bios, err := db.GetBiosForAccount(id)
 	if err != nil {
 		return err
