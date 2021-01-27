@@ -1,10 +1,12 @@
 package bios
 
 import (
+	"context"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
 	"strings"
+	"time"
 )
 
 // Help sends the bios help embed message
@@ -38,12 +40,8 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 
 	if len(bios) == 0 {
 		_, err := b.b.SendMessage(m.ChannelID, "This user hasn't created a bio, or just plain doesn't exist.")
-		if err != nil {
-			return err
-		}
+		return err
 	}
-
-	// Show first bio
 
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed
@@ -60,34 +58,48 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 
 		totalBios := len(bios)
 
-		for i, bio := range bios {
-			// Found a bio, now to form an embed
+		tracker := &trackedEmbed{
+			channelId: m.ChannelID,
+			bios:      bios,
+			timeoutAt: time.Now().Add(bioTimeoutDuration),
+		}
 
-			plurality := &pluralityInfo{
-				CurrentNumber: i+1,
-				TotalCount:    totalBios,
-			}
+		// send first bio
 
-			var nd nameDriver
-			if bio.SysMemberID != "" {
-				nd = newSystemName(bio.SysMemberID, plurality)
-			} else {
-				nd = newAccountName(id, m.GuildID, plurality, b.b)
-			}
+		plurality := &pluralityInfo{
+			CurrentNumber: tracker.current + 1,
+			TotalCount:    totalBios,
+		}
 
-			e, err := b.formBioEmbed(nd, bio.BioData)
-			if err != nil {
-				return err
-			}
+		var nd nameDriver
+		if bios[0].SysMemberID != "" { // account bios will have a blank system member ID
+			nd = newSystemName(bios[0].SysMemberID, plurality)
+		} else {
+			nd = newAccountName(id, m.GuildID, plurality, b.b)
+		}
 
-			_, err = b.b.SendEmbed(m.ChannelID, e)
+		e, err := b.formBioEmbed(nd, bios[0].BioData)
+		if err != nil {
+			return err
+		}
+
+		sentMessage, err := b.b.SendEmbed(m.ChannelID, e)
+		if err != nil {
+			return err
+		}
+
+		b.trackerLock.Lock()
+		b.trackedEmbeds[sentMessage.ID] = tracker
+		b.trackerLock.Unlock()
+
+		for _, v := range []string{previousBioReaction, nextBioReaction} {
+			err := b.b.Client.Channel(sentMessage.ChannelID).AddReaction(context.Background(), sentMessage.ID, v)
 			if err != nil {
 				return err
 			}
 		}
+
 	}
-
-
 
 	return nil
 }

@@ -214,7 +214,12 @@ func RegisterHandlers(b *core.Bot) error {
 			}
 		}
 
-		err := roleComponent.ReactionAdd(r)
+		err := bioComponent.ReactionAdd(r)
+		if err != nil {
+			logging.Error(err, "bioComponent.ReactionAdd")
+		}
+
+		err = roleComponent.ReactionAdd(r)
 		if err != nil {
 			logging.Error(err)
 		}
