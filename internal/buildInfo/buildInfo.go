@@ -6,10 +6,10 @@ import (
 )
 
 const (
-    Version = "3.0.0dev"
-    BuildDate = "16/01/2021 at 17:39:42"
-    LinesOfCode = "2491"
-    NumFiles = "41"
+    Version = "3.0.0"
+    BuildDate = "28/01/2021 at 20:59:20"
+    LinesOfCode = "3003"
+    NumFiles = "46"
 )
 
 var (

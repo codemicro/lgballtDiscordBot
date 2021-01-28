@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-01-28
+### Added
+* Bios for systems (**BREAKING**)
+  * Migration script available - `migration/toV3.py`
+
 ## [2.0.2] - 2021-01-23
 ### Added
 * `<p>shutdown` command
@@ -181,7 +186,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v1.8.4...v2.0.0
