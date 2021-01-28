@@ -2,12 +2,11 @@ package bios
 
 import (
 	"context"
-	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/skwair/harmony"
-	"github.com/skwair/harmony/embed"
 	"strings"
+	"time"
 )
 
 // Help sends the bios help embed message
@@ -32,22 +31,19 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		id = m.Author.ID
 	}
 
-	bdt := new(db.UserBio)
-	ok, err := bdt.Populate(id)
+	bios, err := db.GetBiosForAccount(id)
 	if err != nil {
 		return err
 	}
-	bioData := bdt.BioData
 
-	if !ok {
-		// No bio for that user
+	if len(bios) == 0 {
 		_, err := b.b.SendMessage(m.ChannelID, "This user hasn't created a bio, or just plain doesn't exist.")
-		if err != nil {
-			return err
-		}
-	} else {
+		return err
+	}
+
+	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(id, m.GuildID, bioData)
+		e, err := b.formBioEmbed(newAccountName(id, m.GuildID, nil, b.b), bios[0].BioData)
 		if err != nil {
 			return err
 		}
@@ -56,6 +52,52 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		if err != nil {
 			return err
 		}
+	} else {
+
+		totalBios := len(bios)
+
+		tracker := &trackedEmbed{
+			accountId: m.Author.ID,
+			channelId: m.ChannelID,
+			bios:      bios,
+			timeoutAt: time.Now().Add(bioTimeoutDuration),
+		}
+
+		// send first bio
+
+		plurality := &pluralityInfo{
+			CurrentNumber: tracker.current + 1,
+			TotalCount:    totalBios,
+		}
+
+		var nd nameDriver
+		if bios[0].SysMemberID != "" { // account bios will have a blank system member ID
+			nd = newSystemName(bios[0].SysMemberID, plurality)
+		} else {
+			nd = newAccountName(id, m.GuildID, plurality, b.b)
+		}
+
+		e, err := b.formBioEmbed(nd, bios[0].BioData)
+		if err != nil {
+			return err
+		}
+
+		sentMessage, err := b.b.SendEmbed(m.ChannelID, e)
+		if err != nil {
+			return err
+		}
+
+		b.trackerLock.Lock()
+		b.trackedEmbeds[sentMessage.ID] = tracker
+		b.trackerLock.Unlock()
+
+		for _, v := range []string{previousBioReaction, nextBioReaction} {
+			err := b.b.Client.Channel(sentMessage.ChannelID).AddReaction(context.Background(), sentMessage.ID, v)
+			if err != nil {
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -65,126 +107,19 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 func (b *Bios) SetField(command []string, m *harmony.Message) error {
 	// Syntax: <field name> <value>
 
-	properFieldName, validFieldName := b.validateFieldName(command[0])
-
-	if !validFieldName {
-		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid field name! Choose from one of the "+
-			"following: "+strings.Join(b.data.Fields, ", "))
-
-		return err
-	}
-
 	newValue := strings.Join(command[1:], " ")
-
-	if len(newValue) > maxBioFieldLen {
-		_, err := b.b.SendMessage(m.ChannelID, "Sorry - the new text you have entered is too long (this is a "+
-			"Discord limitation). Please limit each field of your bio to `1024` characters.")
-		return err
-	}
-
 	bdt := new(db.UserBio)
-	hasBio, err := bdt.Populate(m.Author.ID)
-	if err != nil {
-		return err
-	}
-	bioData := bdt.BioData
+	bdt.UserId = m.Author.ID
 
-	if !hasBio {
-		bioData = make(map[string]string)
-		bioData[properFieldName] = newValue
-	} else {
-		bioData[properFieldName] = newValue
-	}
-
-	bdt.BioData = bioData
-
-	if !hasBio {
-		err = bdt.Create()
-	} else {
-		err = bdt.Save()
-	}
-
-	if err != nil {
-		return err
-	}
-
-	// react to message with a check mark to signify it worked
-	err = b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
-	return err
+	return b.setBioField(bdt, command[0], newValue, false, m)
 }
 
 // ClearField runs the bio field clear command
 func (b *Bios) ClearField(command []string, m *harmony.Message) error {
 	// Syntax: <field name>
 
-	properFieldName, validFieldName := b.validateFieldName(command[0])
-
-	if !validFieldName {
-		_, err := b.b.SendMessage(m.ChannelID, "That's not a valid bio field.")
-		return err
-	}
-
 	bdt := new(db.UserBio)
-	hasBio, err := bdt.Populate(m.Author.ID)
-	if err != nil {
-		return err
-	}
+	bdt.UserId = m.Author.ID
 
-	if !hasBio {
-		_, err := b.b.SendMessage(m.ChannelID, "You have not created a bio, hence there is nothing to delete anything from.")
-		return err
-	}
-
-	delete(bdt.BioData, properFieldName)
-
-	if len(bdt.BioData) == 0 {
-		// There are no fields left in the bio, so we shall delete it
-		err = bdt.Delete()
-	} else {
-		// Else save as normal
-		err = bdt.Save()
-	}
-
-	if err != nil {
-		return err
-	}
-
-	// react to message with a check mark to signify it worked
-	for _, v := range []string{"🗑", "✅"} {
-		err := b.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, v)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(uid, guildId string, bioData map[string]string) (*embed.Embed, error) {
-
-	var name string
-	var avatar string
-
-	name, user, err := b.b.GetNickname(uid, guildId)
-	if err != nil {
-		return nil, err
-	}
-	avatar = user.AvatarURL()
-
-	e := embed.New()
-	e.Thumbnail(embed.NewThumbnail(avatar))
-	e.Title(fmt.Sprintf("%s's bio", name))
-
-	var fields []*embed.Field
-	for _, category := range b.data.Fields {
-		fVal, ok := bioData[category]
-		if ok {
-			fields = append(fields, embed.NewField().Name(category).Value(fVal).Build())
-		}
-	}
-
-	e.Fields(fields...)
-
-	return e.Build(), nil
+	return b.clearBioField(bdt, command[0], m)
 }

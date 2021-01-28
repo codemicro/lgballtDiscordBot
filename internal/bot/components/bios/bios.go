@@ -1,17 +1,37 @@
 package bios
 
 import (
+	"context"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/skwair/harmony/embed"
 	"strings"
+	"sync"
+	"time"
 )
 
-const maxBioFieldLen = 1024
+const (
+	maxBioFieldLen      = 1024
+	nextBioReaction     = "➡️"
+	previousBioReaction = "⬅️"
+	bioTimeoutDuration  = time.Minute * 5
+)
 
 type Bios struct {
-	b    *core.Bot
-	data biosData
+	b             *core.Bot
+	data          biosData
+	trackerLock   *sync.RWMutex
+	trackedEmbeds map[string]*trackedEmbed // map of message IDs to tracked embed objects
+}
+
+type trackedEmbed struct {
+	current   int
+	accountId string
+	channelId string
+	bios      []db.UserBio
+	timeoutAt time.Time
 }
 
 var biosHelpEmbed *embed.Embed
@@ -19,6 +39,34 @@ var biosHelpEmbed *embed.Embed
 func New(bot *core.Bot) (*Bios, error) {
 	b := new(Bios)
 	b.b = bot
+	b.trackerLock = new(sync.RWMutex)
+	b.trackedEmbeds = make(map[string]*trackedEmbed)
+
+	// goroutine to close tracked embeds when they timeout
+	go func() {
+		for {
+			time.Sleep(time.Second * 30)
+			b.trackerLock.Lock()
+
+			var toRemove []string
+			for key, tracked := range b.trackedEmbeds {
+				if tracked.timeoutAt.Before(time.Now()) {
+					// this embed has timed out
+					toRemove = append(toRemove, key)
+				}
+			}
+
+			for _, key := range toRemove {
+				err := b.b.Client.Channel(b.trackedEmbeds[key].channelId).RemoveAllReactions(context.Background(), key)
+				if err != nil {
+					logging.Error(err, fmt.Sprintf("unable to clear reactions from tracked message %s", key))
+				}
+				delete(b.trackedEmbeds, key)
+			}
+
+			b.trackerLock.Unlock()
+		}
+	}()
 
 	dt, err := loadBiosFile()
 	if err != nil {

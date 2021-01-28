@@ -143,3 +143,6 @@ $RECYCLE.BIN/
 token.txt
 run/
 build/
+internal/pluralkit/member_test.go
+
+internal/pluralkit/system_test.go

@@ -6,6 +6,8 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
 	"os"
 )
 
@@ -15,8 +17,20 @@ func init() {
 
 	fmt.Println("Setting up db")
 
+	dbConfig := new(gorm.Config)
+
+	if config.DebugMode {
+		dbConfig.Logger = logger.New(
+			log.New(os.Stdout, "\n", log.LstdFlags),
+			logger.Config{
+				LogLevel: logger.Info,
+				Colorful: true,
+			},
+		)
+	}
+
 	var err error
-	Conn, err = gorm.Open(sqlite.Open(config.DbFileName), &gorm.Config{})
+	Conn, err = gorm.Open(sqlite.Open(config.DbFileName), dbConfig)
 	if err != nil {
 		logging.Error(err, fmt.Sprintf("Unable to open db file %s", config.DbFileName))
 		os.Exit(1)
