@@ -52,7 +52,7 @@ func newApiError(statusCode int, responseBody []byte) *ApiError {
 	}
 }
 
-var responseCache = cache.New(5*time.Minute, 10*time.Minute)
+var responseCache = cache.New(3*time.Minute, 5*time.Minute)
 
 // orchestrateRequest takes various parameters, makes a request and returns an error. output should be a variable that
 // can be used to unmarshal response JSON into. isStatusCode should be a function that returns true if a status code is
