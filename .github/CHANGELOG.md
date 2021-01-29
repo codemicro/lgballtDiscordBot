@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * Bios for systems (**BREAKING**)
   * Migration script available - `migration/toV3.py`
+* `pkApi` config field
 
 ## [2.0.2] - 2021-01-23
 ### Added
