@@ -11,11 +11,7 @@ import (
 )
 
 func (b *Bios) HelpSystem(_ []string, m *harmony.Message) error {
-	_, err := b.b.SendMessage(m.ChannelID, systemBiosPt1)
-	if err != nil {
-		return err
-	}
-	_, err = b.b.SendMessage(m.ChannelID, systemBiosPt2)
+	_, err := b.b.SendMessage(m.ChannelID, systemBiosText)
 	return err
 }
 
