@@ -40,7 +40,7 @@ func (b *Bios) ClearFieldSystem(command []string, m *harmony.Message) error {
 	return b.clearBioField(bdt, command[1], m)
 }
 
-var sysmateDetectionBio = regexp.MustCompile(`(?m)[a-zA-Z]{5}`)
+var sysmateDetectionBio = regexp.MustCompile(`(?m)^[a-zA-Z]{5}$`)
 
 func (b *Bios) ImportSystemMember(command []string, m *harmony.Message) error {
 	// Syntax: <member ID>
@@ -70,16 +70,44 @@ func (b *Bios) ImportSystemMember(command []string, m *harmony.Message) error {
 		}
 	}
 
-	// get bio
-	pkMember, err := pluralkit.MemberByMemberId(memberId)
+	// check to see if account has a system
+	systemInfo, err := pluralkit.SystemByDiscordAccount(m.Author.ID)
 	if err != nil {
-		if errors.Is(err, pluralkit.ErrorMemberNotFound) {
-			_, err := b.b.SendMessage(m.ChannelID, "This member ID is not recognised by the PluralKit API (is" +
-				" this a valid member ID?)\nThe PluralKit API returned a HTTP 404.")
+		if errors.Is(err, pluralkit.ErrorAccountHasNoSystem) {
+			_, err := b.b.SendMessage(m.ChannelID, "Your Discord account has no PluralKit systems associated " +
+				"with it.")
 			return err
 		}
 		return err
 	}
+
+	// check system has the specified member ID as a listed member
+	systemMembers, err := pluralkit.MembersBySystemId(systemInfo.Id)
+	if err != nil {
+		if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
+			_, err := b.b.SendMessage(m.ChannelID, "Your system has the member list set to **private**. " +
+				"Please set this to public and try again (HTTP 403)")
+			return err
+		}
+		return err
+	}
+
+	var pkMember *pluralkit.Member
+	for _, sysm := range systemMembers {
+		if strings.EqualFold(sysm.Id, memberId) {
+			pkMember = sysm
+			break
+		}
+	}
+
+	if pkMember == nil {
+		_, err := b.b.SendMessage(m.ChannelID, "Your system has has no member with the given ID. If you're " +
+			"sure there's a registered member with this ID, make sure the member visibility privacy level is set to " +
+			"**public**.")
+		return err
+	}
+
+	// make bio
 
 	var otherText, pronounsText string
 
