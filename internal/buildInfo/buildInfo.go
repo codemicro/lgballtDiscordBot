@@ -6,9 +6,9 @@ import (
 )
 
 const (
-    Version = "3.0.0"
-    BuildDate = "29/01/2021 at 09:52:20"
-    LinesOfCode = "3017"
+    Version = "3.0.1"
+    BuildDate = "29/01/2021 at 11:04:56"
+    LinesOfCode = "3020"
     NumFiles = "46"
 )
 

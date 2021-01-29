@@ -57,7 +57,7 @@ func (b *Bios) ReadBio(command []string, m *harmony.Message) error {
 		totalBios := len(bios)
 
 		tracker := &trackedEmbed{
-			accountId: m.Author.ID,
+			accountId: id,
 			channelId: m.ChannelID,
 			bios:      bios,
 			timeoutAt: time.Now().Add(bioTimeoutDuration),
