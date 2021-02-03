@@ -97,6 +97,10 @@ func MakePing(uid string) string {
 	return "<@!" + uid + ">"
 }
 
+func MakeRolePing(rid string) string {
+	return "<@&" + rid + ">"
+}
+
 var rolePingFilterRegex = regexp.MustCompile(`<@&\d+>`)
 
 func FilterRolePing(instr string) string {

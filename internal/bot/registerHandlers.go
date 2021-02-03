@@ -183,6 +183,8 @@ func RegisterHandlers(b *core.Bot) error {
 			(tools.IsStringInSlice(config.AdminRole, m.Member.Roles) || m.Author.ID == config.OwnerId ||
 				config.DebugMode) {
 
+			// ---------- SHUTDOWN -------------
+
 			// Goodnight.
 
 			logging.Info(fmt.Sprintf("Shutting down from command by %s %s#%s", m.Author.ID, m.Author.Username,
@@ -191,6 +193,15 @@ func RegisterHandlers(b *core.Bot) error {
 			_, _ = b.SendMessage(m.ChannelID, "Bye-bye!")
 
 			b.State.ShutdownSignal <- state.CustomShutdownSignal{}
+
+		} else if strings.EqualFold("listener", messageComponents[0]) {
+
+			// ---------- LISTENER -------------
+
+			err := miscComponent.ListenToMe(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "miscComponent.ListenToMe")
+			}
 
 		}
 
@@ -226,6 +237,11 @@ func RegisterHandlers(b *core.Bot) error {
 		err = miscComponent.PressFReaction(r)
 		if err != nil {
 			logging.Error(err, "miscComponent.PressFReaction")
+		}
+
+		err = miscComponent.ListenerReaction(r)
+		if err != nil {
+			logging.Error(err, "miscComponent.ListenerReaction")
 		}
 	})
 

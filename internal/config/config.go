@@ -22,6 +22,12 @@ type Info struct {
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`
 	OwnerId                    string           `json:"ownerId"`
 	PkApi                      PkApiInfo        `json:"pkApi"`
+	Listeners                  ListenerInfo     `json:"listeners"`
+}
+
+type ListenerInfo struct {
+	RoleId string `json:"roleId"`
+	AllowedChannels []string `json:"allowedChannels"`
 }
 
 type VerificationIds struct {
@@ -57,6 +63,7 @@ var (
 	ChatChartChannelExclusions []string
 	OwnerId                    string
 	PkApi                      PkApiInfo
+	Listeners               ListenerInfo
 )
 
 func init() {
@@ -85,6 +92,7 @@ func init() {
 	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions
 	OwnerId = cfg.OwnerId
 	PkApi = cfg.PkApi
+	Listeners = cfg.Listeners
 
 	if PkApi.ApiUrl[len(PkApi.ApiUrl)-1] == '/' {
 		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]
