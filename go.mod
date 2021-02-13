@@ -18,10 +18,8 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392 // indirect
 	golang.org/x/mod v0.4.0 // indirect
-	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
 	golang.org/x/sys v0.0.0-20201202213521-69691e467435 // indirect
 	golang.org/x/tools v0.0.0-20201229013931-929a8494cf60 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.20.11
 )

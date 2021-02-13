@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Bios for systems now don't fail if the member has been deleted
 
 ## [3.1.0] - 2021-02-03
 ### Added

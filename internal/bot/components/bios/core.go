@@ -2,6 +2,7 @@ package bios
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
@@ -261,18 +262,21 @@ func (an *accountName) CurrentAndTotalCount() (int, int) {
 func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*embed.Embed, error) {
 
 	name, err := nd.Name()
+	var avatar string
 	if err != nil {
-		return nil, err
-	}
-
-	avatar, err := nd.Avatar()
-	if err != nil {
-		return nil, err
+		name = "<unknown name>"
+	} else {
+		avatar, _ = nd.Avatar()
 	}
 
 	var footerText string
 
 	if nd.HasMultiple() {
+
+		if errors.Is(err, pluralkit.ErrorMemberNotFound) {
+			footerText += "⚠ This member appears to have been deleted from PluralKit ⚠\n"
+		}
+
 		footerText += "This account has multiple bios associated with it.\n"
 		curr, total := nd.CurrentAndTotalCount()
 		footerText += fmt.Sprintf("Currently viewing No. %d of %d", curr, total)
