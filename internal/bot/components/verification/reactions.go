@@ -84,7 +84,7 @@ func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
 	re := regexp.MustCompile(`(?m)\x60\x60\x60.*\x60\x60\x60`)
 	newContent := re.ReplaceAllString(m.Content, fmt.Sprintf("%s *Verification request was %s by %s at %s*",
 		actionEmoji, actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format("15:04 on 2 Jan 2006")))
-	newContent = strings.ReplaceAll(newContent, logHelpText, "")
+	newContent = strings.ReplaceAll(newContent, "\n" + logHelpText + "\n", "")
 
 	_, err = c.EditMessage(context.Background(), m.ID, newContent)
 	if err != nil {

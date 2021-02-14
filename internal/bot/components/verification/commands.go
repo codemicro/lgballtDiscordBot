@@ -14,7 +14,7 @@ import (
 func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelimit bool) error {
 
 	// check ratelimit
-	if val, found := verificationRatelimit[m.Author.ID]; found && time.Now().Before(val) && checkRatelimit {
+	if val, found := verificationRatelimit[m.Author.ID]; (found && time.Now().Before(val) && checkRatelimit) {
 		_, err := v.b.SendMessage(m.ChannelID, "You've already submitted a verification request. Please wait.")
 		return err
 	}
@@ -38,7 +38,7 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 		return err
 	}
 
-	var warning string
+	var warning []string
 
 	// check for failed verifications and bans/kicks
 	var removal db.UserRemove
@@ -53,22 +53,25 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 		if rsn == "" {
 			rsn = "none provided"
 		}
-		warning += fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: *%s*\n", removal.Action,
-			rsn)
+		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: " +
+			"*%s*\n", removal.Action, rsn))
 	}
 
 	if found, err := failure.Get(); err != nil {
 		return err
 	} else if found {
-		warning += fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. See %s\n", failure.MessageLink)
+		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. " +
+			"See %s\n", failure.MessageLink))
 	}
 
-	if warning != "" {
-		warning = "\n\n" + warning
+	warningString := strings.Join(warning, "\n")
+
+	if warningString != "" {
+		warningString = "\n\n" + warningString
 	}
 
 	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(m.Author.ID), m.Author.Username, m.Author.Discriminator, verificationText)
-	messagePartTwo := fmt.Sprintf("%s\n%s\n\n```%s```", warning, logHelpText, iu.toString())
+	messagePartTwo := fmt.Sprintf("%s\n%s\n\n```%s```", warningString, logHelpText, iu.toString())
 
 	var newMessage *harmony.Message
 
