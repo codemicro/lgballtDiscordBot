@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/messagetools"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
@@ -47,6 +48,11 @@ func RegisterHandlers(b *core.Bot) error {
 	}
 
 	verificationComponent, err := verification.New(b)
+	if err != nil {
+		return err
+	}
+
+	messageToolsComponent, err := messagetools.New(b)
 	if err != nil {
 		return err
 	}
@@ -122,6 +128,9 @@ func RegisterHandlers(b *core.Bot) error {
 
 		} else if strings.EqualFold(messageComponents[0], "chatchart") {
 			chartComponent.RouteMessage(messageComponents[1:], m)
+
+		} else if strings.EqualFold(messageComponents[0], "m") {
+			messageToolsComponent.RouteMessage(messageComponents[1:], m)
 
 		} else if strings.EqualFold(messageComponents[0], "avatar") {
 

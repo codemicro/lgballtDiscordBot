@@ -11,14 +11,14 @@ var messageLinkRegexp = regexp.MustCompile(`(?m)https://(.+)?discord(?:app)?\.co
 func ParseMessageLink(link string) (guildId, channelId, messageId string, valid bool) {
 
 	// This is a message link: https://discord.com/channels/<guild ID>/<channel ID>/<message ID>
-	matches := messageLinkRegexp.FindAllStringSubmatch(link, -1)
+	matches := messageLinkRegexp.FindStringSubmatch(link)
 	if len(matches) == 0 {
 		return
 	}
 
-	guildId = matches[0][2]
-	channelId = matches[0][3]
-	messageId = matches[0][4]
+	guildId = matches[2]
+	channelId = matches[3]
+	messageId = matches[4]
 	valid = true
 
 	return

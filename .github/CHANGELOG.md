@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * Verification now states the Reddit account age if one is specified
+* Admin command to send/edit bot messages 
 ### Fixed
 * Bios for systems now don't fail if the member has been deleted
 
