@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.2.0] - 2021-02-15
 ### Added
 * Verification now states the Reddit account age if one is specified
 * Admin command to send/edit bot messages 
@@ -200,9 +202,10 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.1.0...HEAD
-[3.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.1...v3.1.0
-[3.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.0...v3.0.1
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.1.0...v3.2.0
+[3.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.1...v3.1.0
+[3.0.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v2.0.0...v2.0.1
