@@ -64,14 +64,28 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 			"See %s\n", failure.MessageLink))
 	}
 
-	warningString := strings.Join(warning, "\n")
+	warningString := strings.Trim(strings.Join(warning, "\n"), "\n")
 
 	if warningString != "" {
 		warningString = "\n\n" + warningString
 	}
 
+	// look for reddit account name
+	redditUsername := findRedditUsername(m.Content)
+
+	// form messages
 	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(m.Author.ID), m.Author.Username, m.Author.Discriminator, verificationText)
-	messagePartTwo := fmt.Sprintf("%s\n%s\n\n```%s```", warningString, logHelpText, iu.toString())
+
+	var messagePartTwo string
+
+	messagePartTwo += warningString
+
+	if redditUsername != "" {
+		messagePartTwo += "\n\n🕰 **Reddit account age**: *loading...*"
+	}
+
+	messagePartTwo += "\n\n" + logHelpText
+	messagePartTwo += "\n\n" + fmt.Sprintf("```%s```", iu.toString())
 
 	var newMessage *harmony.Message
 
@@ -90,6 +104,14 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 		if err != nil {
 			return err
 		}
+	}
+
+	if redditUsername != "" {
+		go func() {
+			// This can take a moment or two, because Reddit is abysmally slow
+			accAge := getRedditAccountAge(redditUsername)
+			v.b.Client.Channel(OutputChannelId).EditMessage(context.Background(), newMessage.ID, strings.ReplaceAll(newMessage.Content, "*loading...*", accAge))
+		}()
 	}
 
 	// track ratelimit
