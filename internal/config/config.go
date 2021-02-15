@@ -26,7 +26,7 @@ type Info struct {
 }
 
 type ListenerInfo struct {
-	RoleId string `json:"roleId"`
+	RoleId          string   `json:"roleId"`
 	AllowedChannels []string `json:"allowedChannels"`
 }
 
@@ -63,7 +63,7 @@ var (
 	ChatChartChannelExclusions []string
 	OwnerId                    string
 	PkApi                      PkApiInfo
-	Listeners               ListenerInfo
+	Listeners                  ListenerInfo
 )
 
 func init() {

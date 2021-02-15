@@ -12,4 +12,3 @@ func New(bot *core.Bot) (*MessageTools, error) {
 
 	return b, nil
 }
-

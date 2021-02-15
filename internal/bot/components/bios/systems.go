@@ -70,7 +70,7 @@ func (b *Bios) ImportSystemMember(command []string, m *harmony.Message) error {
 	systemInfo, err := pluralkit.SystemByDiscordAccount(m.Author.ID)
 	if err != nil {
 		if errors.Is(err, pluralkit.ErrorAccountHasNoSystem) {
-			_, err := b.b.SendMessage(m.ChannelID, "Your Discord account has no PluralKit systems associated " +
+			_, err := b.b.SendMessage(m.ChannelID, "Your Discord account has no PluralKit systems associated "+
 				"with it.")
 			return err
 		}
@@ -81,7 +81,7 @@ func (b *Bios) ImportSystemMember(command []string, m *harmony.Message) error {
 	systemMembers, err := pluralkit.MembersBySystemId(systemInfo.Id)
 	if err != nil {
 		if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
-			_, err := b.b.SendMessage(m.ChannelID, "Your system has the member list set to **private**. " +
+			_, err := b.b.SendMessage(m.ChannelID, "Your system has the member list set to **private**. "+
 				"Please set this to public and try again (HTTP 403)")
 			return err
 		}
@@ -97,8 +97,8 @@ func (b *Bios) ImportSystemMember(command []string, m *harmony.Message) error {
 	}
 
 	if pkMember == nil {
-		_, err := b.b.SendMessage(m.ChannelID, "Your system has has no member with the given ID. If you're " +
-			"sure there's a registered member with this ID, make sure the member visibility privacy level is set to " +
+		_, err := b.b.SendMessage(m.ChannelID, "Your system has has no member with the given ID. If you're "+
+			"sure there's a registered member with this ID, make sure the member visibility privacy level is set to "+
 			"**public**.")
 		return err
 	}

@@ -40,7 +40,7 @@ func (b *Bios) setBioField(bdt *db.UserBio, rawFieldName, newValue string, isSys
 
 	if !hasBio {
 		if isSysmate {
-			_, err := b.b.SendMessage(m.ChannelID, fmt.Sprintf("This member is not registered to your Discord " +
+			_, err := b.b.SendMessage(m.ChannelID, fmt.Sprintf("This member is not registered to your Discord "+
 				"account with the bot. Please import this member using `$bio import %s`", bdt.SysMemberID))
 			return err
 		}

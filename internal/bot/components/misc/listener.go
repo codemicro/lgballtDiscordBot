@@ -40,8 +40,8 @@ func (s *Misc) ListenToMe(_ []string, m *harmony.Message) error {
 
 	emb := embed.Embed{
 		Type:        "rich",
-		Title: "Disclaimer",
-		Footer: embed.NewFooter().Text(fmt.Sprintf("React to this message with %s if you wish to ping for listeners. (%s to cancel)", listenerAcceptReaction, listenerRejectReaction)).Build(),
+		Title:       "Disclaimer",
+		Footer:      embed.NewFooter().Text(fmt.Sprintf("React to this message with %s if you wish to ping for listeners. (%s to cancel)", listenerAcceptReaction, listenerRejectReaction)).Build(),
 		Description: listenerText,
 	}
 

@@ -14,7 +14,7 @@ import (
 func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelimit bool) error {
 
 	// check ratelimit
-	if val, found := verificationRatelimit[m.Author.ID]; (found && time.Now().Before(val) && checkRatelimit) {
+	if val, found := verificationRatelimit[m.Author.ID]; found && time.Now().Before(val) && checkRatelimit {
 		_, err := v.b.SendMessage(m.ChannelID, "You've already submitted a verification request. Please wait.")
 		return err
 	}
@@ -53,14 +53,14 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 		if rsn == "" {
 			rsn = "none provided"
 		}
-		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: " +
+		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: "+
 			"*%s*\n", removal.Action, rsn))
 	}
 
 	if found, err := failure.Get(); err != nil {
 		return err
 	} else if found {
-		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. " +
+		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. "+
 			"See %s\n", failure.MessageLink))
 	}
 
