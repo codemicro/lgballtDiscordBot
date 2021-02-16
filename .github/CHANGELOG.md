@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.3.0] - 2021-02-16
+### Added
+* `<p>steal` command for custom emojis
 ### Removed
 * Custom image for `<p>avatar` command for user with ID equal to `config.OwnerId`
 * Reddit account age functionality in verification
@@ -206,6 +210,7 @@ Now it compiles!
 * Initial release with `bio` component
 
 [Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.2.0...HEAD
+[3.3.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.0.0...v3.0.1
