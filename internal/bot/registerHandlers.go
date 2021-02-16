@@ -148,6 +148,15 @@ func RegisterHandlers(b *core.Bot) error {
 				}
 			}
 
+		} else if strings.EqualFold(messageComponents[0], "steal") {
+
+			if len(messageComponents[1:]) >= 1 {
+				err := miscComponent.StealEmojis(messageComponents[1:], m)
+				if err != nil {
+					logging.Error(err, "miscComponent.StealEmojis")
+				}
+			}
+
 		} else if strings.EqualFold(messageComponents[0], "verify") && (m.ChannelID == verification.InputChannelId ||
 			config.DebugMode) {
 

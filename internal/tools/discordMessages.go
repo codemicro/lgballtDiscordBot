@@ -29,14 +29,14 @@ func MakeMessageLink(guildId, channelId, messageId string) string {
 	return fmt.Sprintf("https://discord.com/channels/%s/%s/%s", guildId, channelId, messageId)
 }
 
-var customEmojiRegex = regexp.MustCompile(`<(a?):(.+:\d+)>`)
+var CustomEmojiRegex = regexp.MustCompile(`<(a?):(.+:\d+)>`)
 
 // ParseEmojiToString returns the emoji name and ID in a single string like name:id
 func ParseEmojiToString(eString string) string {
 	// Custom emojis look like this <a:whirleythonk:743765991464501260> and match this regex: <a?:(.+:\d+)>
 	var emoji string
-	if customEmojiRegex.MatchString(eString) {
-		matches := customEmojiRegex.FindAllStringSubmatch(eString, -1)
+	if CustomEmojiRegex.MatchString(eString) {
+		matches := CustomEmojiRegex.FindAllStringSubmatch(eString, -1)
 		emoji = matches[0][2]
 	} else {
 		emoji = eString
@@ -46,8 +46,8 @@ func ParseEmojiToString(eString string) string {
 
 // ParseEmojiComponents returns if the emoji is animated, the emoji name and emoji ID
 func ParseEmojiComponents(eString string) (isValid bool, isAnimated bool, emojiName string, emojiID string) {
-	if customEmojiRegex.MatchString(eString) {
-		matches := customEmojiRegex.FindAllStringSubmatch(eString, -1)
+	if CustomEmojiRegex.MatchString(eString) {
+		matches := CustomEmojiRegex.FindAllStringSubmatch(eString, -1)
 		aStr := matches[0][1]
 		combi := strings.Split(matches[0][2], ":")
 		var isAnimated bool

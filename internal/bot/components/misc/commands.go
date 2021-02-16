@@ -40,10 +40,8 @@ func (s *Misc) Avatar(command []string, m *harmony.Message) error {
 	return err
 }
 
-func (s *Misc) Emoji(command []string, m *harmony.Message) error {
-	// Syntax: <emoji>
-
-	validEmoji, animated, _, emojiID := tools.ParseEmojiComponents(command[0])
+func (s *Misc) coreEmojiCommand(emoji string, m *harmony.Message) error {
+	validEmoji, animated, _, emojiID := tools.ParseEmojiComponents(emoji)
 
 	if !validEmoji {
 		_, err := s.b.SendMessage(m.ChannelID, "That's not a valid (custom) emoji!")
@@ -58,5 +56,40 @@ func (s *Misc) Emoji(command []string, m *harmony.Message) error {
 	}
 
 	_, err := s.b.SendMessage(m.ChannelID, fmt.Sprintf("ID: `%s`\n%s", emojiID, emojiUrl))
+	return err
+}
+
+func (s *Misc) Emoji(command []string, m *harmony.Message) error {
+	// Syntax: <emoji>
+	return s.coreEmojiCommand(command[0], m)
+}
+
+func (s *Misc) StealEmojis(command []string, m *harmony.Message) error {
+
+	_, channelId, messageId, validMessageLink := tools.ParseMessageLink(command[0])
+
+	if !validMessageLink {
+		_, err := s.b.SendMessage(m.ChannelID, "Invalid message link")
+		return err
+	}
+
+	msg, err := s.b.Client.Channel(channelId).Message(context.Background(), messageId)
+	if err != nil {
+		return err
+	}
+
+	emojisFromMessage := tools.CustomEmojiRegex.FindAllString(msg.Content, -1)
+
+	for _, emoji := range emojisFromMessage {
+		err := s.coreEmojiCommand(emoji, m)
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(emojisFromMessage) == 0 {
+		_, err = s.b.SendMessage(m.ChannelID, "No custom emojis found in that message")
+	}
+
 	return err
 }
