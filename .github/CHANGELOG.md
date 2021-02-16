@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Removed
-* Removed custom image for `<p>avatar` command for user with ID equal to `config.OwnerId`
+* Custom image for `<p>avatar` command for user with ID equal to `config.OwnerId`
+* Reddit account age functionality in verification
 
 ## [3.2.0] - 2021-02-15
 ### Added
