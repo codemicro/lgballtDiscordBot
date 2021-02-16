@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Removed
+* Removed custom image for `<p>avatar` command for user with ID equal to `config.OwnerId`
 
 ## [3.2.0] - 2021-02-15
 ### Added
