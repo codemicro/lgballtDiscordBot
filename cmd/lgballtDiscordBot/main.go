@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-//go:generate python ../../scripts/prebuild.py ../.. ../../internal/buildInfo/buildInfo.go buildInfo 3.3.0
-
 func main() {
 
 	fmt.Printf("LGballT bot v%s built on %s (%s)\n\n", buildInfo.Version, buildInfo.BuildDate,

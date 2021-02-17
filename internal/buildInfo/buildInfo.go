@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const Version = "3.3.0"
+const Version = "3.3.1"
 
 //go:embed currentDate
 var BuildDate string
@@ -17,7 +17,7 @@ var BuildDate string
 var jdat []byte
 
 var (
-	GoVersion   = runtime.Version()
+	GoVersion   = runtime.Version() + " " + runtime.GOOS + runtime.GOARCH
 	StartTime   = time.Now()
 	LinesOfCode = "unknown"
 	NumFiles    = "unknown"
