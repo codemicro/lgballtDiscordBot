@@ -1,0 +1,10 @@
+test: build start
+
+start:
+	docker run -v ./run:/run ghcr.io/codemicro/lgballtdiscordbot/lgballtdiscordbot:latest
+
+build:
+	docker build -t ghcr.io/codemicro/lgballtdiscordbot/lgballtdiscordbot:latest .
+
+publish:
+	docker push ghcr.io/codemicro/lgballtdiscordbot/lgballtdiscordbot:latest
