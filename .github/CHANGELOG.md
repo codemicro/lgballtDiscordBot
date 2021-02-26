@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.3.2] - 2021-02-26
 ### Changed
 * `<p>pressf` no longer uses a pronoun
 ### Fixed
@@ -218,7 +220,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.1...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.2...HEAD
+[3.3.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.1...v3.3.2
 [3.3.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.0...v3.3.1
 [3.3.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.1.0...v3.2.0
