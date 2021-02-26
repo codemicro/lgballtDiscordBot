@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* `<p>pressf` no longer uses a pronoun
 
 ## [3.3.1] - 2021-02-17
 ### Changed 
