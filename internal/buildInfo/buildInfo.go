@@ -41,10 +41,7 @@ type ClocLanguage struct {
 func init() {
 	var jlr JSONLanguagesResult
 
-	err := json.Unmarshal(jdat, &jlr)
-	if err != nil {
-		panic(err)
-	}
+	_ = json.Unmarshal(jdat, &jlr)
 
 	for _, x := range jlr.Languages {
 		if strings.EqualFold(x.Name, "Go") {

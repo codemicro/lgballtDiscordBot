@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Changed
 * `<p>pressf` no longer uses a pronoun
+### Fixed
+* Panic on start if JSON data is invalid for embedded CLOC info
 
 ## [3.3.1] - 2021-02-17
 ### Changed 
