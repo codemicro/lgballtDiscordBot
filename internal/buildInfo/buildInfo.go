@@ -17,7 +17,7 @@ var BuildDate string
 var jdat []byte
 
 var (
-	GoVersion   = runtime.Version() + " " + runtime.GOOS + runtime.GOARCH
+	GoVersion   = runtime.Version() + " " + runtime.GOOS + " " + runtime.GOARCH
 	StartTime   = time.Now()
 	LinesOfCode = "unknown"
 	NumFiles    = "unknown"
