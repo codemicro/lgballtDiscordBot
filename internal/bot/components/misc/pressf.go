@@ -66,7 +66,7 @@ func newPressFTracker(bot *core.Bot, message *harmony.Message, duration time.Dur
 			}
 			apf.Count += 1
 		}
-		_, err := apf.Bot.Client.Channel(apf.Message.ChannelID).EditMessage(context.Background(), apf.Message.ID, fmt.Sprintf("%s\n**%d** people have paid their respects", message.Content, apf.Count))
+		_, err := apf.Bot.Client.Channel(apf.Message.ChannelID).EditMessage(context.Background(), apf.Message.ID, fmt.Sprintf("%s\n**%d** people have paid respects", message.Content, apf.Count))
 		if err != nil {
 			logging.Error(err, "activePressF runner final edit")
 			return
