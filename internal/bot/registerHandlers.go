@@ -221,6 +221,15 @@ func RegisterHandlers(b *core.Bot) error {
 				logging.Error(err, "miscComponent.ListenToMe")
 			}
 
+		} else if strings.EqualFold("muteme", messageComponents[0]) {
+
+			// ---------- MUTE ME -------------
+
+			err := miscComponent.MuteMe(messageComponents[1:], m)
+			if err != nil {
+				logging.Error(err, "miscComponent.MuteMe")
+			}
+
 		}
 
 	})
@@ -260,6 +269,11 @@ func RegisterHandlers(b *core.Bot) error {
 		err = miscComponent.ListenerReaction(r)
 		if err != nil {
 			logging.Error(err, "miscComponent.ListenerReaction")
+		}
+
+		err = miscComponent.MuteMeReaction(r)
+		if err != nil {
+			logging.Error(err, "miscComponent.MuteMeReaction")
 		}
 	})
 

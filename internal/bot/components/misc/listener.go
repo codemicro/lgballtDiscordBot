@@ -16,8 +16,8 @@ var (
 )
 
 const (
-	listenerAcceptReaction = "✅"
-	listenerRejectReaction = "❌"
+	acceptReaction = "✅"
+	rejectReaction = "❌"
 )
 
 var (
@@ -41,7 +41,7 @@ func (s *Misc) ListenToMe(_ []string, m *harmony.Message) error {
 	emb := embed.Embed{
 		Type:        "rich",
 		Title:       "Disclaimer",
-		Footer:      embed.NewFooter().Text(fmt.Sprintf("React to this message with %s if you wish to ping for listeners. (%s to cancel)", listenerAcceptReaction, listenerRejectReaction)).Build(),
+		Footer:      embed.NewFooter().Text(fmt.Sprintf("React to this message with %s if you wish to ping for listeners. (%s to cancel)", acceptReaction, rejectReaction)).Build(),
 		Description: listenerText,
 	}
 
@@ -54,7 +54,7 @@ func (s *Misc) ListenToMe(_ []string, m *harmony.Message) error {
 	activeListenerRequests[msg.ID] = struct{}{}
 	alrMux.Unlock()
 
-	for _, v := range []string{listenerAcceptReaction, listenerRejectReaction} {
+	for _, v := range []string{acceptReaction, rejectReaction} {
 		err := s.b.Client.Channel(msg.ChannelID).AddReaction(context.Background(), msg.ID, v)
 		if err != nil {
 			return err
@@ -66,7 +66,7 @@ func (s *Misc) ListenToMe(_ []string, m *harmony.Message) error {
 
 func (s *Misc) ListenerReaction(r *harmony.MessageReaction) error {
 
-	if !(r.Emoji.Name == listenerAcceptReaction || r.Emoji.Name == listenerRejectReaction) {
+	if !(r.Emoji.Name == acceptReaction || r.Emoji.Name == rejectReaction) {
 		return nil
 	}
 
@@ -87,7 +87,7 @@ func (s *Misc) ListenerReaction(r *harmony.MessageReaction) error {
 	delete(activeListenerRequests, r.MessageID)
 	alrMux.Unlock()
 
-	if r.Emoji.Name == listenerAcceptReaction {
+	if r.Emoji.Name == acceptReaction {
 		_, err = s.b.SendMessage(r.ChannelID, fmt.Sprintf("%s (for %s)", tools.MakeRolePing(config.Listeners.RoleId),
 			tools.MakePing(r.UserID)))
 		if err != nil {

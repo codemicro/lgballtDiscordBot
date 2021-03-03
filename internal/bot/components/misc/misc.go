@@ -10,5 +10,7 @@ func New(bot *core.Bot) (*Misc, error) {
 	b := new(Misc)
 	b.b = bot
 
+	go b.startMuteRemovalWorker()
+
 	return b, nil
 }

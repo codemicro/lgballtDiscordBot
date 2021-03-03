@@ -23,6 +23,7 @@ type Info struct {
 	OwnerId                    string           `json:"ownerId"`
 	PkApi                      PkApiInfo        `json:"pkApi"`
 	Listeners                  ListenerInfo     `json:"listeners"`
+	MuteMe                     MuteMeInfo       `json:"muteMe"`
 }
 
 type ListenerInfo struct {
@@ -51,6 +52,11 @@ type PkApiInfo struct {
 	NumWorkers      int    `json:"numWorkers"`
 }
 
+type MuteMeInfo struct {
+	TimeoutRole   string   `json:"timeoutRole"`
+	RolesToRemove []string `json:"rolesToRemove"`
+}
+
 var (
 	Token                      string
 	Prefix                     string
@@ -64,6 +70,7 @@ var (
 	OwnerId                    string
 	PkApi                      PkApiInfo
 	Listeners                  ListenerInfo
+	MuteMe                     MuteMeInfo
 )
 
 func init() {
@@ -93,6 +100,7 @@ func init() {
 	OwnerId = cfg.OwnerId
 	PkApi = cfg.PkApi
 	Listeners = cfg.Listeners
+	MuteMe = cfg.MuteMe
 
 	if PkApi.ApiUrl[len(PkApi.ApiUrl)-1] == '/' {
 		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]
