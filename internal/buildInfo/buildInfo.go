@@ -13,6 +13,7 @@ const Version = "3.4.0"
 
 //go:embed currentDate
 var BuildDate string
+
 //go:embed jdat
 var jdat []byte
 
@@ -51,9 +52,9 @@ func init() {
 		}
 	}
 
-    if BuildDate == "" {
-        BuildDate = "unknown"
-    } else {
-        BuildDate = strings.Trim(BuildDate, "\n")
-    }
+	if BuildDate == "" {
+		BuildDate = "unknown"
+	} else {
+		BuildDate = strings.Trim(BuildDate, "\n")
+	}
 }
