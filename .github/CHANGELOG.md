@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Removed
 * `<p>biof` commands
+* an outdated section of the bio help text
 
 ## [3.4.0] - 2021-03-03
 ### Added
