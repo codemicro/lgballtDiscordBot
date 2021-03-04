@@ -25,13 +25,13 @@ var (
 )
 
 // https://github.com/hhatto/gocloc/blob/ecf2a9b510f6583a05c67b8705e9bd79e8015ce1/json.go#L3-L6
-type JSONLanguagesResult struct {
-	Languages []ClocLanguage `json:"languages"`
-	Total     ClocLanguage   `json:"total"`
+type jsonLanguagesResult struct {
+	Languages []clocLanguage `json:"languages"`
+	Total     clocLanguage   `json:"total"`
 }
 
 // https://github.com/hhatto/gocloc/blob/ecf2a9b510f6583a05c67b8705e9bd79e8015ce1/language.go#L19-L25
-type ClocLanguage struct {
+type clocLanguage struct {
 	Name       string `json:"name,omitempty"`
 	FilesCount int32  `json:"files"`
 	Code       int32  `json:"code"`
@@ -40,7 +40,7 @@ type ClocLanguage struct {
 }
 
 func init() {
-	var jlr JSONLanguagesResult
+	var jlr jsonLanguagesResult
 
 	_ = json.Unmarshal(jdat, &jlr)
 
