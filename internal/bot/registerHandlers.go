@@ -117,9 +117,6 @@ func RegisterHandlers(b *core.Bot) error {
 		if strings.EqualFold(messageComponents[0], "bio") {
 			bioComponent.RouteMessage(messageComponents[1:], m)
 
-		} else if strings.EqualFold(messageComponents[0], "biof") {
-			bioComponent.RouteAdminMessage(messageComponents[1:], m)
-
 		} else if strings.EqualFold(messageComponents[0], "info") {
 			infoComponent.RouteMessage(messageComponents[1:], m)
 

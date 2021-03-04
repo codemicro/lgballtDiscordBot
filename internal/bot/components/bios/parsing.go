@@ -1,7 +1,6 @@
 package bios
 
 import (
-	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
@@ -89,27 +88,6 @@ func (b *Bios) RouteMessage(args []string, m *harmony.Message) {
 		}
 	}
 
-}
-
-func (b *Bios) RouteAdminMessage(args []string, m *harmony.Message) {
-
-	// TODO: This is going to be royally broken by bios for systems
-
-	if m.Author.ID == config.OwnerId {
-		if len(args) == 1 {
-			// This is me getting the value of a user's bio
-			err := b.AdminReadRawBio(args, m)
-			if err != nil {
-				logging.Error(err)
-			}
-		} else {
-			// This is only triggered for two or more arguments
-			err := b.AdminSetRawBio(args, m)
-			if err != nil {
-				logging.Error(err)
-			}
-		}
-	}
 }
 
 // filterForMemberIds takes a slice of user bios and returns a string slice of all member IDs present in the input
