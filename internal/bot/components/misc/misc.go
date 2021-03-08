@@ -25,6 +25,28 @@ func Init(kit *route.Kit, state *state.State) error {
 		Run:          comp.Avatar,
 	})
 
+	kit.AddCommand(&route.Command{
+		Name:         "Emoji",
+		Help:         "Get an enlarged version of a custom emoji",
+		CommandText:  []string{"emoji"},
+		Arguments:    []route.Argument{
+			{Name: "emoji", Type: route.String},
+		},
+		Restrictions: nil,
+		Run:          comp.Emoji,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:         "Steal emojis",
+		Help:         "Commit theivery and steal someone else's custom emojis",
+		CommandText:  []string{"steal"},
+		Arguments:    []route.Argument{
+			{Name: "messageLink", Type: route.URL},
+		},
+		Restrictions: nil,
+		Run:          comp.StealEmojis,
+	})
+
 	return nil
 
 }
