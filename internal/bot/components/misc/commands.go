@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"strings"
 )
 
 func (s *Misc) Avatar(ctx *route.MessageContext) error {
@@ -82,5 +83,51 @@ func (s *Misc) StealEmojis(ctx *route.MessageContext) error {
 		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "No custom emojis found in that message")
 	}
 
+	return err
+}
+
+const bulletPoint = "•"
+
+func (s *Misc) Help(ctx *route.MessageContext) error {
+
+	// TODO: categories??
+
+	info := ctx.GetCommandInfo()
+
+	emb := new(discordgo.MessageEmbed)
+
+	for _, command := range info {
+
+		var args string
+		var argInfo string
+		for _, arg := range command.Arguments {
+			optional := arg.HasDefault
+
+			if optional {
+				args += "["
+			} else {
+				args += "<"
+			}
+
+			args += arg.Name
+
+			if optional {
+				args += "]"
+			} else {
+				args += ">"
+			}
+
+			args += " "
+
+			argInfo += fmt.Sprintf(" %s **`%s`** - %s\n", bulletPoint, arg.Name, arg.Usage)
+		}
+
+		f := new(discordgo.MessageEmbedField)
+		f.Name = command.Name + fmt.Sprintf(" - **`%s %s`**", command.CommandText, strings.TrimSpace(args))
+		f.Value = fmt.Sprintf("%s\n%s", command.Description, argInfo)
+		emb.Fields = append(emb.Fields, f)
+	}
+
+	_, err := ctx.SendMessageEmbed(ctx.Message.ChannelID, emb)
 	return err
 }
