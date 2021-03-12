@@ -90,7 +90,7 @@ const bulletPoint = "•"
 
 func (s *Misc) Help(ctx *route.MessageContext) error {
 
-	// TODO: categories??
+	// TODO: categories?? also paginate
 
 	info := ctx.GetCommandInfo()
 

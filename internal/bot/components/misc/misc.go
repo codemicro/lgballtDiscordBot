@@ -8,7 +8,7 @@ import (
 
 type Misc struct{}
 
-func Init(kit *route.Kit, state *state.State) error {
+func Init(kit *route.Kit, _ *state.State) error {
 
 	comp := new(Misc)
 
