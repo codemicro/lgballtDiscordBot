@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -68,6 +69,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	// TODO: commands/reactions
 
 	err := misc.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = pressf.Init(kit, st)
 	if err != nil {
 		return err
 	}
