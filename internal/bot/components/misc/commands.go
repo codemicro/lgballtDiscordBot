@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
 )
@@ -90,7 +91,7 @@ const bulletPoint = "•"
 
 func (s *Misc) Help(ctx *route.MessageContext) error {
 
-	// TODO: categories?? also paginate
+	// TODO: categories?? also paginate. and restriction warning with ⚠ emoji
 
 	info := ctx.GetCommandInfo()
 
@@ -129,5 +130,41 @@ func (s *Misc) Help(ctx *route.MessageContext) error {
 	}
 
 	_, err := ctx.SendMessageEmbed(ctx.Message.ChannelID, emb)
+	return err
+}
+
+const (
+	listenerText = "Listeners are *not* a substitute for real help and should not be treated as such. They are here only to listen to you vent, and they don’t have a obligation to help, only listen. Use the command `$ukmentalhealth`, `$usmentalhealth`, `$uslgbthelp`, and `$usrunaway` for more information."
+)
+
+func (s *Misc) ListenToMe(ctx *route.MessageContext) error {
+
+	emb := &discordgo.MessageEmbed{
+		Type:        "rich",
+		Title:       "Disclaimer",
+		Footer:      &discordgo.MessageEmbedFooter{
+			Text: fmt.Sprintf("React to this message with ✅ if you wish to ping for listeners. (❌ to cancel)"),
+		},
+		Description: listenerText,
+	}
+
+	err := ctx.Kit.NewConfirmation(
+		ctx.Message.ChannelID,
+		ctx.Message.Author.ID,
+		emb,
+		func(ctx *route.ReactionContext) error {
+
+			_, err := ctx.Session.ChannelMessageSendComplex(ctx.Reaction.ChannelID, &discordgo.MessageSend{
+				Content: fmt.Sprintf("%s (for %s)", tools.MakeRolePing(config.Listeners.RoleId), tools.MakePing(ctx.Reaction.UserID)),
+				AllowedMentions: &discordgo.MessageAllowedMentions{
+					Roles: []string{config.Listeners.RoleId},
+				},
+			})
+
+			return err
+		},
+		nil,
+	)
+
 	return err
 }

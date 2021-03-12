@@ -3,7 +3,9 @@ package misc
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 )
 
 type Misc struct{}
@@ -50,6 +52,18 @@ func Init(kit *route.Kit, _ *state.State) error {
 		CommandText: []string{"help"},
 		Run:         comp.Help,
 		Invisible:   true,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Request listener",
+		Help:        "Ping someone with the listener role to listen to you in a venting channel",
+		CommandText: []string{"listener"},
+		Restrictions: []route.CommandRestriction{
+			func(_ *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
+				return tools.IsStringInSlice(message.ChannelID, config.Listeners.AllowedChannels), nil
+			},
+		},
+		Run:         comp.ListenToMe,
 	})
 
 	return nil
