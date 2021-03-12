@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/PuerkitoBio/goquery v1.6.0
 	github.com/bwmarrin/discordgo v0.23.2
-	github.com/codemicro/dgo-toolkit v0.1.3 // indirect
+	github.com/codemicro/dgo-toolkit v0.2.2 // indirect
 	github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
