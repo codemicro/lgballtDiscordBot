@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"time"
@@ -42,7 +43,7 @@ func (pf *PressF) newTracker(session *discordgo.Session, message *discordgo.Mess
 				continue
 			}
 
-			name, _, err := tools.GetNickname(session, v.UserID, v.GuildID)
+			name, _, err := common.GetNickname(session, v.UserID, v.GuildID)
 			if err != nil {
 				logging.Error(err, "activePressF runner (nickname get)")
 				return

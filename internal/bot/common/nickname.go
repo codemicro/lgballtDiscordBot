@@ -1,8 +1,6 @@
-package tools
+package common
 
-import (
-	"github.com/bwmarrin/discordgo"
-)
+import "github.com/bwmarrin/discordgo"
 
 func GetNickname(session *discordgo.Session, userId, guildId string) (string, *discordgo.User, error) {
 
@@ -35,3 +33,4 @@ func GetNickname(session *discordgo.Session, userId, guildId string) (string, *d
 	}
 	return "", nil, nil
 }
+
