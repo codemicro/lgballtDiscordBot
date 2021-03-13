@@ -11,8 +11,6 @@ import (
 
 func (*Info) Ping(ctx *route.MessageContext) error {
 
-	fmt.Println(ctx.Message.ChannelID)
-
 	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Pong! Current heartbeat latency is " +
 		"`%dms`", ctx.Session.HeartbeatLatency().Milliseconds()))
 
