@@ -20,6 +20,8 @@ github.com/codemicro/dgo-toolkit v0.2.1 h1:x/lOZE7KUCKwrtzCKA3UpZNGKf8OembGtRMS1
 github.com/codemicro/dgo-toolkit v0.2.1/go.mod h1:r3nPqj2K2HP8b6pbMp4vTq59UWb/f3yLyfSHg9cW0C4=
 github.com/codemicro/dgo-toolkit v0.2.2 h1:xAJST37QS9WOm8sff40LLm4+fR8QuMN8gCFy0l1cZNM=
 github.com/codemicro/dgo-toolkit v0.2.2/go.mod h1:r3nPqj2K2HP8b6pbMp4vTq59UWb/f3yLyfSHg9cW0C4=
+github.com/codemicro/dgo-toolkit v0.2.3 h1:U/okd5jzKti0TANWcAC0yeH8qTJWDPZ67mQUv65ev3M=
+github.com/codemicro/dgo-toolkit v0.2.3/go.mod h1:r3nPqj2K2HP8b6pbMp4vTq59UWb/f3yLyfSHg9cW0C4=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b h1:TUmTwgXqPctxJ0+aXms7oZk+s/jTudzFBqQh/3w7PQE=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b/go.mod h1:BKzltySfdeKRBqHvR6PZUaiYIwPnHmJOfWekE5xEL7A=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=

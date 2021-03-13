@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/muteme"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
@@ -74,6 +75,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	err = pressf.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = muteme.Init(kit, st)
 	if err != nil {
 		return err
 	}
