@@ -124,7 +124,13 @@ func (s *Misc) Help(ctx *route.MessageContext) error {
 		}
 
 		f := new(discordgo.MessageEmbedField)
-		f.Name = command.Name + fmt.Sprintf(" - **`%s %s`**", command.CommandText, strings.TrimSpace(args))
+
+		sep := " "
+		if len(args) == 0 {
+			sep = ""
+		}
+
+		f.Name = command.Name + fmt.Sprintf(" - **`%s%s%s`**", command.CommandText, sep, strings.TrimSpace(args))
 		f.Value = fmt.Sprintf("%s\n%s", command.Description, argInfo)
 		emb.Fields = append(emb.Fields, f)
 	}
