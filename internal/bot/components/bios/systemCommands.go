@@ -70,7 +70,7 @@ func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 	systemMembers, err := pluralkit.MembersBySystemId(systemInfo.Id)
 	if err != nil {
 		if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
-			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Your system has the member list set to " +
+			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Your system has the member list set to "+
 				"**private**. Please set this to public and try again (HTTP 403)")
 			return err
 		}
@@ -86,8 +86,8 @@ func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 	}
 
 	if pkMember == nil {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Your system has has no member with the given " +
-			"ID. If you're sure there's a registered member with this ID, make sure the member visibility privacy " +
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Your system has has no member with the given "+
+			"ID. If you're sure there's a registered member with this ID, make sure the member visibility privacy "+
 			"level is set to "+"**public**.")
 		return err
 	}

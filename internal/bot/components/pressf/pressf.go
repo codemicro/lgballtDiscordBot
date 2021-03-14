@@ -6,11 +6,9 @@ import (
 	"sync"
 )
 
-type PressF struct{
-
+type PressF struct {
 	active map[string]*activePressF
-	mux *sync.RWMutex
-
+	mux    *sync.RWMutex
 }
 
 const regionalFEmoji = "🇫"
@@ -19,17 +17,17 @@ func Init(kit *route.Kit, _ *state.State) error {
 
 	comp := &PressF{
 		active: make(map[string]*activePressF),
-		mux: new(sync.RWMutex),
+		mux:    new(sync.RWMutex),
 	}
 
 	kit.AddCommand(&route.Command{
-		Name:         "Press F",
-		Help:         "Press F to pay your respects, and let everyone else do it too",
-		CommandText:  []string{"pressf"},
-		Arguments:    []route.Argument{
+		Name:        "Press F",
+		Help:        "Press F to pay your respects, and let everyone else do it too",
+		CommandText: []string{"pressf"},
+		Arguments: []route.Argument{
 			{Name: "thing", Type: route.RemainingString},
 		},
-		Run:          comp.Trigger,
+		Run: comp.Trigger,
 	})
 
 	kit.AddReaction(&route.Reaction{

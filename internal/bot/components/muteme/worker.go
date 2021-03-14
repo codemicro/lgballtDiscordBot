@@ -77,4 +77,3 @@ func (mm *MuteMe) muteRemovalWorker(session *discordgo.Session) {
 		}
 	}
 }
-

@@ -17,7 +17,6 @@ type activePressF struct {
 	Message      *discordgo.Message
 }
 
-
 func (pf *PressF) newTracker(session *discordgo.Session, message *discordgo.Message, duration time.Duration) *activePressF {
 	apf := &activePressF{
 		Trigger: make(chan *discordgo.MessageReaction, 100),
@@ -76,7 +75,7 @@ func (pf *PressF) Trigger(ctx *route.MessageContext) error {
 
 	payingRespectsTo := ctx.Arguments["thing"].(string)
 
-	msg, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("React with 🇫 to pay your respects " +
+	msg, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("React with 🇫 to pay your respects "+
 		"to **%s**", tools.FilterRolePing(payingRespectsTo)))
 	if err != nil {
 		return err

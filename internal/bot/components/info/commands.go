@@ -11,7 +11,7 @@ import (
 
 func (*Info) Ping(ctx *route.MessageContext) error {
 
-	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Pong! Current heartbeat latency is " +
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Pong! Current heartbeat latency is "+
 		"`%dms`", ctx.Session.HeartbeatLatency().Milliseconds()))
 
 	return err
@@ -38,13 +38,13 @@ func (i *Info) Info(ctx *route.MessageContext) error {
 	earthRotations := float64(hours) / 24
 
 	emb := &discordgo.MessageEmbed{
-		Title:       fmt.Sprintf("LGBallT bot v%s", buildInfo.Version),
-		Color:       rainbowColours[0],
-		Fields:      []*discordgo.MessageEmbedField{
-			{Name:   "Build date and time", Value:  buildInfo.BuildDate},
-			{Name:   "Go version and arch", Value:  buildInfo.GoVersion},
-			{Name:   "Lines of code", Value:  fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)},
-			{Name:   "Uptime", Value:  fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)},
+		Title: fmt.Sprintf("LGBallT bot v%s", buildInfo.Version),
+		Color: rainbowColours[0],
+		Fields: []*discordgo.MessageEmbedField{
+			{Name: "Build date and time", Value: buildInfo.BuildDate},
+			{Name: "Go version and arch", Value: buildInfo.GoVersion},
+			{Name: "Lines of code", Value: fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)},
+			{Name: "Uptime", Value: fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)},
 		},
 	}
 

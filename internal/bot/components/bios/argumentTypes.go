@@ -11,6 +11,7 @@ import (
 var pluralkitMemberIdRegexp = regexp.MustCompile(`(?m)^[a-zA-Z]{5}$`)
 
 type pluralkitMemberIdType struct{}
+
 func (pluralkitMemberIdType) Parse(content *string) (interface{}, error) {
 
 	a, b := common.TakeFirstPart(*content)
@@ -23,10 +24,13 @@ func (pluralkitMemberIdType) Parse(content *string) (interface{}, error) {
 	return nil, errors.New("not a valid PluralKit member ID")
 
 }
-func (pluralkitMemberIdType) Help(_ string) string { return "A PluralKit member ID, for example `abcde`" }
+func (pluralkitMemberIdType) Help(_ string) string {
+	return "A PluralKit member ID, for example `abcde`"
+}
 func (pluralkitMemberIdType) Name() string { return "pkMemberId" }
 
 type bioFieldType struct{}
+
 func (bioFieldType) Parse(content *string) (interface{}, error) {
 
 	a, b := common.TakeFirstPart(*content)
@@ -50,5 +54,4 @@ func (bioFieldType) Parse(content *string) (interface{}, error) {
 
 }
 func (bioFieldType) Help(_ string) string { return "A bio field" }
-func (bioFieldType) Name() string { return "bioField" }
-
+func (bioFieldType) Name() string         { return "bioField" }

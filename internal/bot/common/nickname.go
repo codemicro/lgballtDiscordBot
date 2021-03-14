@@ -33,4 +33,3 @@ func GetNickname(session *discordgo.Session, userId, guildId string) (string, *d
 	}
 	return "", nil, nil
 }
-

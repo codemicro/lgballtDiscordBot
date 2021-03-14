@@ -24,7 +24,7 @@ type Info struct {
 	PkApi                      PkApiInfo        `json:"pkApi"`
 	Listeners                  ListenerInfo     `json:"listeners"`
 	MuteMe                     MuteMeInfo       `json:"muteMe"`
-	BioFields []string `json:"bioFields"`
+	BioFields                  []string         `json:"bioFields"`
 }
 
 type ListenerInfo struct {
@@ -72,7 +72,7 @@ var (
 	PkApi                      PkApiInfo
 	Listeners                  ListenerInfo
 	MuteMe                     MuteMeInfo
-	BioFields []string
+	BioFields                  []string
 )
 
 func init() {

@@ -54,7 +54,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 	}
 
 	if !hasBio {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "You have not created a bio, hence there is " +
+		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "You have not created a bio, hence there is "+
 			"nothing to delete anything from.")
 		return err
 	}

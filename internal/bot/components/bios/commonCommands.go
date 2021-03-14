@@ -81,4 +81,3 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 
 	return nil
 }
-

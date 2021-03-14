@@ -146,9 +146,9 @@ const (
 func (s *Misc) ListenToMe(ctx *route.MessageContext) error {
 
 	emb := &discordgo.MessageEmbed{
-		Type:        "rich",
-		Title:       "Disclaimer",
-		Footer:      &discordgo.MessageEmbedFooter{
+		Type:  "rich",
+		Title: "Disclaimer",
+		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("React to this message with ✅ if you wish to ping for listeners. (❌ to cancel)"),
 		},
 		Description: listenerText,

@@ -63,7 +63,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 				return tools.IsStringInSlice(message.ChannelID, config.Listeners.AllowedChannels), nil
 			},
 		},
-		Run:         comp.ListenToMe,
+		Run: comp.ListenToMe,
 	})
 
 	return nil
