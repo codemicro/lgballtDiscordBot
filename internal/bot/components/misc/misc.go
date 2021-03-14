@@ -3,6 +3,7 @@ package misc
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
@@ -19,7 +20,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "Get an enlarged version of a user's avatar",
 		CommandText: []string{"avatar"},
 		Arguments: []route.Argument{
-			{Name: "userId", Type: route.String, Default: func(_ *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error) {
+			{Name: "user", Type: common.PingOrUserIdType, Default: func(_ *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error) {
 				return message.Author.ID, nil
 			}},
 		},

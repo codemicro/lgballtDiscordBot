@@ -12,7 +12,7 @@ import (
 func (s *Misc) Avatar(ctx *route.MessageContext) error {
 	// Args: userID
 
-	id := ctx.Arguments["userId"].(string)
+	id := ctx.Arguments["user"].(string)
 
 	// get user
 	user, err := ctx.Session.User(id)
