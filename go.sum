@@ -8,6 +8,8 @@ github.com/bwmarrin/discordgo v0.23.2 h1:BzrtTktixGHIu9Tt7dEE6diysEF9HWnXeHuoJEt
 github.com/bwmarrin/discordgo v0.23.2/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
 github.com/codemicro/dgo-toolkit v0.2.4 h1:59iZ0kRYq4jz87iHgTgNw4VuAiasgRmxrkOho0z52CA=
 github.com/codemicro/dgo-toolkit v0.2.4/go.mod h1:r3nPqj2K2HP8b6pbMp4vTq59UWb/f3yLyfSHg9cW0C4=
+github.com/codemicro/dgo-toolkit v0.3.0 h1:rNoN6CTns0UCKUD7C/mtmyDnoKQ9eEVmZdx7T8cS27U=
+github.com/codemicro/dgo-toolkit v0.3.0/go.mod h1:r3nPqj2K2HP8b6pbMp4vTq59UWb/f3yLyfSHg9cW0C4=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b h1:TUmTwgXqPctxJ0+aXms7oZk+s/jTudzFBqQh/3w7PQE=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b/go.mod h1:BKzltySfdeKRBqHvR6PZUaiYIwPnHmJOfWekE5xEL7A=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
