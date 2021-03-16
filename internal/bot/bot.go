@@ -6,6 +6,7 @@ import (
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/messageTools"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/muteme"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
@@ -92,6 +93,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	err = bios.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = messageTools.Init(kit, st)
 	if err != nil {
 		return err
 	}
