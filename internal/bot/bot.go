@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/messageTools"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
@@ -98,6 +99,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	err = messageTools.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = chatchart.Init(kit, st)
 	if err != nil {
 		return err
 	}
