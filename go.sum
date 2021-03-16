@@ -8,8 +8,8 @@ github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d h1:Byv0BzEl
 github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/bwmarrin/discordgo v0.23.2 h1:BzrtTktixGHIu9Tt7dEE6diysEF9HWnXeHuoJEt2fH4=
 github.com/bwmarrin/discordgo v0.23.2/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
-github.com/codemicro/dgo-toolkit v0.3.1 h1:2qhdjaCO0wBhL2CQHuRoDEQvvmf5AG16e5XMZk83PEM=
-github.com/codemicro/dgo-toolkit v0.3.1/go.mod h1:NT5a9aepB/b22XwmlpoahjfU79sAAMzPmn/2YOTRCp0=
+github.com/codemicro/dgo-toolkit v0.3.2 h1:rWHriWR0reo7njwIwjYDKkgPMGC4JkYlE9U5PBapAVU=
+github.com/codemicro/dgo-toolkit v0.3.2/go.mod h1:NT5a9aepB/b22XwmlpoahjfU79sAAMzPmn/2YOTRCp0=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b h1:TUmTwgXqPctxJ0+aXms7oZk+s/jTudzFBqQh/3w7PQE=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b/go.mod h1:BKzltySfdeKRBqHvR6PZUaiYIwPnHmJOfWekE5xEL7A=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=

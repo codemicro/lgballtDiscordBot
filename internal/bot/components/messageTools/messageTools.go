@@ -17,7 +17,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "Send a message in a specific channel",
 		CommandText: []string{"m", "send"},
 		Arguments: []route.Argument{
-			{Name: "channelId", Type: route.DiscordSnowflakeType},
+			{Name: "channelId", Type: route.DiscordSnowflake},
 			{Name: "message", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
