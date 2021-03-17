@@ -11,6 +11,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/muteme"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -104,6 +105,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	err = chatchart.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = roles.Init(kit, st)
 	if err != nil {
 		return err
 	}
