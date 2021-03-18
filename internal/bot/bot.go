@@ -12,6 +12,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/muteme"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -110,6 +111,11 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	err = roles.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = verification.Init(kit, st)
 	if err != nil {
 		return err
 	}
