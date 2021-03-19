@@ -152,6 +152,11 @@ func (s *Misc) Help(ctx *route.MessageContext) error {
 				emb.Fields = append(emb.Fields, f)
 			}
 
+			emb.Footer = &discordgo.MessageEmbedFooter{
+				Text: "If a command is marked with a ⚠ emoji, there are restrictions placed on who can run " +
+					"that command and/or where it can be run",
+			}
+
 			if len(emb.Fields) > 0 {
 				embedsByCategory = append(embedsByCategory, emb)
 			}
@@ -160,7 +165,7 @@ func (s *Misc) Help(ctx *route.MessageContext) error {
 		s.helpEmbeds = embedsByCategory
 	})
 
-	return ctx.Kit.NewPaginate(ctx.Message.ChannelID, ctx.Message.Author.ID, s.helpEmbeds, time.Minute * 5)
+	return ctx.Kit.NewPaginate(ctx.Message.ChannelID, ctx.Message.Author.ID, s.helpEmbeds, time.Minute*5)
 }
 
 const (
