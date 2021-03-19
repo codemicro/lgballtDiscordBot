@@ -4,16 +4,24 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"sync"
 )
 
-type Misc struct{}
+type Misc struct {
+
+	helpEmbeds []*discordgo.MessageEmbed
+	helpEmbedOnce *sync.Once
+
+}
 
 func Init(kit *route.Kit, _ *state.State) error {
 
 	comp := new(Misc)
+	comp.helpEmbedOnce = new(sync.Once)
 
 	kit.AddCommand(&route.Command{
 		Name:        "Avatar",
@@ -25,6 +33,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			}},
 		},
 		Run: comp.Avatar,
+		Category: meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -35,6 +44,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "emoji", Type: route.String},
 		},
 		Run: comp.Emoji,
+		Category: meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -45,6 +55,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "messageLink", Type: route.URL},
 		},
 		Run: comp.StealEmojis,
+		Category: meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -53,6 +64,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		CommandText: []string{"help"},
 		Run:         comp.Help,
 		Invisible:   true,
+		Category: meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -65,6 +77,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			},
 		},
 		Run: comp.ListenToMe,
+		Category: meta.CategoryMisc,
 	})
 
 	return nil

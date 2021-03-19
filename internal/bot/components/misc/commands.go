@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
+	"time"
 )
 
 func (s *Misc) Avatar(ctx *route.MessageContext) error {
@@ -91,52 +93,74 @@ const bulletPoint = "•"
 
 func (s *Misc) Help(ctx *route.MessageContext) error {
 
-	// TODO: categories?? also paginate. and restriction warning with ⚠ emoji
+	s.helpEmbedOnce.Do(func() {
+		info := ctx.GetCommandInfo()
 
-	info := ctx.GetCommandInfo()
+		var embedsByCategory []*discordgo.MessageEmbed
 
-	emb := new(discordgo.MessageEmbed)
+		for categoryNumber := range *meta.IterateCategories() {
 
-	for _, command := range info {
+			emb := new(discordgo.MessageEmbed)
+			emb.Title = meta.Descriptions[categoryNumber]
 
-		var args string
-		var argInfo string
-		for _, arg := range command.Arguments {
-			optional := arg.HasDefault
+			for _, command := range info {
 
-			if optional {
-				args += "["
-			} else {
-				args += "<"
+				if command.Category != categoryNumber {
+					continue
+				}
+
+				var args string
+				var argInfo string
+				for _, arg := range command.Arguments {
+					optional := arg.HasDefault
+
+					var optionalText string
+					if optional {
+						args += "["
+						optionalText = "(optional) "
+					} else {
+						args += "<"
+					}
+
+					args += arg.Name
+
+					if optional {
+						args += "]"
+					} else {
+						args += ">"
+					}
+
+					args += " "
+
+					argInfo += fmt.Sprintf(" %s **`%s`** %s- %s\n", bulletPoint, arg.Name, optionalText, arg.Usage)
+				}
+
+				f := new(discordgo.MessageEmbedField)
+
+				sep := " "
+				if len(args) == 0 {
+					sep = ""
+				}
+
+				var warnEmoji string
+				if command.HasRestrictions {
+					warnEmoji = "⚠"
+				}
+
+				f.Name = command.Name + fmt.Sprintf(" - **`%s%s%s`** %s", command.CommandText, sep, strings.TrimSpace(args), warnEmoji)
+				f.Value = fmt.Sprintf("%s\n%s", command.Description, argInfo)
+				emb.Fields = append(emb.Fields, f)
 			}
 
-			args += arg.Name
-
-			if optional {
-				args += "]"
-			} else {
-				args += ">"
+			if len(emb.Fields) > 0 {
+				embedsByCategory = append(embedsByCategory, emb)
 			}
-
-			args += " "
-
-			argInfo += fmt.Sprintf(" %s **`%s`** - %s\n", bulletPoint, arg.Name, arg.Usage)
 		}
 
-		f := new(discordgo.MessageEmbedField)
+		s.helpEmbeds = embedsByCategory
+	})
 
-		sep := " "
-		if len(args) == 0 {
-			sep = ""
-		}
-
-		f.Name = command.Name + fmt.Sprintf(" - **`%s%s%s`**", command.CommandText, sep, strings.TrimSpace(args))
-		f.Value = fmt.Sprintf("%s\n%s", command.Description, argInfo)
-		emb.Fields = append(emb.Fields, f)
-	}
-
-	_, err := ctx.SendMessageEmbed(ctx.Message.ChannelID, emb)
-	return err
+	return ctx.Kit.NewPaginate(ctx.Message.ChannelID, ctx.Message.Author.ID, s.helpEmbeds, time.Minute * 5)
 }
 
 const (
