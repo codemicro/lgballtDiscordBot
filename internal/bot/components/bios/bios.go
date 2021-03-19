@@ -122,6 +122,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "newValue", Type: route.RemainingString},
 		},
 		Run: comp.SingletSetField,
+		AllowOverloading: true,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -134,6 +135,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "newValue", Type: route.RemainingString},
 		},
 		Run: comp.SystemSetField,
+		AllowOverloading: true,
 	})
 
 	kit.AddCommand(&route.Command{
