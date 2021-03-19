@@ -2,6 +2,7 @@ package muteme
 
 import (
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 )
 
@@ -22,6 +23,7 @@ func Init(kit *route.Kit, st *state.State) error {
 			{Name: "duration", Type: route.Duration},
 		},
 		Run: comp.Trigger,
+		Category: meta.CategoryMisc,
 	})
 
 	return nil

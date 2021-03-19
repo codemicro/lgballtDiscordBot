@@ -2,6 +2,7 @@ package pressf
 
 import (
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"sync"
 )
@@ -28,6 +29,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "thing", Type: route.RemainingString},
 		},
 		Run: comp.Trigger,
+		Category: meta.CategoryFun,
 	})
 
 	kit.AddReaction(&route.Reaction{

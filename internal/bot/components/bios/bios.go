@@ -5,6 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
@@ -104,6 +105,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "View information about the bios feature of the bot",
 		CommandText: []string{"bio", "help"},
 		Run:         comp.SingletHelp,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -111,6 +113,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "View information about the bios for systems feature of the bot",
 		CommandText: []string{"bio", "syshelp"},
 		Run:         comp.SystemHelp,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -123,6 +126,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run: comp.SingletSetField,
 		AllowOverloading: true,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -136,6 +140,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run: comp.SystemSetField,
 		AllowOverloading: true,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -146,6 +151,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 		},
 		Run: comp.SingletClearField,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -157,6 +163,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 		},
 		Run: comp.SystemClearField,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -167,18 +174,20 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "memberId", Type: pluralkitMemberIdType{}},
 		},
 		Run: comp.SystemImportMember,
+		Category: meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
 		Name:        "Bios view",
 		Help:        "View the bio(s) associated with a Discord account",
-		CommandText: []string{"bio", "show"},
+		CommandText: []string{"bio"},
 		Arguments: []route.Argument{
 			{Name: "user", Type: common.PingOrUserIdType, Default: func(_ *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error) {
 				return message.Author.ID, nil
 			}},
 		},
 		Run: comp.ReadBio,
+		Category: meta.CategoryBios,
 	})
 
 	return nil

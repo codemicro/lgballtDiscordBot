@@ -2,6 +2,7 @@ package messageTools
 
 import (
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 )
@@ -24,6 +25,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			route.RestrictionByRole(config.AdminRole),
 		},
 		Run: comp.Send,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -38,6 +40,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			route.RestrictionByRole(config.AdminRole),
 		},
 		Run: comp.Edit,
+		Category: meta.CategoryAdminTools,
 	})
 
 	return nil

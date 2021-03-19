@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"regexp"
@@ -86,6 +87,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.FVerify,
 		Invisible: true,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -97,6 +99,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.Verify,
 		Invisible: true,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -111,6 +114,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.TrackBan,
 		Invisible: true,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -125,6 +129,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.TrackKick,
 		Invisible: true,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddReaction(&route.Reaction{

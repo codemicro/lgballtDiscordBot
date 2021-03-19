@@ -2,6 +2,7 @@ package roles
 
 import (
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 )
@@ -25,6 +26,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			route.RestrictionByRole(config.AdminRole),
 		},
 		Run: comp.Track,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -39,6 +41,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			route.RestrictionByRole(config.AdminRole),
 		},
 		Run: comp.Untrack,
+		Category: meta.CategoryAdminTools,
 	})
 
 	kit.AddReaction(&route.Reaction{

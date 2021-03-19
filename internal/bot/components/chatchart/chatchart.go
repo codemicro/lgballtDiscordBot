@@ -2,6 +2,7 @@ package chatchart
 
 import (
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 )
 
@@ -33,6 +34,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "channel", Type: route.ChannelMention},
 		},
 		Run: comp.Trigger,
+		Category: meta.CategoryFun,
 	})
 
 	return nil
