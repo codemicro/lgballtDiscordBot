@@ -151,6 +151,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 		},
 		Run: comp.SingletClearField,
+		AllowOverloading: true,
 		Category: meta.CategoryBios,
 	})
 
@@ -163,6 +164,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 		},
 		Run: comp.SystemClearField,
+		AllowOverloading: true,
 		Category: meta.CategoryBios,
 	})
 
