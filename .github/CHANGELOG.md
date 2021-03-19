@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.5.1] - 2021-03-19
 ### Changed
 * `bioFieldType` help text
 ### Fixed
@@ -242,7 +244,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.1...HEAD
+[3.5.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.2...v3.4.0
 [3.3.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.3.1...v3.3.2

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const Version = "3.5.0"
+const Version = "3.5.1"
 
 //go:embed currentDate
 var BuildDate string
