@@ -14,13 +14,7 @@ import (
 
 func (*Verification) coreVerification(ctx *route.MessageContext) error {
 
-	command := strings.Fields(ctx.Raw)
-
-	if len(command) < 1 {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You're missing your verification message! Try again," +
-			" silly! " + tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
-		return err
-	}
+	command := strings.Fields(ctx.Raw)[1:]
 
 	// Copy message into output channel
 	iu := inlineData{
@@ -116,10 +110,18 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 
 func (v *Verification) Verify(ctx *route.MessageContext) error {
 
+	command := strings.Fields(ctx.Raw)[1:]
+
 	// check ratelimit
 	if val, found := v.ratelimit[ctx.Message.Author.ID]; found && time.Now().Before(val) {
 		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You've already submitted a verification " +
 			"request. Please wait.")
+		return err
+	}
+
+	if len(command) < 1 {
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You're missing your verification message! Try again," +
+			" silly! " + tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
 		return err
 	}
 

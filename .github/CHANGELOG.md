@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * `bioFieldType` help text
 ### Fixed
 * Allowed command overloading on bio clear commands
+* Verification now requires a message again
 
 ## [3.5.0] - 2021-03-19
 ### Added
