@@ -53,5 +53,5 @@ func (bioFieldType) Parse(content *string) (interface{}, error) {
 	return nil, errors.New("invalid field name: options are: " + strings.Join(config.BioFields, ", "))
 
 }
-func (bioFieldType) Help(_ string) string { return "A bio field" }
+func (bioFieldType) Help(_ string) string { return "A bio field name, eg `pronouns` or `gender`" }
 func (bioFieldType) Name() string         { return "bioField" }
