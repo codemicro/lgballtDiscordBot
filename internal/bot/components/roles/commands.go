@@ -1,41 +1,41 @@
 package roles
 
 import (
-	"context"
-	"errors"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
 	"strings"
 )
 
-func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
+func (*Roles) Track(ctx *route.MessageContext) error {
 	// Syntax: <message link> <emoji> <role name>
 
-	guildId, channelID, messageID, valid := tools.ParseMessageLink(command[0])
+	messageLink := ctx.Arguments["messageLink"].(string)
+	emojiString := ctx.Arguments["emoji"].(string)
+	roleName := ctx.Arguments["roleName"].(string)
+
+	guildId, channelID, messageID, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := r.b.SendMessage(m.ChannelID, "Unable to parse message link")
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Unable to parse message link")
 		return err
 	}
 
 	// Check message exists
-	channelRes := r.b.Client.Channel(channelID)
-	_, err := channelRes.Message(context.Background(), messageID)
+	_, err := ctx.Session.ChannelMessage(channelID, messageID)
 	if err != nil {
 		var respCode int
 		switch e := err.(type) {
-		case *harmony.APIError:
-			respCode = e.HTTPCode
-		case *harmony.ValidationError:
-			respCode = e.HTTPCode
+		case *discordgo.RESTError:
+			respCode = e.Response.StatusCode
 		default:
 			return err
 		}
 
 		if respCode == 404 || respCode == 400 {
-			_, err := r.b.SendMessage(m.ChannelID, "Message link invalid")
+			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message link invalid")
 			return err
 		}
 	}
@@ -49,40 +49,34 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	// Check there are less than 20
 
 	if len(reactionRoles) >= 20 {
-		_, err := r.b.SendMessage(m.ChannelID, "This message has too many reaction roles assigned to it "+
-			"already (maximum 20)")
+		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "This message has too many reaction roles " +
+			"assigned to it already (maximum 20)")
 		return err
 	}
 
 	// Search for and find role in guild
 
-	guild := r.b.Client.Guild(guildId)
-	roles, err := guild.Roles(context.Background())
+	roles, err := ctx.Session.GuildRoles(guildId)
 	if err != nil {
-		if errors.Is(err, harmony.APIError{}) {
-			_, err := r.b.SendMessage(m.ChannelID, "Unable to fetch roles for this guild")
-			return err
-		}
 		return err
 	}
 
 	var roleID string
-	targetRoleName := strings.Join(command[2:], " ")
 	{
 		for _, role := range roles {
-			if strings.EqualFold(role.Name, targetRoleName) {
+			if strings.EqualFold(role.Name, roleName) {
 				roleID = role.ID
 				break
 			}
 		}
 	}
 	if roleID == "" {
-		_, err := r.b.SendMessage(m.ChannelID, "Unable to find the specified role")
+		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "Unable to find the specified role")
 		return err
 	}
 
 	// Determine emoji string
-	emoji := tools.ParseEmojiToString(command[1])
+	emoji := tools.ParseEmojiToString(emojiString)
 
 	// Check this role or emoji are not in use
 	var errMessage string
@@ -97,19 +91,20 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 		}
 	}
 	if errMessage != "" {
-		_, err := r.b.SendMessage(m.ChannelID, errMessage)
+		_, err = ctx.SendMessageString(ctx.Message.ChannelID, errMessage)
 		return err
 	}
 
 	// Add reaction
 	// This will also act as a litmus test to see if the emoji is actually valid, since this will return an error if the
 	// emoji is not valid
-	err = r.b.Client.Channel(channelID).AddReaction(context.Background(), messageID, emoji)
+	err = ctx.Session.MessageReactionAdd(channelID, messageID, emoji)
 	if err != nil {
 		switch n := err.(type) {
-		case *harmony.APIError:
-			if n.HTTPCode == 400 && strings.Contains(strings.ToLower(n.Message), "unknown emoji") {
-				_, err := r.b.SendMessage(m.ChannelID, "That's not a valid emoji")
+		case *discordgo.RESTError:
+			if n.Response.StatusCode == 400 && n.Message != nil &&
+				strings.Contains(strings.ToLower(n.Message.Message), "unknown emoji") {
+				_, err := ctx.SendMessageString(ctx.Message.ChannelID, "That's not a valid emoji")
 				return err
 			}
 		}
@@ -129,35 +124,35 @@ func (r *Roles) TrackReaction(command []string, m *harmony.Message) error {
 	}
 
 	// Confirmation
-	return r.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
+	return ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
 }
 
-func (r *Roles) UntrackReaction(command []string, m *harmony.Message) error {
+func (r *Roles) Untrack(ctx *route.MessageContext) error {
 	// Syntax: <message link> <emoji>
 
-	_, channelID, messageID, valid := tools.ParseMessageLink(command[0])
+	messageLink := ctx.Arguments["messageLink"].(string)
+	emojiString := ctx.Arguments["emoji"].(string)
+
+	_, channelID, messageID, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := r.b.SendMessage(m.ChannelID, "Unable to parse message link")
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Unable to parse message link")
 		return err
 	}
 
 	// Check message exists
-	channelRes := r.b.Client.Channel(channelID)
-	_, err := channelRes.Message(context.Background(), messageID)
+	_, err := ctx.Session.ChannelMessage(channelID, messageID)
 	if err != nil {
 		var respCode int
 		switch e := err.(type) {
-		case *harmony.APIError:
-			respCode = e.HTTPCode
-		case *harmony.ValidationError:
-			respCode = e.HTTPCode
+		case *discordgo.RESTError:
+			respCode = e.Response.StatusCode
 		default:
 			return err
 		}
 
 		if respCode == 404 || respCode == 400 {
-			_, err := r.b.SendMessage(m.ChannelID, "Message link invalid")
+			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message link invalid")
 			return err
 		}
 	}
@@ -165,12 +160,12 @@ func (r *Roles) UntrackReaction(command []string, m *harmony.Message) error {
 	// NUKE!
 	rr := &db.ReactionRole{
 		MessageId: messageID,
-		Emoji:     tools.ParseEmojiToString(command[1]),
+		Emoji:     tools.ParseEmojiToString(emojiString),
 	}
 	err = rr.Delete()
 	if err != nil {
 		return err
 	}
 
-	return r.b.Client.Channel(m.ChannelID).AddReaction(context.Background(), m.ID, "✅")
+	return ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
 }

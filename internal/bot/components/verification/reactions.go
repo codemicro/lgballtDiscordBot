@@ -1,27 +1,27 @@
 package verification
 
 import (
-	"context"
 	"errors"
 	"fmt"
+	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
 	"regexp"
 	"strings"
 	"time"
 )
 
-func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
+func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
-	reactingUser, err := v.b.Client.User(context.Background(), r.UserID)
+	reactingUser, err := ctx.Session.User(ctx.Reaction.UserID)
 	if err != nil {
 		return err
 	}
 
-	c := v.b.Client.Channel(r.ChannelID)
+	// c := v.b.Client.Channel(r.ChannelID)
 
-	m, err := c.Message(context.Background(), r.MessageID)
+	m, err := ctx.Session.ChannelMessage(ctx.Reaction.ChannelID, ctx.Reaction.MessageID)
 	if err != nil {
 		return err
 	}
@@ -41,19 +41,17 @@ func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
 	var actionTaken string
 	var actionEmoji string
 
-	if r.Emoji.Name == acceptReaction {
+	if ctx.Reaction.Emoji.Name == acceptReaction {
 		actionTaken = "accepted"
 		actionEmoji = acceptReaction
 
-		err = v.b.Client.Guild(r.GuildID).AddMemberRoleWithReason(context.Background(), inlineUserData.UserID, roleId,
-			fmt.Sprintf("Added verification role on request of %s#%s", reactingUser.Username,
-				reactingUser.Discriminator))
+		err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, inlineUserData.UserID, config.VerificationIDs.RoleId)
 
 		if err != nil {
 			return err
 		}
 
-	} else if r.Emoji.Name == rejectReaction {
+	} else if ctx.Reaction.Emoji.Name == rejectReaction {
 		actionTaken = "rejected"
 		actionEmoji = rejectReaction
 
@@ -64,7 +62,7 @@ func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
 		if err != nil {
 			return err
 		}
-		vf.MessageLink = tools.MakeMessageLink(r.GuildID, r.ChannelID, r.MessageID)
+		vf.MessageLink = tools.MakeMessageLink(ctx.Reaction.GuildID, ctx.Reaction.ChannelID, ctx.Reaction.MessageID)
 		if found {
 			err = vf.Save()
 		} else {
@@ -86,11 +84,11 @@ func (v *Verification) AdminDecision(r *harmony.MessageReaction) error {
 		actionEmoji, actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format("15:04 on 2 Jan 2006")))
 	newContent = strings.ReplaceAll(newContent, "\n"+logHelpText+"\n", "")
 
-	_, err = c.EditMessage(context.Background(), m.ID, newContent)
+	_, err = ctx.Session.ChannelMessageEdit(ctx.Reaction.ChannelID, m.ID, newContent)
 	if err != nil {
 		return err
 	}
 
-	err = c.RemoveAllReactions(context.Background(), m.ID)
+	err = ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 	return err
 }

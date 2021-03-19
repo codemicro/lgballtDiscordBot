@@ -1,14 +1,11 @@
 package bios
 
-import (
-	"context"
-	"github.com/skwair/harmony"
-)
+import "github.com/codemicro/dgo-toolkit/route"
 
-func (b *Bios) ReactionAdd(e *harmony.MessageReaction) error {
+func (b *Bios) PaginationReaction(ctx *route.ReactionContext) error {
 
 	b.trackerLock.RLock()
-	_, found := b.trackedEmbeds[e.MessageID]
+	_, found := b.trackedEmbeds[ctx.Reaction.MessageID]
 	b.trackerLock.RUnlock()
 
 	if !found {
@@ -18,13 +15,13 @@ func (b *Bios) ReactionAdd(e *harmony.MessageReaction) error {
 	b.trackerLock.Lock()
 	defer b.trackerLock.Unlock()
 
-	tracked := b.trackedEmbeds[e.MessageID]
+	tracked := b.trackedEmbeds[ctx.Reaction.MessageID]
 
 	var newBioIndex int
 
-	if e.Emoji.Name == nextBioReaction {
+	if ctx.Reaction.Emoji.Name == nextBioReaction {
 		newBioIndex = tracked.current + 1
-	} else if e.Emoji.Name == previousBioReaction {
+	} else if ctx.Reaction.Emoji.Name == previousBioReaction {
 		newBioIndex = tracked.current - 1
 	} else { // not one of the control emojis
 		return nil
@@ -47,7 +44,7 @@ func (b *Bios) ReactionAdd(e *harmony.MessageReaction) error {
 	if tracked.bios[newBioIndex].SysMemberID != "" { // account bios will have a blank system member ID
 		nd = newSystemName(tracked.bios[newBioIndex].SysMemberID, plurality)
 	} else {
-		nd = newAccountName(tracked.accountId, e.GuildID, plurality, b.b)
+		nd = newAccountName(tracked.accountId, ctx.Reaction.GuildID, plurality, ctx.Session)
 	}
 
 	newEmbed, err := b.formBioEmbed(nd, tracked.bios[newBioIndex].BioData)
@@ -56,9 +53,9 @@ func (b *Bios) ReactionAdd(e *harmony.MessageReaction) error {
 	}
 
 	// remove reaction
-	_ = b.b.Client.Channel(tracked.channelId).RemoveUserReaction(context.Background(), e.MessageID, e.UserID, e.Emoji.Name)
+	_ = ctx.Session.MessageReactionRemove(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, ctx.Reaction.Emoji.Name, ctx.Reaction.UserID)
 
 	// edit message with that
-	_, err = b.b.Client.Channel(tracked.channelId).EditEmbed(context.Background(), e.MessageID, "", newEmbed)
+	_, err = ctx.Session.ChannelMessageEditEmbed(tracked.channelId, ctx.Reaction.MessageID, newEmbed)
 	return err
 }

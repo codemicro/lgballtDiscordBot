@@ -1,40 +1,37 @@
 package verification
 
 import (
-	"context"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
 	"strings"
 	"time"
 )
 
-func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelimit bool) error {
+func (*Verification) coreVerification(ctx *route.MessageContext) error {
 
-	// check ratelimit
-	if val, found := verificationRatelimit[m.Author.ID]; found && time.Now().Before(val) && checkRatelimit {
-		_, err := v.b.SendMessage(m.ChannelID, "You've already submitted a verification request. Please wait.")
-		return err
-	}
+	command := strings.Fields(ctx.Raw)
 
 	if len(command) < 1 {
-		_, err := v.b.SendMessage(m.ChannelID, "You're missing your verification message! Try again, silly! "+
-			tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You're missing your verification message! Try again," +
+			" silly! " + tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
 		return err
 	}
 
 	// Copy message into output channel
 	iu := inlineData{
-		UserID: m.Author.ID,
+		UserID: ctx.Message.Author.ID,
 	}
 
 	verificationText := strings.Join(command, " ")
 
 	if len(verificationText) > 1500 {
-		_, err := v.b.SendMessage(m.ChannelID, "Sorry, that message is too long! Please keep your "+
-			"verification text to a *maximum* of 1500 characters.")
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Sorry, that message is too long! Please keep " +
+			"your verification text to a *maximum* of 1500 characters.")
 		return err
 	}
 
@@ -43,8 +40,8 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 	// check for failed verifications and bans/kicks
 	var removal db.UserRemove
 	var failure db.VerificationFail
-	removal.UserId = m.Author.ID
-	failure.UserId = m.Author.ID
+	removal.UserId = ctx.Message.Author.ID
+	failure.UserId = ctx.Message.Author.ID
 
 	if found, err := removal.Get(); err != nil {
 		return err
@@ -71,7 +68,8 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 	}
 
 	// form messages
-	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(m.Author.ID), m.Author.Username, m.Author.Discriminator, verificationText)
+	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(ctx.Message.Author.ID),
+		ctx.Message.Author.Username, ctx.Message.Author.Discriminator, verificationText)
 
 	var messagePartTwo string
 
@@ -79,69 +77,82 @@ func (v *Verification) Verify(command []string, m *harmony.Message, checkRatelim
 	messagePartTwo += "\n\n" + logHelpText
 	messagePartTwo += "\n\n" + fmt.Sprintf("```%s```", iu.toString())
 
-	var newMessage *harmony.Message
+	var newMessage *discordgo.Message
 
 	if len(messagePartOne)+len(messagePartTwo) > 2000 {
-		_, err := v.b.SendMessage(OutputChannelId, messagePartOne)
+		_, err := ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne)
 		if err != nil {
 			return err
 		}
-		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne)
+		newMessage, err = ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne)
 		if err != nil {
 			return err
 		}
 	} else {
 		var err error
-		newMessage, err = v.b.SendMessage(OutputChannelId, messagePartOne+messagePartTwo)
+		newMessage, err = ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne+messagePartTwo)
 		if err != nil {
 			return err
 		}
 	}
 
-	// track ratelimit
-	if checkRatelimit {
-		verificationRatelimit[m.Author.ID] = time.Now().Add(ratelimitTimeout)
-	}
-
 	// Add sample reactions to that message
 	for _, reaction := range []string{acceptReaction, rejectReaction} {
-		err := v.b.Client.Channel(OutputChannelId).AddReaction(context.Background(), newMessage.ID, reaction)
+		err := ctx.Session.MessageReactionAdd(config.VerificationIDs.OutputChannel, newMessage.ID, reaction)
 		if err != nil {
 			return err
 		}
 	}
 
 	// Delete user's message
-	err := v.b.Client.Channel(m.ChannelID).DeleteMessage(context.Background(), m.ID)
+	err := ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
 	if err != nil {
 		logging.Error(err, "failed to delete message in verification")
 	}
 
+	return nil
+
+}
+
+func (v *Verification) Verify(ctx *route.MessageContext) error {
+
+	// check ratelimit
+	if val, found := v.ratelimit[ctx.Message.Author.ID]; found && time.Now().Before(val) {
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You've already submitted a verification " +
+			"request. Please wait.")
+		return err
+	}
+
+	err := v.coreVerification(ctx)
+	if err != nil {
+		return err
+	}
+
+	v.ratelimit[ctx.Message.Author.ID] = time.Now().Add(ratelimitTimeout)
+
 	// Send confirmation message to user
-	_, err = v.b.SendMessage(m.ChannelID, fmt.Sprintf("Thanks %s - your verification request has been "+
-		"recieved. We'll check it as soon as possible.", tools.MakePing(m.Author.ID)))
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Thanks %s - your verification request has been "+
+		"recieved. We'll check it as soon as possible.", tools.MakePing(ctx.Message.Author.ID)))
 	return err
 }
 
-func (v *Verification) FVerify(command []string, m *harmony.Message) error {
-	if len(command) != 1 {
-		_, err := v.b.SendMessage(m.ChannelID, "No message link supplied")
-		return err
-	}
+func (v *Verification) FVerify(ctx *route.MessageContext) error {
 
-	_, channelId, messageId, valid := tools.ParseMessageLink(command[0])
+	messageLink := ctx.Arguments["messageLink"].(string)
+
+	_, channelId, messageId, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := v.b.SendMessage(m.ChannelID, "Invalid message link")
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Invalid message link")
 		return err
 	}
 
-	mct, err := v.b.Client.Channel(channelId).Message(context.Background(), messageId)
+	mct, err := ctx.Session.ChannelMessage(channelId, messageId)
 	if err != nil {
 		switch e := err.(type) {
-		case *harmony.APIError:
-			if e.HTTPCode == 404 {
-				_, err := v.b.SendMessage(m.ChannelID, "Message not found")
+		case *discordgo.RESTError:
+			if e.Response.StatusCode == 404 {
+				_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message not found")
 				return err
 			}
 			return err
@@ -150,34 +161,34 @@ func (v *Verification) FVerify(command []string, m *harmony.Message) error {
 		}
 	}
 
-	return v.Verify(strings.Split(mct.Content, " "), mct, false)
+	err = v.coreVerification(&route.MessageContext{
+		CommonContext: ctx.CommonContext,
+		Message:       &discordgo.MessageCreate{Message: mct},
+		Arguments:     nil,
+		Raw:           mct.Content,
+	})
 
-}
-
-func (v *Verification) RecordRemoval(command []string, m *harmony.Message) error {
-
-	if len(command) < 3 {
-		return nil
+	if err != nil {
+		return err
 	}
 
-	actionType := command[0]
-	uid, _ := tools.ParsePing(command[1])
-	reason := strings.Join(command[2:], " ")
+	return ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
+}
 
-	ur := db.UserRemove{UserId: uid}
+func (*Verification) coreRecordRemoval(ctx *route.MessageContext, actionType string) error {
+
+	userId := ctx.Arguments["user"].(string)
+	reason := ctx.Arguments["reason"].(string)
+
+	ur := db.UserRemove{UserId: userId}
 
 	found, err := ur.Get()
 	if err != nil {
 		return err
 	}
 
-	if actionType == "ban" {
-		ur.Action = "banned"
-	} else {
-		ur.Action = "kicked"
-	}
-
 	ur.Reason = reason
+	ur.Action = actionType
 
 	if found {
 		err = ur.Save()
@@ -189,6 +200,14 @@ func (v *Verification) RecordRemoval(command []string, m *harmony.Message) error
 		return err
 	}
 
-	_, err = v.b.SendMessage(m.ChannelID, "Action logged.")
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, "Action logged.")
 	return err
+}
+
+func (v *Verification) TrackBan(ctx *route.MessageContext) error {
+	return v.coreRecordRemoval(ctx, "banned")
+}
+
+func (v *Verification) TrackKick(ctx *route.MessageContext) error {
+	return v.coreRecordRemoval(ctx, "kicked")
 }

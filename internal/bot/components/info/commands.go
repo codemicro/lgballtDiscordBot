@@ -1,46 +1,20 @@
 package info
 
 import (
-	"context"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
-	"github.com/go-ping/ping"
-	"github.com/hashicorp/go-multierror"
-	"github.com/skwair/harmony"
-	"github.com/skwair/harmony/embed"
-	"runtime"
 	"time"
 )
 
-func (i *Info) Ping(_ []string, m *harmony.Message) error {
+func (*Info) Ping(ctx *route.MessageContext) error {
 
-	_ = i.b.Client.Channel(m.ChannelID).TriggerTyping(context.Background())
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Pong! Current heartbeat latency is "+
+		"`%dms`", ctx.Session.HeartbeatLatency().Milliseconds()))
 
-	pinger, err := ping.NewPinger("www.discord.com")
-	if err != nil {
-		return err
-	}
-
-	if runtime.GOOS == "windows" { // See https://github.com/go-ping/ping#windows
-		pinger.SetPrivileged(true)
-	}
-
-	pinger.Count = 3
-	err = pinger.Run()
-	if err != nil {
-		_, mErr := i.b.SendMessage(m.ChannelID, "Unable to complete ping.")
-		if mErr != nil {
-			err = multierror.Append(err, mErr)
-		}
-		return err
-	}
-	stats := pinger.Statistics()
-	_, err = i.b.SendMessage(m.ChannelID, fmt.Sprintf("Pong! Average ping time was `%dms`",
-		stats.AvgRtt.Milliseconds()))
-
-	return nil
-
+	return err
 }
 
 var rainbowColours = [...]int{
@@ -54,7 +28,7 @@ var rainbowColours = [...]int{
 	0,
 }
 
-func (i *Info) Info(_ []string, m *harmony.Message) error {
+func (i *Info) Info(ctx *route.MessageContext) error {
 	sinceStart := time.Since(buildInfo.StartTime)
 
 	hours := int64(sinceStart.Hours())
@@ -63,18 +37,21 @@ func (i *Info) Info(_ []string, m *harmony.Message) error {
 
 	earthRotations := float64(hours) / 24
 
-	emb := embed.New().
-		Title(fmt.Sprintf("LGBallT bot v%s", buildInfo.Version)).
-		Fields(
-			embed.NewField().Name("Build date and time").Value(buildInfo.BuildDate).Build(),
-			embed.NewField().Name("Go version").Value(buildInfo.GoVersion).Build(),
-			embed.NewField().Name("Lines of code").Value(fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)).Build(),
-			embed.NewField().Name("Uptime").Value(fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)).Build(),
-		).Build()
+	cmds, reactions := ctx.Kit.GetNums()
 
-	emb.Color = rainbowColours[0]
+	emb := &discordgo.MessageEmbed{
+		Title: fmt.Sprintf("LGBallT bot v%s", buildInfo.Version),
+		Color: rainbowColours[0],
+		Fields: []*discordgo.MessageEmbedField{
+			{Name: "Build date and time", Value: buildInfo.BuildDate},
+			{Name: "Go version and arch", Value: buildInfo.GoVersion},
+			{Name: "Lines of code", Value: fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)},
+			{Name: "Registered commands", Value: fmt.Sprintf("There are currently %d commands and %d reaction handlers registered in the bot.", cmds, reactions)},
+			{Name: "Uptime", Value: fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)},
+		},
+	}
 
-	msg, err := i.b.SendEmbed(m.ChannelID, emb)
+	msg, err := ctx.SendMessageEmbed(ctx.Message.ChannelID, emb)
 	if err != nil {
 		return err
 	}
@@ -83,7 +60,7 @@ func (i *Info) Info(_ []string, m *harmony.Message) error {
 		for c := 1; c < len(rainbowColours); c += 1 {
 			time.Sleep(time.Millisecond * 800)
 			emb.Color = rainbowColours[c]
-			_, err := i.b.Client.Channel(msg.ChannelID).EditEmbed(context.Background(), msg.ID, "", emb)
+			_, err = ctx.Session.ChannelMessageEditEmbed(msg.ChannelID, msg.ID, emb)
 			if err != nil {
 				logging.Error(err, "info colours unable to update")
 				return

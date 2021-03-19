@@ -1,25 +1,17 @@
 package chatchart
 
 import (
-	"context"
+	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
 )
 
-func (c *ChatChart) TriggerCollection(command []string, m *harmony.Message) error {
-	// Syntax: <channel mention>
+func (c *ChatChart) Trigger(ctx *route.MessageContext) error {
 
-	channelId, validChannel := tools.ParseChannelMention(command[0])
-	if validChannel {
-		_, err := c.b.Client.Channel(channelId).Get(context.Background())
-		if err != nil {
-			validChannel = false
-		}
-	}
+	channelId := ctx.Arguments["channel"].(string)
 
-	if !validChannel {
-		_, err := c.b.SendMessage(m.ChannelID, "Invalid channel")
+	if _, err := ctx.Session.Channel(channelId); err != nil {
+		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Invalid channel")
 		if err != nil {
 			return err
 		}
@@ -32,12 +24,12 @@ func (c *ChatChart) TriggerCollection(command []string, m *harmony.Message) erro
 	} else {
 		c.queue <- collectionIntent{
 			ChannelId: channelId,
-			Message:   m,
+			Ctx:   ctx,
 		}
 		msg = "Task queued. You'll be pinged when collection is complete and a chart is ready."
 	}
 
-	_, err := c.b.SendMessage(m.ChannelID, msg)
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, msg)
 	return err
 
 }

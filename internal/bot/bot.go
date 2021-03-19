@@ -1,40 +1,52 @@
 package bot
 
 import (
-	"context"
 	"fmt"
-	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/core"
+	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/messageTools"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/misc"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/muteme"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/pressf"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/roles"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
-	"github.com/skwair/harmony"
 	"time"
 )
 
 func Start(state *state.State) error {
 
-	client, err := harmony.NewClient(config.Token, harmony.WithGatewayIntents(harmony.GatewayIntentUnprivileged))
+	session, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
 		return err
 	}
 
-	b := core.New(client, config.Prefix, state)
-	err = RegisterHandlers(b)
+	kit := route.NewKit(session, []string{config.Prefix})
+
+	kit.ErrorHandler = func(err error) { logging.Error(err) }
+
+	err = registerHandlers(kit, state)
 	if err != nil {
 		return err
 	}
 
-	if err = client.Connect(context.Background()); err != nil {
+	err = session.Open()
+	if err != nil {
 		return err
 	}
 
 	go func() {
 		f := func(text string) {
-			_ = client.CurrentUser().SetStatus(&harmony.Status{
-				Game: &harmony.Activity{
-					Name: text,
-				},
-			})
+			err := session.UpdateGameStatus(0, text)
+			if err != nil {
+				logging.Error(err)
+			}
 		}
 
 		if len(config.Statuses) == 1 {
@@ -50,14 +62,65 @@ func Start(state *state.State) error {
 		}
 	}()
 
-	state.AddGoroutine()
-
-	// Set finish worker
 	go func() {
 		state.WaitUntilShutdownTrigger()
-		client.Disconnect()
+		_ = session.Close()
 		state.FinishGoroutine()
 	}()
+
+	return nil
+}
+
+func registerHandlers(kit *route.Kit, st *state.State) error {
+
+	// TODO: commands/reactions
+
+	err := misc.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = pressf.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = muteme.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = info.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = bios.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = messageTools.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = chatchart.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = roles.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	err = verification.Init(kit, st)
+	if err != nil {
+		return err
+	}
+
+	kit.CreateHandlers()
 
 	return nil
 }

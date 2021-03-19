@@ -2,20 +2,19 @@ package chatchart
 
 import (
 	"bytes"
-	"context"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"github.com/skwair/harmony"
-	"github.com/skwair/harmony/embed"
 	"github.com/wcharczuk/go-chart/v2"
 	"sort"
+	"strconv"
 	"strings"
+	"time"
 )
 
 const (
 	maxMessages      = 5000
-	perGroup         = 100
 	percentThreshold = 1
 	usernameMaxLen   = 17
 )
@@ -42,22 +41,27 @@ func magicalUsernameTrim(in string) string {
 	return o
 }
 
+const discordEpoch = 1420070400000
+
+func makeSnowflakeAtTime(t time.Time) string {
+	x := (uint64(t.UnixNano()/1000000) - discordEpoch) << 22
+	return strconv.FormatUint(x, 10)
+}
+
 func (c *ChatChart) collectMessages(intent collectionIntent) {
 
+	// TODO: zerolog
+
 	channelId := intent.ChannelId
-	m := intent.Message
+	ctx := intent.Ctx
 
-	// get channel
-	channel := c.b.Client.Channel(channelId)
-
-	// get last message ID
-	msg, err := c.b.SendMessage(channelId, "Chatchart collection in progress...")
+	// trigger typing
+	err := ctx.Session.ChannelTyping(channelId)
 	if err != nil {
-		logging.Error(err, "could not send message from collectMessages")
-		return
+		logging.Warn(err.Error())
 	}
 
-	lastMessage := msg.ID
+	lastMessage := makeSnowflakeAtTime(time.Now().Add(time.Minute * 5))
 	messageCount := 0
 
 	messageUserCount := make(map[string]int)
@@ -65,7 +69,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	// get messages and count per user
 	for messageCount < maxMessages {
 
-		messages, err := channel.Messages(context.Background(), "<"+lastMessage, perGroup)
+		messages, err := ctx.Session.ChannelMessages(channelId, 100, lastMessage, "", "")
 
 		if err != nil {
 			logging.Error(err, "unable to fetch messages for chatchart command")
@@ -76,7 +80,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 			break
 		}
 
-		lmt := messages[0].Timestamp
+		lmt, _ := discordgo.SnowflakeTimestamp(messages[0].ID)
 
 		for _, message := range messages {
 			authorName := fmt.Sprintf("%s#%s", message.Author.Username, message.Author.Discriminator)
@@ -84,18 +88,16 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 			v += 1
 			messageUserCount[authorName] = v
 
-			if lmt.After(message.Timestamp) {
-				lmt = message.Timestamp
+			nt, _ := discordgo.SnowflakeTimestamp(message.ID)
+
+			if lmt.After(nt) {
+				lmt = nt
 				lastMessage = message.ID
 			}
 		}
 
 		messageCount += len(messages)
 	}
-
-	// delete own message
-	_ = channel.DeleteMessage(context.Background(), msg.ID) // error ignored in case someone has already deleted the
-	// message
 
 	// filter out groups that are < 5 percent of the total
 	var otherTotal int
@@ -131,9 +133,9 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	})
 
 	// get channel
-	crx, err := channel.Get(context.Background())
+	crx, err := ctx.Session.Channel(channelId)
 	if err != nil {
-		logging.Error(err, "failed to get source channel info")
+		logging.Error(err, "failed to fetch channel")
 	}
 
 	// make graph
@@ -150,7 +152,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		XAxis:    chart.Style{TextRotationDegrees: 90},
 	}
 
-	buffer := &tools.ClosingBuffer{Buffer: bytes.NewBuffer([]byte{})}
+	buffer := bytes.NewBuffer([]byte{})
 	err = pie.Render(chart.PNG, buffer)
 	if err != nil {
 		logging.Error(err, "failed to render chart in collectMessages")
@@ -158,10 +160,9 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	}
 
 	// form an embed
-	emb := embed.Embed{
-		Type:        "rich",
-		Image:       embed.NewImage("attachment://chart.png"),
+	emb := &discordgo.MessageEmbed{
 		Description: fmt.Sprintf("Chatchart for %s\n", tools.MakeChannelMention(crx.ID)),
+		Image:       &discordgo.MessageEmbedImage{URL: "attachment://chart.png"},
 	}
 
 	// add fields to embed
@@ -171,10 +172,21 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// send image to user with ping
 
-	_, err = c.b.Client.Channel(m.ChannelID).Send(context.Background(),
-		harmony.WithContent(tools.MakePing(m.Author.ID)),
-		harmony.WithEmbed(&emb),
-		harmony.WithFiles(harmony.FileFromReadCloser(buffer, "chart.png")))
+	_, err = ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
+		Embed:   emb,
+		Content: tools.MakePing(ctx.Message.Author.ID),
+		Files: []*discordgo.File{
+			{Name: "chart.png", Reader: buffer},
+		},
+		AllowedMentions: &discordgo.MessageAllowedMentions{
+			Users: []string{ctx.Message.Author.ID},
+		},
+		Reference: &discordgo.MessageReference{
+			MessageID: ctx.Message.ID,
+			ChannelID: ctx.Message.ChannelID,
+			GuildID:   ctx.Message.GuildID,
+		},
+	})
 
 	if err != nil {
 		logging.Error(err, "unable to send final chatchart message from collectMessages")

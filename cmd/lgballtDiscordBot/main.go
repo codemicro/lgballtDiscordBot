@@ -20,7 +20,7 @@ func main() {
 
 	err := bot.Start(runState)
 	if err != nil {
-		logging.Error(err, "Failed to start Harmony client")
+		logging.Error(err, "Failed to start bot")
 		os.Exit(1)
 	}
 
