@@ -150,3 +150,5 @@ internal/pluralkit/system_test.go
 internal/buildInfo/currentDate
 
 internal/buildInfo/jdat
+
+internal/buildInfo/clocData

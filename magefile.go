@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path"
 	"strings"
 	"time"
@@ -72,13 +71,13 @@ func PreBuild() error {
 	}
 
 	{
-		// gocloc --output-type=json . > internal/buildInfo/jdat
+		// gocloc --output-type=json . > internal/buildInfo/clocData
 		gcOut, err := sh.Output("gocloc", "--output-type=json", ".")
 		if err != nil {
 			return err
 		}
 
-		err = ioutil.WriteFile(path.Join("internal", "buildInfo", "jdat"), []byte(strings.TrimSpace(gcOut)), 0644)
+		err = ioutil.WriteFile(path.Join("internal", "buildInfo", "clocData"), []byte(strings.TrimSpace(gcOut)), 0644)
 		if err != nil {
 			return err
 		}

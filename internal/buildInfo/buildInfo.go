@@ -14,7 +14,7 @@ const Version = "3.5.1"
 //go:embed currentDate
 var BuildDate string
 
-//go:embed jdat
+//go:embed clocData
 var jdat []byte
 
 var (
