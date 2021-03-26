@@ -20,6 +20,11 @@ import (
 
 var Default = Build
 
+const (
+	dockerImageTag      = "lgballtdiscordbot"
+	builtExecutableName = "lgballtDiscordBot"
+)
+
 func Build() error {
 	mg.Deps(InstallDeps)
 	mg.Deps(PreBuild)
@@ -32,21 +37,38 @@ func Build() error {
 		fileExtension = ".exe"
 	}
 
-	cmd := exec.Command("go", "build", "-o", path.Join("build", "lgballtDiscordBot" + fileExtension), "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
+	cmd := exsh.Command("go", "build", "-o", path.Join("build", builtExecutableName+fileExtension), "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
 	return cmd.Run()
 }
 
 func InstallDeps() error {
 	fmt.Println("Installing dependencies")
-	cmd := exec.Command("go", "mod", "download")
-	return cmd.Run()
+	cmd := exsh.Command("go", "mod", "download")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	if !exsh.IsCmdAvail("gocloc") {
+		fmt.Println("Installing gocloc")
+		cmd = exsh.Command("go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc")
+		cmd.Env = append(os.Environ(), "GO111MODULE=off")
+		if err := cmd.Run(); err != nil {
+			return err
+		}
+	} else {
+		if mg.Verbose() {
+			fmt.Println("Skipping gocloc install (found in PATH)")
+		}
+	}
+
+	return nil
 }
 
 func PreBuild() error {
 	fmt.Println("Running prebuild tasks")
 
 	if !exsh.IsCmdAvail("gocloc") {
-		return errors.New("gocloc must be installed on your system path - see https://github.com/hhatto/gocloc")
+		return errors.New("gocloc must be installed on your PATH - run `mage installDeps` or see https://github.com/hhatto/gocloc")
 	}
 
 	{
@@ -79,12 +101,12 @@ type Docker mg.Namespace
 
 func (Docker) Build() error {
 	if !exsh.IsCmdAvail("docker") {
-		return errors.New("docker must be installed on your system path - see https://docs.docker.com/get-docker/")
+		return errors.New("docker must be installed on your PATH - see https://docs.docker.com/get-docker/")
 	}
 
 	fmt.Println("Building Docker image")
 
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
-	cmd := exec.Command("docker", "build", ".", "--file", "Dockerfile", "--tag", "lgballtdiscordbot")
+	cmd := exsh.Command("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
 	return cmd.Run()
 }
