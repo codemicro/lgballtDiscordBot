@@ -144,11 +144,8 @@ token.txt
 run/
 build/
 internal/pluralkit/member_test.go
-
 internal/pluralkit/system_test.go
-
 internal/buildInfo/currentDate
-
 internal/buildInfo/jdat
-
 internal/buildInfo/clocData
+internal/buildInfo/version
