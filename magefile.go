@@ -112,6 +112,8 @@ func (Docker) Build() error {
 		return errors.New("docker must be installed on your PATH - see https://docs.docker.com/get-docker/")
 	}
 
+	mg.Deps(PreBuild)
+
 	fmt.Println("Building Docker image")
 
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
