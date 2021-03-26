@@ -24,6 +24,8 @@ const (
 	builtExecutableName = "lgballtDiscordBot"
 )
 
+var buildVersion = getVersion()
+
 func Build() error {
 	mg.Deps(InstallDeps)
 	mg.Deps(PreBuild)
@@ -36,7 +38,7 @@ func Build() error {
 		fileExtension = ".exe"
 	}
 
-	cmd := exsh.Command("go", "build", "-o", path.Join("build", builtExecutableName+fileExtension), "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
+	cmd := exsh.Command("go", "build", "-o", path.Join("build", fmt.Sprintf("%s-%s%s", builtExecutableName, buildVersion, fileExtension)), "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
 	return cmd.Run()
 }
 
@@ -90,7 +92,14 @@ func PreBuild() error {
 		if err != nil {
 			return err
 		}
+	}
 
+	{
+		// write internal/buildInfo/version
+		err := ioutil.WriteFile(path.Join("internal", "buildInfo", "version"), []byte(buildVersion), 0644)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -108,4 +117,23 @@ func (Docker) Build() error {
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
 	cmd := exsh.Command("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
 	return cmd.Run()
+}
+
+func getVersion() string {
+	versionString := os.Getenv("VERSION")
+	
+	if versionString == "" {
+		commitHash, err := sh.Output("git", "log", "-n1", "--format=format:'%H'")
+		if err != nil {
+			return "unknown"
+		}
+
+		return strings.Trim(commitHash, "'")[:6] + "dev"
+	}
+
+	if strings.ToLower(versionString)[0] == 'v' {
+		versionString = versionString[1:]
+	}
+
+	return versionString
 }
