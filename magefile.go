@@ -59,9 +59,15 @@ func InstallDeps() error {
 
 	if !exsh.IsCmdAvail("gocloc") {
 		fmt.Println("Installing gocloc")
+		
 		if err := sh.RunWith(map[string]string{"GO111MODULE": "off"}, "go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc"); err != nil {
 			return err
 		}
+
+		if !exsh.IsCmdAvail("gocloc") {
+			return errors.New("gocloc was installed, but cannot be found: is GOPATH/bin on PATH?")
+		}
+
 	} else {
 		if mg.Verbose() {
 			fmt.Println("Skipping gocloc install (found in PATH)")
