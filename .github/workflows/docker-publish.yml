@@ -25,6 +25,7 @@ jobs:
         uses: magefile/mage-action@v1
         env:
           REGISTRY_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+          VERSION: ${GITHUB_REF/refs\/tags\//}
         with:
           version: latest
           args: -v docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
