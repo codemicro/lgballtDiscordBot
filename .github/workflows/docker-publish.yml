@@ -1,36 +1,30 @@
-name: Docker
+name: Build and publish Docker image
 
 on:
-    workflow_dispatch:
-    release:
-      types: [published]
-      
+  workflow_dispatch:
+  release:
+    types: [published]
+
 env:
   IMAGE_NAME: lgballtdiscordbot
 
 jobs:
-  # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
+  mage:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
-
-      - name: Log into registry
-        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u codemicro --password-stdin
-
-      - name: Push image
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
-
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag $IMAGE_NAME $IMAGE_ID:latest
-          docker push $IMAGE_ID:latest
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      -
+        name: Run Mage
+        uses: magefile/mage-action@v1
+        env:
+          REGISTRY_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          version: latest
+          args: docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
