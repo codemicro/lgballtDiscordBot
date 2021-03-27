@@ -58,6 +58,12 @@ func InstallDeps() error {
 		return err
 	}
 
+	mg.Deps(EnsureGocloc)
+
+	return nil
+}
+
+func EnsureGocloc() error {
 	if !exsh.IsCmdAvail("gocloc") {
 		fmt.Println("Installing gocloc")
 
@@ -125,6 +131,7 @@ func (Docker) Build() error {
 		return errors.New("docker must be installed on your PATH - see https://docs.docker.com/get-docker/")
 	}
 
+	mg.Deps(EnsureGocloc)
 	mg.Deps(PreBuild)
 
 	fmt.Println("Building Docker image as version", buildVersion)
