@@ -42,28 +42,24 @@ func Build() error {
 
 	outputFilename := path.Join("build", fmt.Sprintf("%s.%s%s", builtExecutableName, buildVersion, fileExtension))
 
-	cmd := exsh.Command("go", "build", "-o", outputFilename, "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
-	if err := cmd.Run(); err != nil {
+
+	if err := sh.Run("go", "build", "-o", outputFilename, "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot"); err != nil {
 		return err
 	}
 
 	fmt.Println("Successfully built and written to", outputFilename)
-
 	return nil
 }
 
 func InstallDeps() error {
 	fmt.Println("Installing dependencies")
-	cmd := exsh.Command("go", "mod", "download")
-	if err := cmd.Run(); err != nil {
+	if err := sh.Run("go", "mod", "download"); err != nil {
 		return err
 	}
 
 	if !exsh.IsCmdAvail("gocloc") {
 		fmt.Println("Installing gocloc")
-		cmd = exsh.Command("go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc")
-		cmd.Env = append(os.Environ(), "GO111MODULE=off")
-		if err := cmd.Run(); err != nil {
+		if err := sh.RunWith(map[string]string{"GO111MODULE": "off"}, "go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc"); err != nil {
 			return err
 		}
 	} else {
@@ -127,8 +123,7 @@ func (Docker) Build() error {
 	fmt.Println("Building Docker image")
 
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
-	cmd := exsh.Command("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
-	return cmd.Run()
+	return sh.Run("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
 }
 
 func getVersion() string {

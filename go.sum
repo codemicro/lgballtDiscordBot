@@ -8,8 +8,8 @@ github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d h1:Byv0BzEl
 github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/bwmarrin/discordgo v0.23.2 h1:BzrtTktixGHIu9Tt7dEE6diysEF9HWnXeHuoJEt2fH4=
 github.com/bwmarrin/discordgo v0.23.2/go.mod h1:c1WtWUGN6nREDmzIpyTp/iD3VYt4Fpx+bVyfBG7JE+M=
-github.com/codemicro/alib-go v0.0.4 h1:gWeslcW7QWK5aSU70kKY6XvVnptvskjXReEZprb4vgM=
-github.com/codemicro/alib-go v0.0.4/go.mod h1:yb287N7INtdPrv1aq40IgyquW1njH+2WfJ/jK9w9P6A=
+github.com/codemicro/alib-go v0.0.5 h1:gttS97MfSXpLr4Ek0ZqeiaQad5SJjWku8hoUoS2h184=
+github.com/codemicro/alib-go v0.0.5/go.mod h1:yb287N7INtdPrv1aq40IgyquW1njH+2WfJ/jK9w9P6A=
 github.com/codemicro/dgo-toolkit v0.5.1 h1:0O6jE0C4KXvF7tcn+Bsma+LD4DqsR6agwsJOw/zhsT8=
 github.com/codemicro/dgo-toolkit v0.5.1/go.mod h1:NT5a9aepB/b22XwmlpoahjfU79sAAMzPmn/2YOTRCp0=
 github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b h1:TUmTwgXqPctxJ0+aXms7oZk+s/jTudzFBqQh/3w7PQE=
