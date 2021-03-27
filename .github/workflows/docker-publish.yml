@@ -27,4 +27,4 @@ jobs:
           REGISTRY_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           version: latest
-          args: docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
+          args: -v docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
