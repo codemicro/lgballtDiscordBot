@@ -123,14 +123,16 @@ func (Docker) Build() error {
 
 func getVersion() string {
 	versionString := os.Getenv("VERSION")
-	
+
 	if versionString == "" {
+		log.SetOutput(bytes.NewBuffer([]byte{})) // suppress mage/sh from printing the git command when run - bad solution but oh well. It works
 		commitHash, err := sh.Output("git", "log", "-n1", "--format=format:'%H'")
+		log.SetOutput(os.Stdout)
 		if err != nil {
 			return "unknown"
 		}
 
-		return strings.Trim(commitHash, "'")[:6] + "dev"
+		return strings.Trim(commitHash, "'")[:6] + "-dev"
 	}
 
 	if strings.ToLower(versionString)[0] == 'v' {
