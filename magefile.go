@@ -3,9 +3,11 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -38,8 +40,16 @@ func Build() error {
 		fileExtension = ".exe"
 	}
 
-	cmd := exsh.Command("go", "build", "-o", path.Join("build", fmt.Sprintf("%s-%s%s", builtExecutableName, buildVersion, fileExtension)), "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
-	return cmd.Run()
+	outputFilename := path.Join("build", fmt.Sprintf("%s.%s%s", builtExecutableName, buildVersion, fileExtension))
+
+	cmd := exsh.Command("go", "build", "-o", outputFilename, "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot")
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	fmt.Println("Successfully built and written to", outputFilename)
+
+	return nil
 }
 
 func InstallDeps() error {
