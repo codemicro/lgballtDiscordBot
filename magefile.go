@@ -6,9 +6,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 	"time"
@@ -42,7 +44,6 @@ func Build() error {
 
 	outputFilename := path.Join("build", fmt.Sprintf("%s.%s%s", builtExecutableName, buildVersion, fileExtension))
 
-
 	if err := sh.Run("go", "build", "-o", outputFilename, "github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot"); err != nil {
 		return err
 	}
@@ -59,7 +60,7 @@ func InstallDeps() error {
 
 	if !exsh.IsCmdAvail("gocloc") {
 		fmt.Println("Installing gocloc")
-		
+
 		if err := sh.RunWith(map[string]string{"GO111MODULE": "off"}, "go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc"); err != nil {
 			return err
 		}
@@ -126,10 +127,51 @@ func (Docker) Build() error {
 
 	mg.Deps(PreBuild)
 
-	fmt.Println("Building Docker image")
+	fmt.Println("Building Docker image as version", buildVersion)
 
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
 	return sh.Run("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
+}
+
+func (Docker) Login(registry, user string) error {
+	// Requires token to be in REGISTRY_AUTH_TOKEN
+
+	token, ok := os.LookupEnv("REGISTRY_AUTH_TOKEN")
+	if !ok {
+		return errors.New("REGISTRY_AUTH_TOKEN not set")
+	}
+
+	var output io.Writer
+	if mg.Verbose() {
+		output = os.Stdout
+	} else {
+		output = bytes.NewBuffer([]byte{})
+	}
+
+	fmt.Printf("Logging into Docker registry %s", registry)
+
+	// echo "$REGISTRY_AUTH_TOKEN" | docker login ghcr.io -u codemicro --password-stdin
+	cmd := exec.Command("docker", "login", registry, "-u", user, "--password-stdin")
+	cmd.Stdout = output
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = bytes.NewBufferString(token)
+	return cmd.Run()
+}
+
+func (Docker) Publish(imageId string) error {
+	// note: imageId should be something like "blah/blah/blah:latest"
+
+	imageId = fmt.Sprintf(strings.ToLower(imageId), dockerImageTag)
+
+	fmt.Println("Publishing Docker image as", imageId)
+
+	// docker tag $IMAGE_NAME $IMAGE_ID
+	if err := sh.Run("docker", "tag", dockerImageTag, imageId); err != nil {
+		return err
+	}
+
+	// docker push $IMAGE_ID
+	return sh.Run("docker", "push", imageId)
 }
 
 func getVersion() string {
