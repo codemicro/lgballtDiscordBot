@@ -27,4 +27,4 @@ jobs:
           VERSION: ${GITHUB_REF/refs\/tags\//}
         with:
           version: latest
-          args: -v docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
+          args: -v setBuildVersion "$VERSION" docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"

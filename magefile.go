@@ -21,14 +21,16 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-var Default = Build
-
 const (
 	dockerImageTag      = "lgballtdiscordbot"
 	builtExecutableName = "lgballtDiscordBot"
 )
 
-var buildVersion = getVersion()
+var buildVersion = getLatestCommitHash(true)
+
+func SetBuildVersion(ver string) {
+	buildVersion = ver
+}
 
 func Build() error {
 	mg.Deps(InstallDeps)
@@ -181,23 +183,21 @@ func (Docker) Publish(imageId string) error {
 	return sh.Run("docker", "push", imageId)
 }
 
-func getVersion() string {
-	versionString := os.Getenv("VERSION")
+func getLatestCommitHash(trim bool) string {
 
-	if versionString == "" {
-		log.SetOutput(bytes.NewBuffer([]byte{})) // suppress mage/sh from printing the git command when run - bad solution but oh well. It works
-		commitHash, err := sh.Output("git", "log", "-n1", "--format=format:'%H'")
-		log.SetOutput(os.Stdout)
-		if err != nil {
-			return "unknown"
-		}
-
-		return strings.Trim(commitHash, "'")[:6] + "-dev"
+	// suppress mage/sh from printing the git command when run - bad solution but oh well. It works
+	// https://github.com/magefile/mage/issues/291
+	log.SetOutput(bytes.NewBuffer([]byte{})) 
+	commitHash, err := sh.Output("git", "log", "-n1", "--format=format:'%H'")
+	log.SetOutput(os.Stdout)
+	if err != nil {
+		return "unknown"
 	}
 
-	if strings.ToLower(versionString)[0] == 'v' {
-		versionString = versionString[1:]
+	cutStr := strings.Trim(commitHash, "'")
+	if trim {
+		cutStr = cutStr[:6]
 	}
 
-	return versionString
+	return cutStr + "-dev"
 }
