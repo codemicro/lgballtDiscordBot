@@ -20,6 +20,10 @@ jobs:
         with:
           go-version: 1.16
       -
+        name: Get tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      -
         name: Run Mage
         uses: magefile/mage-action@v1
         env:
@@ -27,4 +31,4 @@ jobs:
           VERSION: ${GITHUB_REF/refs\/tags\//}
         with:
           version: latest
-          args: -v setBuildVersion "$VERSION" docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
+          args: -v setBuildVersion ${{ steps.get_version.outputs.VERSION }} docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
