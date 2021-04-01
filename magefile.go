@@ -29,7 +29,7 @@ const (
 var buildVersion = getLatestCommitHash(true)
 
 func SetBuildVersion(ver string) {
-	buildVersion = ver
+	buildVersion = strings.TrimPrefix(ver, "v")
 }
 
 func Build() error {
