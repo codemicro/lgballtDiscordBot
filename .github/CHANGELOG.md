@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [3.5.2] - 2021-04-01
+### Changed
+* Switched to DiscordGo for webhook execution
+### Fixed
+* Reddit RSS feeds no longer cause a panic if no publish time is provided
+
 ## [3.5.1] - 2021-03-19
 ### Changed
 * `bioFieldType` help text
