@@ -89,7 +89,15 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 		// just send it
 
 		for _, redditPost := range newItems {
+
 			wh := dishook.NewMessage()
+
+			var formattedTime time.Time
+			if redditPost.UpdatedParsed == nil {
+				formattedTime = time.Now()
+			} else {
+				formattedTime = *redditPost.UpdatedParsed
+			}
 
 			var emb dishook.Embed
 			emb.Title = redditPost.Title
@@ -100,7 +108,7 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 			emb.URL = redditPost.Link
 			emb.Footer = dishook.EmbedFooter{
 				Text: fmt.Sprintf("New post at %s - /r/%s",
-					redditPost.UpdatedParsed.Format("Mon Jan 2 15:04:05 MST 2006"), redditPost.Categories[0]),
+					formattedTime.Format("Mon Jan 2 15:04:05 MST 2006"), redditPost.Categories[0]),
 			}
 
 			extVals := redditPost.Extensions["media"]["thumbnail"]
