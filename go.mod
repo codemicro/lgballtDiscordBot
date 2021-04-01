@@ -7,7 +7,6 @@ require (
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/codemicro/alib-go v0.0.6
 	github.com/codemicro/dgo-toolkit v0.5.1
-	github.com/codemicro/dishook v0.0.0-20210103015922-e45eb21ab48b
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0

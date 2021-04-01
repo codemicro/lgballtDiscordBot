@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/codemicro/dishook"
+	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-func subMonitorSequencer(state *state.State, info config.RedditFeedInfo) {
+func subMonitorSequencer(state *state.State, info config.RedditFeedInfo, ts *discordgo.Session) {
 
 	var idCache []string
 
@@ -44,7 +44,7 @@ func subMonitorSequencer(state *state.State, info config.RedditFeedInfo) {
 		case <-finished:
 			jumpOut = true
 		case <-ticker.C:
-			subMonitorAction(info, &idCache)
+			subMonitorAction(info, &idCache, ts)
 		}
 	}
 
@@ -52,9 +52,12 @@ func subMonitorSequencer(state *state.State, info config.RedditFeedInfo) {
 
 }
 
-var contentFilterRegex = regexp.MustCompile(`(?m) *submitted +by +\/u\/.+ +\[link\] +\[comments\] *`)
+var (
+	contentFilterRegex = regexp.MustCompile(`(?m) *submitted +by +\/u\/.+ +\[link\] +\[comments\] *`)
+	webhookIdTokenRegex = regexp.MustCompile(`(?m)\/webhooks\/(.+)\/(.+)\/?`)
+)
 
-func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
+func subMonitorAction(info config.RedditFeedInfo, idCache *[]string, ts *discordgo.Session) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -90,8 +93,6 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 
 		for _, redditPost := range newItems {
 
-			wh := dishook.NewMessage()
-
 			var formattedTime time.Time
 			if redditPost.UpdatedParsed == nil {
 				formattedTime = time.Now()
@@ -99,23 +100,31 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 				formattedTime = *redditPost.UpdatedParsed
 			}
 
-			var emb dishook.Embed
-			emb.Title = redditPost.Title
-			emb.Author = dishook.EmbedAuthor{
-				Name: redditPost.Author.Name,
-				URL:  fmt.Sprintf("https://www.reddit.com%s", redditPost.Author.Name),
+			whParams := &discordgo.WebhookParams{
+				Username:        "r/" + redditPost.Categories[0],
+				AvatarURL:       info.IconUrl,
+				Embeds:          []*discordgo.MessageEmbed{
+					{
+						Title:       redditPost.Title,
+						URL: redditPost.Link,
+						Footer:      &discordgo.MessageEmbedFooter{
+							Text:         fmt.Sprintf("New post at %s - /r/%s",
+								formattedTime.Format("Mon Jan 2 15:04:05 MST 2006"), redditPost.Categories[0]),
+						},
+						Author:      &discordgo.MessageEmbedAuthor{
+							URL:          fmt.Sprintf("https://www.reddit.com%s", redditPost.Author.Name),
+							Name:         redditPost.Author.Name,
+						},
+					},
+				},
 			}
-			emb.URL = redditPost.Link
-			emb.Footer = dishook.EmbedFooter{
-				Text: fmt.Sprintf("New post at %s - /r/%s",
-					formattedTime.Format("Mon Jan 2 15:04:05 MST 2006"), redditPost.Categories[0]),
-			}
+
 
 			extVals := redditPost.Extensions["media"]["thumbnail"]
 			if len(extVals) >= 1 {
 				v, ok := extVals[0].Attrs["url"]
 				if ok {
-					emb.Thumbnail = dishook.EmbedImage{URL: v}
+					whParams.Embeds[0].Thumbnail = &discordgo.MessageEmbedThumbnail{URL: v}
 				}
 			}
 
@@ -131,12 +140,21 @@ func subMonitorAction(info config.RedditFeedInfo, idCache *[]string) {
 				content = content[:70] + "..."
 			}
 
-			emb.Description = content
+			whParams.Embeds[0].Description = content
 
-			wh.Embeds = append(wh.Embeds, emb)
-			wh.Username = "/r/" + redditPost.Categories[0]
-			wh.AvatarURL = info.IconUrl
-			_, err = wh.Send(info.Webhook, true)
+			mtx := webhookIdTokenRegex.FindStringSubmatch(info.Webhook)
+			if mtx == nil {
+				logging.Error(err, fmt.Sprintf("unable to extract webhook ID and token from URL %s", info.Webhook))
+				return
+			}
+
+			_, err = ts.WebhookExecute(
+				mtx[1],
+				mtx[2],
+				true,
+				whParams,
+			)
+
 			if err != nil {
 				logging.Error(err, fmt.Sprintf("unable to send to webhook URL %s", info.Webhook))
 				return
