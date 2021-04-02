@@ -50,7 +50,6 @@ func ParseEmojiComponents(eString string) (isValid bool, isAnimated bool, emojiN
 		matches := CustomEmojiRegex.FindAllStringSubmatch(eString, -1)
 		aStr := matches[0][1]
 		combi := strings.Split(matches[0][2], ":")
-		var isAnimated bool
 		if aStr == "a" {
 			isAnimated = true
 		}
