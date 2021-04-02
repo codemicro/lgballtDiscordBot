@@ -73,8 +73,6 @@ func Start(state *state.State) error {
 
 func registerHandlers(kit *route.Kit, st *state.State) error {
 
-	// TODO: commands/reactions
-
 	err := misc.Init(kit, st)
 	if err != nil {
 		return err
