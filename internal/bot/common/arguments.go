@@ -13,7 +13,7 @@ func TakeFirstPart(in string) (string, string) {
 	return xspl[0], v
 }
 
-var idFromPingRegex = regexp.MustCompile(`<@!(.+)>`)
+var idFromPingRegex = regexp.MustCompile(`<@!?(.+)>`)
 
 var PingOrUserIdType = pingOrUserIdType{}
 
