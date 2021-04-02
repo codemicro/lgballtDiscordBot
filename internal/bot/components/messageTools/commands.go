@@ -33,8 +33,7 @@ func (*MessageTools) Edit(ctx *route.MessageContext) error {
 	_, channelId, messageId, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Could not parse message link")
-		return err
+		return ctx.SendErrorMessage("Could not parse message link")
 	}
 
 	_, err := ctx.Session.ChannelMessageEdit(channelId, messageId, newContent)

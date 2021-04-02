@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* User errors (those caused by something the user did) in commands now use `route.(*MessageContext).SendErrorMessage`
 
 ## [3.5.3] - 2021-04-01
 ### Changed

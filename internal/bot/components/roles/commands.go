@@ -19,8 +19,7 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 	guildId, channelID, messageID, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Unable to parse message link")
-		return err
+		return ctx.SendErrorMessage("Unable to parse message link")
 	}
 
 	// Check message exists
@@ -35,8 +34,7 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 		}
 
 		if respCode == 404 || respCode == 400 {
-			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message link invalid")
-			return err
+			return ctx.SendErrorMessage("Message link invalid")
 		}
 	}
 
@@ -49,9 +47,8 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 	// Check there are less than 20
 
 	if len(reactionRoles) >= 20 {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "This message has too many reaction roles " +
-			"assigned to it already (maximum 20)")
-		return err
+		return ctx.SendErrorMessage("This message has too many reaction roles assigned to it already " +
+			"(maximum 20)")
 	}
 
 	// Search for and find role in guild
@@ -71,8 +68,7 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 		}
 	}
 	if roleID == "" {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "Unable to find the specified role")
-		return err
+		return ctx.SendErrorMessage("Unable to find the specified role")
 	}
 
 	// Determine emoji string
@@ -91,8 +87,7 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 		}
 	}
 	if errMessage != "" {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, errMessage)
-		return err
+		return ctx.SendErrorMessage(errMessage)
 	}
 
 	// Add reaction
@@ -104,8 +99,7 @@ func (*Roles) Track(ctx *route.MessageContext) error {
 		case *discordgo.RESTError:
 			if n.Response.StatusCode == 400 && n.Message != nil &&
 				strings.Contains(strings.ToLower(n.Message.Message), "unknown emoji") {
-				_, err := ctx.SendMessageString(ctx.Message.ChannelID, "That's not a valid emoji")
-				return err
+				return ctx.SendErrorMessage("That's not a valid emoji")
 			}
 		}
 		return err
@@ -136,8 +130,7 @@ func (r *Roles) Untrack(ctx *route.MessageContext) error {
 	_, channelID, messageID, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Unable to parse message link")
-		return err
+		return ctx.SendErrorMessage("Unable to parse message link")
 	}
 
 	// Check message exists
@@ -152,8 +145,7 @@ func (r *Roles) Untrack(ctx *route.MessageContext) error {
 		}
 
 		if respCode == 404 || respCode == 400 {
-			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message link invalid")
-			return err
+			return ctx.SendErrorMessage("Message link invalid")
 		}
 	}
 

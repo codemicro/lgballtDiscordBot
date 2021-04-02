@@ -16,7 +16,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 	}
 
 	if len(bios) == 0 {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "This user hasn't created a bio, or just plain doesn't exist.")
+		err = ctx.SendErrorMessage("This user hasn't created a bio, or just plain doesn't exist.")
 		return err
 	}
 

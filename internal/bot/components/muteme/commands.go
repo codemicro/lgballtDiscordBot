@@ -17,8 +17,7 @@ func (mm *MuteMe) Trigger(ctx *route.MessageContext) error {
 	finishTimeString := finishTime.UTC().Format(time.RFC822)
 
 	if finishTime.After(time.Now().Add(time.Hour * 24 * 366)) {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Maximum duration is 365 days")
-		return err
+		return ctx.SendErrorMessage("Maximum duration is 365 days")
 	}
 
 	emb := &discordgo.MessageEmbed{

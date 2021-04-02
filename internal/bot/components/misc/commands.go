@@ -22,8 +22,7 @@ func (s *Misc) Avatar(ctx *route.MessageContext) error {
 		switch n := err.(type) {
 		case *discordgo.RESTError:
 			if n.Response.StatusCode == 404 || n.Response.StatusCode == 400 {
-				_, err := ctx.SendMessageString(ctx.Message.ChannelID, "This user doesn't exist.")
-				return err
+				return ctx.SendErrorMessage("This user doesn't exist.")
 			}
 		}
 		return err
@@ -38,7 +37,7 @@ func (s *Misc) coreEmojiCommand(ctx *route.MessageContext, emoji string) error {
 	validEmoji, animated, _, emojiID := tools.ParseEmojiComponents(emoji)
 
 	if !validEmoji {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "That's not a valid (custom) emoji!")
+		err := ctx.SendErrorMessage("That's not a valid (custom) emoji!")
 		return err
 	}
 
@@ -64,8 +63,7 @@ func (s *Misc) StealEmojis(ctx *route.MessageContext) error {
 	_, channelId, messageId, validMessageLink := tools.ParseMessageLink(ctx.Arguments["messageLink"].(string))
 
 	if !validMessageLink {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Invalid message link")
-		return err
+		return ctx.SendErrorMessage("Invalid message link")
 	}
 
 	msg, err := ctx.Session.ChannelMessage(channelId, messageId)
@@ -83,7 +81,7 @@ func (s *Misc) StealEmojis(ctx *route.MessageContext) error {
 	}
 
 	if len(emojisFromMessage) == 0 {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "No custom emojis found in that message")
+		err = ctx.SendErrorMessage("No custom emojis found in that message")
 	}
 
 	return err

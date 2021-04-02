@@ -24,9 +24,8 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 	verificationText := strings.Join(command, " ")
 
 	if len(verificationText) > 1500 {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Sorry, that message is too long! Please keep " +
-			"your verification text to a *maximum* of 1500 characters.")
-		return err
+		return ctx.SendErrorMessage("Sorry, that message is too long! Please keep your verification text to" +
+			" a *maximum* of 1500 characters.")
 	}
 
 	var warning []string
@@ -114,15 +113,12 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 
 	// check ratelimit
 	if val, found := v.ratelimit[ctx.Message.Author.ID]; found && time.Now().Before(val) {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You've already submitted a verification " +
-			"request. Please wait.")
-		return err
+		return ctx.SendErrorMessage( "You've already submitted a verification request. Please wait.")
 	}
 
 	if len(command) < 1 {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "You're missing your verification message! Try again," +
+		return ctx.SendErrorMessage("You're missing your verification message! Try again," +
 			" silly! " + tools.MakeCustomEmoji(false, "trans_happy", "747448537398116392"))
-		return err
 	}
 
 	err := v.coreVerification(ctx)
@@ -145,8 +141,7 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 	_, channelId, messageId, valid := tools.ParseMessageLink(messageLink)
 
 	if !valid {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Invalid message link")
-		return err
+		return ctx.SendErrorMessage("Invalid message link")
 	}
 
 	mct, err := ctx.Session.ChannelMessage(channelId, messageId)
@@ -154,8 +149,7 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 		switch e := err.(type) {
 		case *discordgo.RESTError:
 			if e.Response.StatusCode == 404 {
-				_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Message not found")
-				return err
+				return ctx.SendErrorMessage("Message not found")
 			}
 			return err
 		default:

@@ -9,8 +9,8 @@ import (
 func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate bool, ctx *route.MessageContext) error {
 
 	if len(newValue) > maxBioFieldLen {
-		_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Sorry - the new text you have entered is too "+
-			"long (this is a "+"Discord limitation). Please limit each field of your bio to `1024` characters.")
+		err := ctx.SendErrorMessage("Sorry - the new text you have entered is too long (this is a Discord" +
+			" limitation). Please limit each field of your bio to `1024` characters.")
 		return err
 	}
 
@@ -27,9 +27,8 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 
 	if !hasBio {
 		if isSysmate {
-			_, err = ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("This member is not registered "+
-				"to your Discord "+"account with the bot. Please import this member using `$bio import %s`",
-				bdt.SysMemberID))
+			err = ctx.SendErrorMessage(fmt.Sprintf("This member is not registered to your Discord account with" +
+				" the bot. Please import this member using `$bio import %s`", bdt.SysMemberID))
 			return err
 		}
 		err = bdt.Create()
@@ -54,8 +53,8 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 	}
 
 	if !hasBio {
-		_, err = ctx.SendMessageString(ctx.Message.ChannelID, "You have not created a bio, hence there is "+
-			"nothing to delete anything from.")
+		err = ctx.SendErrorMessage("You have not created a bio, hence there is nothing to delete anything " +
+			"from.")
 		return err
 	}
 
