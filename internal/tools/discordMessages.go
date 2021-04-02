@@ -29,7 +29,7 @@ func MakeMessageLink(guildId, channelId, messageId string) string {
 	return fmt.Sprintf("https://discord.com/channels/%s/%s/%s", guildId, channelId, messageId)
 }
 
-var CustomEmojiRegex = regexp.MustCompile(`<(a?):(.+:\d+)>`)
+var CustomEmojiRegex = regexp.MustCompile(`<(a?):([^:]+:\d+)>`)
 
 // ParseEmojiToString returns the emoji name and ID in a single string like name:id
 func ParseEmojiToString(eString string) string {

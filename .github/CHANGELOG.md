@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Only the user that requested the bio of another user can control the carousel generated
 * User errors (those caused by something the user did) in commands now use `route.(*MessageContext).SendErrorMessage`
 ### Fixed
+* Custom emoji regular expression now detects multiple custom emojis in one message
+  * This fixes `<p>steal` by extension
 * Pings in the format `<@userid>` are correctly detected
 
 ## [3.5.3] - 2021-04-01
