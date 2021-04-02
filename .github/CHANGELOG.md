@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Changed
+* Only the user that requested the bio of another user can control the carousel generated
 * User errors (those caused by something the user did) in commands now use `route.(*MessageContext).SendErrorMessage`
 
 ## [3.5.3] - 2021-04-01

@@ -21,11 +21,12 @@ type Bios struct {
 }
 
 type trackedEmbed struct {
-	current   int
-	accountId string
-	channelId string
-	bios      []db.UserBio
-	timeoutAt time.Time
+	current        int
+	accountId      string
+	channelId      string
+	bios           []db.UserBio
+	timeoutAt      time.Time
+	requestingUser string
 }
 
 const (
@@ -105,7 +106,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "View information about the bios feature of the bot",
 		CommandText: []string{"bio", "help"},
 		Run:         comp.SingletHelp,
-		Category: meta.CategoryBios,
+		Category:    meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -113,7 +114,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "View information about the bios for systems feature of the bot",
 		CommandText: []string{"bio", "syshelp"},
 		Run:         comp.SystemHelp,
-		Category: meta.CategoryBios,
+		Category:    meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -124,9 +125,9 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 			{Name: "newValue", Type: route.RemainingString},
 		},
-		Run: comp.SingletSetField,
+		Run:              comp.SingletSetField,
 		AllowOverloading: true,
-		Category: meta.CategoryBios,
+		Category:         meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -138,9 +139,9 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 			{Name: "newValue", Type: route.RemainingString},
 		},
-		Run: comp.SystemSetField,
+		Run:              comp.SystemSetField,
 		AllowOverloading: true,
-		Category: meta.CategoryBios,
+		Category:         meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -150,9 +151,9 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "field", Type: bioFieldType{}},
 		},
-		Run: comp.SingletClearField,
+		Run:              comp.SingletClearField,
 		AllowOverloading: true,
-		Category: meta.CategoryBios,
+		Category:         meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -163,9 +164,9 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "memberId", Type: pluralkitMemberIdType{}},
 			{Name: "field", Type: bioFieldType{}},
 		},
-		Run: comp.SystemClearField,
+		Run:              comp.SystemClearField,
 		AllowOverloading: true,
-		Category: meta.CategoryBios,
+		Category:         meta.CategoryBios,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -175,7 +176,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "memberId", Type: pluralkitMemberIdType{}},
 		},
-		Run: comp.SystemImportMember,
+		Run:      comp.SystemImportMember,
 		Category: meta.CategoryBios,
 	})
 
@@ -188,7 +189,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 				return message.Author.ID, nil
 			}},
 		},
-		Run: comp.ReadBio,
+		Run:      comp.ReadBio,
 		Category: meta.CategoryBios,
 	})
 

@@ -36,10 +36,11 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		totalBios := len(bios)
 
 		tracker := &trackedEmbed{
-			accountId: targetUserId,
-			channelId: ctx.Message.ChannelID,
-			bios:      bios,
-			timeoutAt: time.Now().Add(bioTimeoutDuration),
+			accountId:      targetUserId,
+			channelId:      ctx.Message.ChannelID,
+			bios:           bios,
+			timeoutAt:      time.Now().Add(bioTimeoutDuration),
+			requestingUser: ctx.Message.Author.ID,
 		}
 
 		// send first bio

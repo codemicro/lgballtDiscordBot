@@ -17,6 +17,12 @@ func (b *Bios) PaginationReaction(ctx *route.ReactionContext) error {
 
 	tracked := b.trackedEmbeds[ctx.Reaction.MessageID]
 
+	if tracked.requestingUser != ctx.Reaction.UserID {
+		_ = ctx.Session.MessageReactionRemove(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, ctx.Reaction.Emoji.Name,
+			ctx.Reaction.UserID)
+		return nil
+	}
+
 	var newBioIndex int
 
 	if ctx.Reaction.Emoji.Name == nextBioReaction {
