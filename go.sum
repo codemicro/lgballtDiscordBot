@@ -12,6 +12,8 @@ github.com/codemicro/alib-go v0.0.6 h1:PYARLmaHWXH43DFwIP/MGIDiG4eiaCPnYLC52ZZB1
 github.com/codemicro/alib-go v0.0.6/go.mod h1:yb287N7INtdPrv1aq40IgyquW1njH+2WfJ/jK9w9P6A=
 github.com/codemicro/dgo-toolkit v0.5.1 h1:0O6jE0C4KXvF7tcn+Bsma+LD4DqsR6agwsJOw/zhsT8=
 github.com/codemicro/dgo-toolkit v0.5.1/go.mod h1:NT5a9aepB/b22XwmlpoahjfU79sAAMzPmn/2YOTRCp0=
+github.com/codemicro/dgo-toolkit v0.6.0 h1:wF74f6tmoUjWb1cepuHmgbxRpCPVvPRrJd2H1xFuFSU=
+github.com/codemicro/dgo-toolkit v0.6.0/go.mod h1:SfeyvPVg1Brngjs476YfrwvKHptGFmINV22RyvNURXA=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
@@ -27,6 +29,8 @@ github.com/hashicorp/errwrap v1.1.0 h1:OxrOeh75EUXMY8TBjag2fzXGZ40LB6IKw45YeGUDY
 github.com/hashicorp/errwrap v1.1.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-multierror v1.1.0 h1:B9UzwGQJehnUY1yNrnwREHc3fGbC2xefo8g4TbElacI=
 github.com/hashicorp/go-multierror v1.1.0/go.mod h1:spPvp8C1qA32ftKqdAHm4hHTbPw+vmowP0z+KUhOZdA=
+github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+lD48awMYo=
+github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/jinzhu/now v1.1.1 h1:g39TucaRWyV3dwDO++eEc6qf8TVIQ/Da48WmqjZ3i7E=
