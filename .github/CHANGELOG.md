@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [3.6.1] - 2021-04-06
+### Changed
+* Test change of command precedence for potential bug fix?
+
 ## [3.6.0] - 2021-04-02
 ### Changed
 * Only the user that requested the bio of another user can control the carousel generated
@@ -263,7 +267,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.1...HEAD
+[3.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.0...v3.6.1
 [3.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.3...v3.6.0
 [3.5.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.2...v3.5.3
 [3.5.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.1...v3.5.2

@@ -118,19 +118,6 @@ func Init(kit *route.Kit, _ *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
-		Name:        "Bios set field",
-		Help:        "Set a field in your bio",
-		CommandText: []string{"bio", "set"},
-		Arguments: []route.Argument{
-			{Name: "field", Type: bioFieldType{}},
-			{Name: "newValue", Type: route.RemainingString},
-		},
-		Run:              comp.SingletSetField,
-		AllowOverloading: true,
-		Category:         meta.CategoryBios,
-	})
-
-	kit.AddCommand(&route.Command{
 		Name:        "Bios set field (systems)",
 		Help:        "Set a field in a system member's bio",
 		CommandText: []string{"bio", "set"},
@@ -145,13 +132,14 @@ func Init(kit *route.Kit, _ *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
-		Name:        "Bios clear field",
-		Help:        "Clear a field in your bio",
-		CommandText: []string{"bio", "clear"},
+		Name:        "Bios set field",
+		Help:        "Set a field in your bio",
+		CommandText: []string{"bio", "set"},
 		Arguments: []route.Argument{
 			{Name: "field", Type: bioFieldType{}},
+			{Name: "newValue", Type: route.RemainingString},
 		},
-		Run:              comp.SingletClearField,
+		Run:              comp.SingletSetField,
 		AllowOverloading: true,
 		Category:         meta.CategoryBios,
 	})
@@ -165,6 +153,18 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "field", Type: bioFieldType{}},
 		},
 		Run:              comp.SystemClearField,
+		AllowOverloading: true,
+		Category:         meta.CategoryBios,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Bios clear field",
+		Help:        "Clear a field in your bio",
+		CommandText: []string{"bio", "clear"},
+		Arguments: []route.Argument{
+			{Name: "field", Type: bioFieldType{}},
+		},
+		Run:              comp.SingletClearField,
 		AllowOverloading: true,
 		Category:         meta.CategoryBios,
 	})
