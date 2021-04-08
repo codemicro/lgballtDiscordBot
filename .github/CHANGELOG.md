@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.6.2] - 2021-04-08
 ### Changed
 * Switch verification log messages to use embeds and pings instead of plaintext and weird Base64 encoded data
 ### Fixed
@@ -271,7 +273,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.1...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.2...HEAD
+[3.6.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.1...v3.6.2
 [3.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.0...v3.6.1
 [3.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.3...v3.6.0
 [3.5.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.5.2...v3.5.3
