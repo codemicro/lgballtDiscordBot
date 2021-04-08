@@ -6,8 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
-## Changed
+### Changed
 * Switch verification log messages to use embeds and pings instead of plaintext and weird Base64 encoded data
+### Fixed
+* Chatchart messages no longer fail to send when the requesting message has been deleted (eg. if a PluralKit proxy was used)
 
 ## [3.6.1] - 2021-04-06
 ### Changed

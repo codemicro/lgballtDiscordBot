@@ -55,12 +55,6 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	channelId := intent.ChannelId
 	ctx := intent.Ctx
 
-	// trigger typing
-	err := ctx.Session.ChannelTyping(channelId)
-	if err != nil {
-		logging.Warn(err.Error())
-	}
-
 	lastMessage := makeSnowflakeAtTime(time.Now().Add(time.Minute * 5))
 	messageCount := 0
 
@@ -68,6 +62,12 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// get messages and count per user
 	for messageCount < maxMessages {
+
+		// trigger typing
+		err := ctx.Session.ChannelTyping(channelId)
+		if err != nil {
+			logging.Warn(err.Error())
+		}
 
 		messages, err := ctx.Session.ChannelMessages(channelId, 100, lastMessage, "", "")
 
@@ -172,7 +172,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// send image to user with ping
 
-	_, err = ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, &discordgo.MessageSend{
+	msend := &discordgo.MessageSend{
 		Embed:   emb,
 		Content: tools.MakePing(ctx.Message.Author.ID),
 		Files: []*discordgo.File{
@@ -186,10 +186,24 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 			ChannelID: ctx.Message.ChannelID,
 			GuildID:   ctx.Message.GuildID,
 		},
-	})
+	}
 
+	_, err = ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, msend)
+	// If the requesting message has been deleted, the message reference will fail and an error will be returned.
 	if err != nil {
-		logging.Error(err, "unable to send final chatchart message from collectMessages")
-		return
+		// retry without the message reference
+		msend.Reference = nil
+		// because the buffer has been read, the chart will need to be re-rendered
+		err = pie.Render(chart.PNG, buffer)
+		if err != nil {
+			logging.Error(err, "failed to render chart in collectMessages after the first attempt to send a message")
+			return
+		}
+
+		_, err = ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, msend)
+		if err != nil {
+			logging.Error(err, "unable to send final chatchart message from collectMessages")
+			return
+		}
 	}
 }
