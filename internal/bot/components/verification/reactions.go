@@ -1,14 +1,12 @@
 package verification
 
 import (
-	"errors"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
-	"regexp"
-	"strings"
 	"time"
 )
 
@@ -26,15 +24,16 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		return err
 	}
 
+	if m.Author.ID != ctx.Session.State.User.ID || m.ChannelID != config.VerificationIDs.OutputChannel || len(m.Embeds) < 1 {
+		return nil
+	}
+
 	// Fetch inline data in the message that was reacted to
 
-	inlineUserData, err := dataFromString(m.Content)
-	if err != nil {
-		if errors.Is(err, errorMissingData) {
-			// No data to be found, so we assume it's not relevant
-			return nil
-		}
-		return err
+	// find the user ID that this relates to
+	userID, found := tools.ParsePing(m.Content)
+	if !found {
+		return nil
 	}
 
 	// Depending on the reaction, we should do different things...
@@ -45,7 +44,7 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		actionTaken = "accepted"
 		actionEmoji = acceptReaction
 
-		err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, inlineUserData.UserID, config.VerificationIDs.RoleId)
+		err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, userID, config.VerificationIDs.RoleId)
 
 		if err != nil {
 			return err
@@ -57,7 +56,7 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 		// add verification failure
 		var vf db.VerificationFail
-		vf.UserId = inlineUserData.UserID
+		vf.UserId = userID
 		found, err := vf.Get()
 		if err != nil {
 			return err
@@ -76,18 +75,22 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		return err
 	}
 
-	// Edit message and remove data area
+	// Edit message
 
-	// This assumes that the data is wrapped in backticks
-	re := regexp.MustCompile(`(?m)\x60\x60\x60.*\x60\x60\x60`)
-	newContent := re.ReplaceAllString(m.Content, fmt.Sprintf("%s *Verification request was %s by %s at %s*",
-		actionEmoji, actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format("15:04 on 2 Jan 2006")))
-	newContent = strings.ReplaceAll(newContent, "\n"+logHelpText+"\n", "")
+	m.Embeds[0].Fields = append(m.Embeds[0].Fields, &discordgo.MessageEmbedField{
+		Name:   fmt.Sprintf("%s Decision", actionEmoji),
+		Value:  fmt.Sprintf("Verification request was %s by %s at %s", actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format(time.RFC822)),
+		Inline: false,
+	})
 
-	_, err = ctx.Session.ChannelMessageEdit(ctx.Reaction.ChannelID, m.ID, newContent)
-	if err != nil {
-		return err
-	}
+	m.Embeds[0].Footer = nil
+
+	_, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
+		Content:         &m.Content,
+		Embed:           m.Embeds[0],
+		ID:              m.ID,
+		Channel:         m.ChannelID,
+	})
 
 	err = ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 	return err

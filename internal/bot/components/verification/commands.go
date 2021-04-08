@@ -16,11 +16,6 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 
 	command := strings.Fields(ctx.Raw)[1:]
 
-	// Copy message into output channel
-	iu := inlineData{
-		UserID: ctx.Message.Author.ID,
-	}
-
 	verificationText := strings.Join(command, " ")
 
 	if len(verificationText) > 1500 {
@@ -28,7 +23,7 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 			" a *maximum* of 1500 characters.")
 	}
 
-	var warning []string
+	emb := new(discordgo.MessageEmbed)
 
 	// check for failed verifications and bans/kicks
 	var removal db.UserRemove
@@ -43,50 +38,36 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 		if rsn == "" {
 			rsn = "none provided"
 		}
-		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has been **%s** before for reason: "+
-			"*%s*\n", removal.Action, rsn))
+
+		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
+			Name:   "⚠️ Warning",
+			Value:  fmt.Sprintf("This user has been **%s** before for reason: *%s*", removal.Action, rsn),
+			Inline: false,
+		})
 	}
 
 	if found, err := failure.Get(); err != nil {
 		return err
 	} else if found {
-		warning = append(warning, fmt.Sprintf("⚠️ **Warning**: this user has failed verification before. "+
-			"See %s\n", failure.MessageLink))
+		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
+			Name:   "⚠️ Warning",
+			Value:  fmt.Sprintf("This user has failed verification before. See %s", failure.MessageLink),
+			Inline: false,
+		})
 	}
 
-	warningString := strings.Trim(strings.Join(warning, "\n"), "\n")
-
-	if warningString != "" {
-		warningString = "\n\n" + warningString
+	emb.Title = fmt.Sprintf("Verification request from %s#%s", ctx.Message.Author.Username, ctx.Message.Author.Discriminator)
+	emb.Description = verificationText
+	emb.Footer = &discordgo.MessageEmbedFooter{
+		Text:         logHelpText,
 	}
 
-	// form messages
-	messagePartOne := fmt.Sprintf("From: %s (%s#%s)\nContent: %s", tools.MakePing(ctx.Message.Author.ID),
-		ctx.Message.Author.Username, ctx.Message.Author.Discriminator, verificationText)
-
-	var messagePartTwo string
-
-	messagePartTwo += warningString
-	messagePartTwo += "\n\n" + logHelpText
-	messagePartTwo += "\n\n" + fmt.Sprintf("```%s```", iu.toString())
-
-	var newMessage *discordgo.Message
-
-	if len(messagePartOne)+len(messagePartTwo) > 2000 {
-		_, err := ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne)
-		if err != nil {
-			return err
-		}
-		newMessage, err = ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne)
-		if err != nil {
-			return err
-		}
-	} else {
-		var err error
-		newMessage, err = ctx.SendMessageString(config.VerificationIDs.OutputChannel, messagePartOne+messagePartTwo)
-		if err != nil {
-			return err
-		}
+	newMessage, err := ctx.Session.ChannelMessageSendComplex(config.VerificationIDs.OutputChannel, &discordgo.MessageSend{
+		Content:         tools.MakePing(ctx.Message.Author.ID),
+		Embed:           emb,
+	})
+	if err != nil {
+		return err
 	}
 
 	// Add sample reactions to that message
@@ -98,7 +79,7 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 	}
 
 	// Delete user's message
-	err := ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
+	err = ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
 	if err != nil {
 		logging.Error(err, "failed to delete message in verification")
 	}

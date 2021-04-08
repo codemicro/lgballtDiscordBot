@@ -1,15 +1,12 @@
 package verification
 
 import (
-	"encoding/base64"
-	"errors"
 	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
-	"regexp"
 	"time"
 )
 
@@ -20,50 +17,15 @@ const (
 	dataStartMarker = "[STA."
 	dataEndMarker   = ".END]"
 
-	acceptReaction = "☑️"
+	acceptReaction = "✅"
 	rejectReaction = "❌"
 
 	ratelimitTimeout = time.Hour
 )
 
 var (
-	dataExtractionRegex = regexp.MustCompile(fmt.Sprintf("%s(.+)%s", regexp.QuoteMeta(dataStartMarker), regexp.QuoteMeta(dataEndMarker)))
-	errorMissingData    = errors.New("unable to find inline data data")
-
-	logHelpText = fmt.Sprintf("*React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.*", acceptReaction, rejectReaction)
+	logHelpText = fmt.Sprintf("React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.", acceptReaction, rejectReaction)
 )
-
-type inlineData struct {
-	UserID string `msg:"u"`
-}
-
-func dataFromString(text string) (inlineData, error) {
-	matches := dataExtractionRegex.FindStringSubmatch(text)
-	if len(matches) < 2 {
-		return inlineData{}, errorMissingData
-	}
-
-	data := matches[1]
-
-	decoded, err := base64.StdEncoding.DecodeString(data)
-	if err != nil {
-		return inlineData{}, err
-	}
-
-	var iu inlineData
-	_, err = iu.UnmarshalMsg(decoded)
-	if err != nil {
-		return inlineData{}, err
-	}
-
-	return iu, nil
-}
-
-func (z inlineData) toString() string {
-	data, _ := z.MarshalMsg(nil)
-	encoded := base64.StdEncoding.EncodeToString(data)
-	return dataStartMarker + encoded + dataEndMarker
-}
 
 type Verification struct {
 	ratelimit map[string]time.Time
