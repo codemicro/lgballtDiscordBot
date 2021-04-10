@@ -100,8 +100,15 @@ func MakeRolePing(rid string) string {
 	return "<@&" + rid + ">"
 }
 
-var rolePingFilterRegex = regexp.MustCompile(`<@&\d+>`)
+var rolePingRegex = regexp.MustCompile(`<@&(\d+)	>`)
+
+func FindRolePings(in string) (o []string) {
+	for _, x := range rolePingRegex.FindAllStringSubmatch(in, -1) {
+		o = append(o, x[1])
+	}
+	return
+}
 
 func FilterRolePing(instr string) string {
-	return rolePingFilterRegex.ReplaceAllString(instr, "`$0`")
+	return rolePingRegex.ReplaceAllString(instr, "`$0`")
 }

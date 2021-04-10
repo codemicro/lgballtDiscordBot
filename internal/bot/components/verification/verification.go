@@ -1,7 +1,6 @@
 package verification
 
 import (
-	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
@@ -19,12 +18,11 @@ const (
 
 	acceptReaction = "✅"
 	rejectReaction = "❌"
+	scrapPronounReaction = "🚮"
+
+	pronounEmbedFieldTitle = "Pronouns"
 
 	ratelimitTimeout = time.Hour
-)
-
-var (
-	logHelpText = fmt.Sprintf("React with %s to accept this request or %s to reject this request.\nRejecting this request will not inform the user.", acceptReaction, rejectReaction)
 )
 
 type Verification struct {

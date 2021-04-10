@@ -17,8 +17,6 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		return err
 	}
 
-	// c := v.b.Client.Channel(r.ChannelID)
-
 	m, err := ctx.Session.ChannelMessage(ctx.Reaction.ChannelID, ctx.Reaction.MessageID)
 	if err != nil {
 		return err
@@ -28,7 +26,28 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		return nil
 	}
 
-	// Fetch inline data in the message that was reacted to
+	if ctx.Reaction.Emoji.Name == scrapPronounReaction {
+		n := 0
+		for _, field := range m.Embeds[0].Fields {
+			if field.Name != pronounEmbedFieldTitle {
+				m.Embeds[0].Fields[n] = field
+				n++
+			}
+		}
+		m.Embeds[0].Fields = m.Embeds[0].Fields[:n]
+
+		if _, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
+			Content:         &m.Content,
+			Embed:           m.Embeds[0],
+			ID:              m.ID,
+			Channel:         m.ChannelID,
+		}); err != nil {
+			return err
+		}
+
+		return ctx.Session.MessageReactionsRemoveEmoji(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, scrapPronounReaction)
+
+	}
 
 	// find the user ID that this relates to
 	userID, found := tools.ParsePing(m.Content)
@@ -44,10 +63,25 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		actionTaken = "accepted"
 		actionEmoji = acceptReaction
 
-		err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, userID, config.VerificationIDs.RoleId)
+		var pronounContent string
+		for _, field := range m.Embeds[0].Fields {
+			if field.Name == pronounEmbedFieldTitle {
+				pronounContent = field.Value
+				break
+			}
+		}
 
-		if err != nil {
-			return err
+		rolesToAdd := []string{config.VerificationIDs.RoleId}
+
+		if pronounContent != "" {
+			rolesToAdd = append(rolesToAdd, tools.FindRolePings(pronounContent)...)
+		}
+
+		for _, role := range rolesToAdd {
+			fmt.Println(role)
+			if err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, userID, role); err != nil {
+				return err
+			}
 		}
 
 	} else if ctx.Reaction.Emoji.Name == rejectReaction {
@@ -92,6 +126,5 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		Channel:         m.ChannelID,
 	})
 
-	err = ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
-	return err
+	return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 }

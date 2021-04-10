@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/pronouns"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
 	"time"
@@ -22,6 +23,12 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 		return ctx.SendErrorMessage("Sorry, that message is too long! Please keep your verification text to" +
 			" a *maximum* of 1500 characters.")
 	}
+
+	guildRoles, err := ctx.Session.GuildRoles(ctx.Message.GuildID)
+	if err != nil {
+		return err
+	}
+	possiblePronouns := pronouns.FilterRoleList(guildRoles)
 
 	emb := new(discordgo.MessageEmbed)
 
@@ -56,22 +63,44 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 		})
 	}
 
+	reactionsToAdd := []string{acceptReaction, rejectReaction}
+
+	var pronounInstructions string
+	if userPronouns := pronouns.FindPronounsInString(ctx.Message.Content, possiblePronouns); len(userPronouns) != 0 {
+
+		var ps []string
+		for _, p := range userPronouns {
+			ps = append(ps, tools.MakeRolePing(p.RoleID))
+		}
+
+		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
+			Name:  pronounEmbedFieldTitle,
+			Value: fmt.Sprintf("The following pronoun roles will be applied if this user is verified:\n%s", strings.Join(ps, " ")),
+		})
+
+		fmt.Println(fmt.Sprintf("The following pronoun roles will be applied if this user is verified:\n%s", strings.Join(ps, " ")))
+
+		pronounInstructions = fmt.Sprintf("\nIf the auto-detected pronouns are incorrect, react with %s to remove them.", scrapPronounReaction)
+		reactionsToAdd = append(reactionsToAdd, scrapPronounReaction)
+
+	}
+
 	emb.Title = fmt.Sprintf("Verification request from %s#%s", ctx.Message.Author.Username, ctx.Message.Author.Discriminator)
 	emb.Description = verificationText
 	emb.Footer = &discordgo.MessageEmbedFooter{
-		Text:         logHelpText,
+		Text: fmt.Sprintf("React with %s to accept this request or %s to reject this request.%s\nRejecting this request will not inform the user.", acceptReaction, rejectReaction, pronounInstructions),
 	}
 
 	newMessage, err := ctx.Session.ChannelMessageSendComplex(config.VerificationIDs.OutputChannel, &discordgo.MessageSend{
-		Content:         tools.MakePing(ctx.Message.Author.ID),
-		Embed:           emb,
+		Content: tools.MakePing(ctx.Message.Author.ID),
+		Embed:   emb,
 	})
 	if err != nil {
 		return err
 	}
 
 	// Add sample reactions to that message
-	for _, reaction := range []string{acceptReaction, rejectReaction} {
+	for _, reaction := range reactionsToAdd {
 		err := ctx.Session.MessageReactionAdd(config.VerificationIDs.OutputChannel, newMessage.ID, reaction)
 		if err != nil {
 			return err
@@ -94,7 +123,7 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 
 	// check ratelimit
 	if val, found := v.ratelimit[ctx.Message.Author.ID]; found && time.Now().Before(val) {
-		return ctx.SendErrorMessage( "You've already submitted a verification request. Please wait.")
+		return ctx.SendErrorMessage("You've already submitted a verification request. Please wait.")
 	}
 
 	if len(command) < 1 {
