@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [3.7.1] - 2021-04-11
 ## Added
 * Filtering to verification pronoun roles
 
@@ -279,7 +281,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.7.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.7.1...HEAD
+[3.7.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.2...v3.7.0
 [3.6.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.1...v3.6.2
 [3.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.6.0...v3.6.1
