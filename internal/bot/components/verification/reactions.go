@@ -78,7 +78,6 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		}
 
 		for _, role := range rolesToAdd {
-			fmt.Println(role)
 			if err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, userID, role); err != nil {
 				return err
 			}

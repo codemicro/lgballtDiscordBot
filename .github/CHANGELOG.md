@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+## Fixed
+* Remove erroneous `\t` in role ping regexp that was breaking verification pronoun roles
 
 ## [3.7.1] - 2021-04-11
 ## Added
