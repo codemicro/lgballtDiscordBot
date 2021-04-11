@@ -1,12 +1,5 @@
 # LGballT Discord bot
 
-This is the custom Discord bot for the LGballT Discord server.
+I should probably write some build/deployment instructions at some point
 
-### Build
-```bash
-go build github.com/codemicro/lgballtDiscordBot/cmd/lgballtDiscordBot
-```
-
-### Run
-
-hey Abi, ya fool - write this bit
+[Changelog](https://github.com/codemicro/lgballtDiscordBot/blob/master/.github/CHANGELOG.md)
