@@ -68,6 +68,18 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 	var pronounInstructions string
 	if userPronouns := pronouns.FindPronounsInString(ctx.Message.Content, possiblePronouns); len(userPronouns) != 0 {
 
+		{
+			// filter out excluded roles
+			var n int
+			for _, x := range userPronouns {
+				if !tools.IsStringInSlice(x.RoleID, config.VerificationIDs.ExcludedPronounRoles) {
+					userPronouns[n] = x
+					n += 1
+				}
+			}
+			userPronouns = userPronouns[:n]
+		}
+
 		var ps []string
 		for _, p := range userPronouns {
 			ps = append(ps, tools.MakeRolePing(p.RoleID))
@@ -77,8 +89,6 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 			Name:  pronounEmbedFieldTitle,
 			Value: fmt.Sprintf("The following pronoun roles will be applied if this user is verified:\n%s", strings.Join(ps, " ")),
 		})
-
-		fmt.Println(fmt.Sprintf("The following pronoun roles will be applied if this user is verified:\n%s", strings.Join(ps, " ")))
 
 		pronounInstructions = fmt.Sprintf("\nIf the auto-detected pronouns are incorrect, react with %s to remove them.", scrapPronounReaction)
 		reactionsToAdd = append(reactionsToAdd, scrapPronounReaction)

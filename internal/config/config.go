@@ -33,10 +33,11 @@ type ListenerInfo struct {
 }
 
 type VerificationIds struct {
-	InputChannel  string `json:"inputChannel"`
-	OutputChannel string `json:"outputChannel"`
-	RoleId        string `json:"assignRoleId"`
-	ModlogChannel string `json:"modlogChannel"`
+	InputChannel         string   `json:"inputChannel"`
+	OutputChannel        string   `json:"outputChannel"`
+	RoleId               string   `json:"assignRoleId"`
+	ModlogChannel        string   `json:"modlogChannel"`
+	ExcludedPronounRoles []string `json:"excludedPronounRoles"`
 }
 
 type RedditFeedInfo struct {
