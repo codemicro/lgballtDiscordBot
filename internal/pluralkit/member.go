@@ -25,8 +25,19 @@ type Member struct {
 	Birthday    string `json:"birthday"`
 }
 
-func MembersBySystemId(sid string) ([]*Member, error) {
-	var members []*Member
+type Members []*Member
+
+func (m Members) Get(memberID string) *Member {
+	for _, member := range m {
+		if member.Id == memberID {
+			return member
+		}
+	}
+	return nil
+}
+
+func MembersBySystemId(sid string) (Members, error) {
+	var members Members
 	return members, orchestrateRequest(
 		fmt.Sprintf(membersBySystemIdUrl, sid),
 		&members,
