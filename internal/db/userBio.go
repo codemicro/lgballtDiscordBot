@@ -9,6 +9,7 @@ import (
 type UserBio struct {
 	UserId      string `gorm:"primarykey"`
 	SysMemberID string `gorm:"primarykey"`
+	SystemID    string
 	RawBioData  string
 	BioData     map[string]string `gorm:"-"`
 }
