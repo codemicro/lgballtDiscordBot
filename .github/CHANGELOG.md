@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * Added initial selection to bios (**BREAKING**)
   * For accounts with multiple bios registered, the bio to start at in the carousel is now chosen by the user
+* `<p>forgetme` command
+### Changed
+* Switch to using hashed user IDs in kick, ban and verification fail tables (**BREAKING**)
+  * This means this data can be retained while complying with a request from a user to delete all identifying data
   
 ## [3.7.2] - 2021-04-11
 ### Fixed
