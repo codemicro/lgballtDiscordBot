@@ -235,3 +235,35 @@ func (*Misc) ForgetMe(ctx *route.MessageContext) error {
 		},
 	)
 }
+
+func (*Misc) GetMyData(ctx *route.MessageContext) error {
+
+	zipDataReader, err := db.GenerateUserDataZipFile(ctx.Message.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	// make DM channel
+	dm, err := ctx.Session.UserChannelCreate(ctx.Message.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = ctx.Session.ChannelMessageSendComplex(dm.ID, &discordgo.MessageSend{
+		Content: "👋🏼 hello\nsomeone said you wanted this",
+		Files: []*discordgo.File{{
+			Name:        fmt.Sprintf("lgballtbot.%s.data.zip", ctx.Message.Author.ID),
+			ContentType: "application/zip",
+			Reader:      zipDataReader,
+		}},
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, "Check your DMs!")
+	if err != nil {
+		return err
+	}
+	return nil
+}

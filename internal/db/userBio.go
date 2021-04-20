@@ -10,7 +10,7 @@ type UserBio struct {
 	UserId      string `gorm:"primarykey"`
 	SysMemberID string `gorm:"primarykey"`
 	SystemID    string
-	RawBioData  string
+	RawBioData  string `json:"-"`
 	BioData     map[string]string `gorm:"-"`
 }
 
