@@ -80,6 +80,22 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Category: meta.CategoryMisc,
 	})
 
+	kit.AddCommand(&route.Command{
+		Name:        "Forget me",
+		Help:        "Delete all data associated with your Discord account from the bot database",
+		CommandText: []string{"forgetme"},
+		Run: comp.ForgetMe,
+		Category: meta.CategoryMisc,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Dump your data",
+		Help:        "Get a dump of all the data associated with your Discord user ID in the bot database",
+		CommandText: []string{"mydata"},
+		Run: comp.GetMyData,
+		Category: meta.CategoryMisc,
+	})
+
 	return nil
 
 }

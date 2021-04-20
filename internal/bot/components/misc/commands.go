@@ -6,6 +6,7 @@ import (
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
 	"time"
@@ -200,4 +201,69 @@ func (s *Misc) ListenToMe(ctx *route.MessageContext) error {
 	)
 
 	return err
+}
+
+func (*Misc) ForgetMe(ctx *route.MessageContext) error {
+
+	emb := &discordgo.MessageEmbed{
+		Type:  "rich",
+		Title: "This will delete all data associated with your Discord account from the bot database",
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: fmt.Sprintf("React with ✅ if you still wish to delete all your data. (❌ to cancel)"),
+		},
+		Description: "This includes any information that can be tied to your Discord user ID, like bio data for your " +
+			"account (including system bios, if applicable).\nRecords of failed verifications, bans or kicks will not" +
+			" be removed due to the nature of how this data is stored.\nAnything removed will **not** be recoverable." +
+			" For more information, contact Abi (0x414b#8669).",
+	}
+
+	return ctx.Kit.NewConfirmation(
+		ctx.Message.ChannelID,
+		ctx.Message.Author.ID,
+		emb,
+		func(ctx *route.ReactionContext) error {
+			err := db.ForgetUserID(ctx.Reaction.UserID)
+			if err != nil {
+				return err
+			}
+			_, _ = ctx.Session.ChannelMessageEdit(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, "All data successfully deleted")
+			return nil
+		},
+		func(ctx *route.ReactionContext) error {
+			_, _ = ctx.Session.ChannelMessageEdit(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, "Cancelled!")
+			return nil
+		},
+	)
+}
+
+func (*Misc) GetMyData(ctx *route.MessageContext) error {
+
+	zipDataReader, err := db.GenerateUserDataZipFile(ctx.Message.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	// make DM channel
+	dm, err := ctx.Session.UserChannelCreate(ctx.Message.Author.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = ctx.Session.ChannelMessageSendComplex(dm.ID, &discordgo.MessageSend{
+		Content: "👋🏼 hello\nsomeone said you wanted this",
+		Files: []*discordgo.File{{
+			Name:        fmt.Sprintf("lgballtbot.%s.data.zip", ctx.Message.Author.ID),
+			ContentType: "application/zip",
+			Reader:      zipDataReader,
+		}},
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, "Check your DMs!")
+	if err != nil {
+		return err
+	}
+	return nil
 }

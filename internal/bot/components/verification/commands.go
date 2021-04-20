@@ -35,8 +35,9 @@ func (*Verification) coreVerification(ctx *route.MessageContext) error {
 	// check for failed verifications and bans/kicks
 	var removal db.UserRemove
 	var failure db.VerificationFail
-	removal.UserId = ctx.Message.Author.ID
-	failure.UserId = ctx.Message.Author.ID
+	hashedID := hashString(ctx.Message.Author.ID)
+	removal.UserId = hashedID
+	failure.UserId = hashedID
 
 	if found, err := removal.Get(); err != nil {
 		return err
@@ -196,7 +197,7 @@ func (*Verification) coreRecordRemoval(ctx *route.MessageContext, actionType str
 	userId := ctx.Arguments["user"].(string)
 	reason := ctx.Arguments["reason"].(string)
 
-	ur := db.UserRemove{UserId: userId}
+	ur := db.UserRemove{UserId: hashString(userId)}
 
 	found, err := ur.Get()
 	if err != nil {
