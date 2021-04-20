@@ -1,6 +1,8 @@
 package verification
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
@@ -99,4 +101,8 @@ func Init(kit *route.Kit, _ *state.State) error {
 	})
 
 	return nil
+}
+
+func hashString(raw string) string {
+	return fmt.Sprintf("%x", sha256.Sum256([]byte(raw)))
 }

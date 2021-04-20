@@ -89,7 +89,7 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 		// add verification failure
 		var vf db.VerificationFail
-		vf.UserId = userID
+		vf.UserId = hashString(userID)
 		found, err := vf.Get()
 		if err != nil {
 			return err

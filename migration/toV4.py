@@ -1,7 +1,7 @@
-from os import system
 import sqlite3
 import requests
 import sys
+import hashlib
 
 db_location = sys.argv[1]
 
@@ -17,11 +17,21 @@ selectAllFromOld = "SELECT * FROM `user_bios`"
 dropOld = "DROP TABLE `user_bios`"
 renameNew = "ALTER TABLE `user_bios_temp` RENAME TO `user_bios`"
 
+selectAllBans = "SELECT * FROM `user_bans`"
+selectAllKicks = "SELECT * FROM `user_kicks`"
+selectAllRejections = "SELECT * FROM `verification_fails`"
+
+updateBan = "UPDATE `user_bans` SET `user_id` = ? WHERE `user_id` = ?"
+updateKick = "UPDATE `user_kicks` SET `user_id` = ? WHERE `user_id` = ?"
+updateRejection = "UPDATE `verification_fails` SET `user_id` = ? WHERE `user_id` = ?"
+
 id_cache = {}
 
 with sqlite3.connect(db_location) as db:	
     cursor = db.cursor()
     
+    # add system ID field to bios
+
     # create new table
     cursor.execute(createNewBiosTable)
     db.commit()
@@ -58,6 +68,26 @@ with sqlite3.connect(db_location) as db:
     cursor.execute(dropOld)
     # rename temp
     cursor.execute(renameNew)
+    db.commit()
+
+    to_do = []
+
+    # hash user IDs with SHA256 in user removal and rejection tables
+    for item in cursor.execute(selectAllBans):
+        uid, _ = item
+        to_do.append((updateBan, uid))
+
+    for item in cursor.execute(selectAllKicks):
+        uid, _ = item
+        to_do.append((updateKick, uid))
+
+    for item in cursor.execute(selectAllRejections):
+        uid, _ = item
+        to_do.append((updateRejection, uid))
+
+    for item in to_do:
+        query, uid = item
+        cursor.execute(query, (hashlib.sha256(uid.encode()).hexdigest(), uid))
 
     db.commit()
 
