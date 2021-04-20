@@ -6,7 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
-
+### Added
+* Added initial selection to bios (**BREAKING**)
+  * For accounts with multiple bios registered, the bio to start at in the carousel is now chosen by the user
+  
 ## [3.7.2] - 2021-04-11
 ### Fixed
 * Remove erroneous `\t` in role ping regexp that was breaking verification pronoun roles
