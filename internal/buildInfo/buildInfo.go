@@ -18,6 +18,9 @@ var BuildDate string
 //go:embed clocData
 var jdat []byte
 
+//go:embed changelogURL
+var ChangelogURL string
+
 var (
 	GoVersion   = runtime.Version() + " " + runtime.GOOS + " " + runtime.GOARCH
 	StartTime   = time.Now()

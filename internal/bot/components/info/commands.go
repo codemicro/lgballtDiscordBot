@@ -47,6 +47,7 @@ func (i *Info) Info(ctx *route.MessageContext) error {
 			{Name: "Go version and arch", Value: buildInfo.GoVersion},
 			{Name: "Lines of code", Value: fmt.Sprintf("The bot is currently being powered by %s lines of code, spread across %s files.", buildInfo.LinesOfCode, buildInfo.NumFiles)},
 			{Name: "Registered commands", Value: fmt.Sprintf("There are currently %d commands and %d reaction handlers registered in the bot.", cmds, reactions)},
+			{Name: "Changelog", Value: buildInfo.ChangelogURL},
 			{Name: "Uptime", Value: fmt.Sprintf("%d hours, %d minutes and %d seconds since start\nThat's %0.3f rotations of the earth", hours, minutes, seconds, earthRotations)},
 		},
 	}

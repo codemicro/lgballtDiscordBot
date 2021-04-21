@@ -4,11 +4,15 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/http/cookiejar"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -123,6 +127,80 @@ func PreBuild() error {
 		}
 	}
 
+	{
+		// upload changelog
+		changelogBytes, err := ioutil.ReadFile(path.Join(".github", "CHANGELOG.md"))
+		if err != nil {
+			return err
+		}
+		changelogString := string(changelogBytes)
+		changelogString = strings.ReplaceAll(changelogString, "codemicro", "username-censored")
+
+		// based on this: https://github.com/radude/rentry/blob/master/rentry
+
+		jar, err := cookiejar.New(nil)
+		if err != nil {
+			return err
+		}
+
+		client := &http.Client{
+			Jar: jar,
+		}
+
+		csrfResponse, err := client.Get("https://rentry.co")
+		if err != nil {
+			return err
+		}
+		if csrfResponse.StatusCode != 200 {
+			return fmt.Errorf("unknown response code of %d from Rentry", csrfResponse.StatusCode)
+		}
+
+		u, _ := url.Parse("https://rentry.co")
+		var v string
+		for _, cook := range jar.Cookies(u) {
+			if cook.Name == "csrftoken" {
+				v = cook.Value
+				break	
+			}
+		}
+
+		form := url.Values{}
+		form.Add("text", changelogString)
+		form.Add("csrfmiddlewaretoken", v)
+
+		req, err := http.NewRequest("POST", "https://rentry.co/api/new", strings.NewReader(form.Encode()))
+		if err != nil {
+			return err
+		}
+
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Add("Referer", "https://rentry.co")
+
+		resp, err := client.Do(req)
+		body, _ := ioutil.ReadAll(resp.Body)
+		if resp.StatusCode != 200 {
+			return fmt.Errorf("unknown response code of %d from Rentry\n%s", resp.StatusCode, string(body))
+		}
+		
+		output := struct{
+			Status   string `json:"status"`
+			Content  string `json:"content"`
+			Url      string `json:"url"`
+			EditCode string `json:"edit_code"`
+		}{}
+
+		err = json.Unmarshal(body, &output)
+		if err != nil {
+			return err
+		}
+
+		// write internal/buildInfo/changelogURL
+		err = ioutil.WriteFile(path.Join("internal", "buildInfo", "changelogURL"), []byte(output.Url), 0644)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -187,7 +265,7 @@ func getLatestCommitHash(trim bool) string {
 
 	// suppress mage/sh from printing the git command when run - bad solution but oh well. It works
 	// https://github.com/magefile/mage/issues/291
-	log.SetOutput(bytes.NewBuffer([]byte{})) 
+	log.SetOutput(bytes.NewBuffer([]byte{}))
 	commitHash, err := sh.Output("git", "log", "-n1", "--format=format:'%H'")
 	log.SetOutput(os.Stdout)
 	if err != nil {

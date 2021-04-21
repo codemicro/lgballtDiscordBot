@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * User colours to bios
+* Changelog is now included in `<p>info` command
+  * This is done by uploading the changelog to a 3rd party service before building
 ### Changed
 * Logging outputs now go to `os.Stderr` in all cases
 ### Fixed

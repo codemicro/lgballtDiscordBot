@@ -149,3 +149,4 @@ internal/buildInfo/currentDate
 internal/buildInfo/jdat
 internal/buildInfo/clocData
 internal/buildInfo/version
+/internal/buildInfo/changelogURL
