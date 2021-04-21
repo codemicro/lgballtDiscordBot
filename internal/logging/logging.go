@@ -52,12 +52,12 @@ func ErrorString(e string) {
 
 func Warn(e string) {
 	e = "WARNING: " + e
-	fmt.Println(e)
+	_, _ = fmt.Fprintln(os.Stderr, e)
 	toFile(e)
 }
 
 func Info(e string) {
 	e = "INFO: " + e
-	fmt.Println(e)
+	_, _ = fmt.Fprintln(os.Stderr, e)
 	toFile(e)
 }
