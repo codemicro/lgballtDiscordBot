@@ -23,6 +23,7 @@ type Member struct {
 	Description string `json:"description"`
 	Pronouns    string `json:"pronouns"`
 	Birthday    string `json:"birthday"`
+	Colour      string `json:"color"`
 }
 
 type Members []*Member

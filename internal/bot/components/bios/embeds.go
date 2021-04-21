@@ -6,7 +6,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
+	"strconv"
 	"sync"
 )
 
@@ -18,6 +20,7 @@ type pluralityInfo struct {
 type nameDriver interface {
 	Name() (string, error)
 	Avatar() (string, error)
+	Colour() (int, error)
 
 	SysMemberId() string
 	HasMultiple() bool
@@ -26,6 +29,7 @@ type nameDriver interface {
 
 type systemName struct {
 	memberId  string
+	colour    int
 	plurality *pluralityInfo
 
 	member *pluralkit.Member
@@ -52,6 +56,17 @@ func (sn *systemName) fetchInformation() error {
 			return
 		}
 		sn.member = member
+
+		if member.Colour != "" {
+			var col int64
+			col, err = strconv.ParseInt(member.Colour, 16, 32)
+			(fmt.Sprint(col))
+			if err != nil {
+				return
+			}
+			sn.colour = int(col)
+		}
+
 	})
 	return err
 }
@@ -78,6 +93,13 @@ func (sn *systemName) Avatar() (string, error) {
 	return sn.member.Avatar, nil
 }
 
+func (sn *systemName) Colour() (int, error) {
+	if err := sn.fetchInformation(); err != nil {
+		return 0, err
+	}
+	return sn.colour, nil
+}
+
 func (sn *systemName) SysMemberId() string {
 	return sn.memberId
 }
@@ -99,6 +121,7 @@ type accountName struct {
 
 	name   string
 	avatar string
+	colour int
 
 	plurality *pluralityInfo
 
@@ -132,6 +155,32 @@ func (an *accountName) fetchInformation() error {
 		}
 		an.name = name
 		an.avatar = user.AvatarURL("")
+
+		member, memberErr := an.session.GuildMember(an.guildId, an.accountId)
+		if memberErr == nil {
+			if len(member.Roles) != 0 {
+
+				var roles []*discordgo.Role
+				roles, err = an.session.GuildRoles(an.guildId)
+				if err != nil {
+					return
+				}
+
+				var role *discordgo.Role
+				for _, r := range roles {
+					if r.ID == member.Roles[0] {
+						role = r
+						break
+					}
+				}
+
+				if role == nil {
+					return
+				}
+
+				an.colour = role.Color
+			}
+		}
 	})
 	return err
 }
@@ -158,6 +207,13 @@ func (an *accountName) HasMultiple() bool {
 	return an.plurality != nil
 }
 
+func (an *accountName) Colour() (int, error) {
+	if err := an.fetchInformation(); err != nil {
+		return 0, err
+	}
+	return an.colour, nil
+}
+
 func (an *accountName) CurrentAndTotalCount() (int, int) {
 	if an.plurality != nil {
 		return an.plurality.CurrentNumber, an.plurality.TotalCount
@@ -170,10 +226,15 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*discordg
 
 	name, err := nd.Name()
 	var avatar string
+	var colour int
+	// if any error is returned from the Name function, it will also affect the Avatar and Colour function, but will
+	// not be returned there.
 	if err != nil {
+		logging.Warn(err.Error())
 		name = "<unknown name>"
 	} else {
 		avatar, _ = nd.Avatar()
+		colour, _ = nd.Colour()
 	}
 
 	var footerText string
@@ -206,6 +267,7 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*discordg
 		Footer:    &discordgo.MessageEmbedFooter{Text: footerText},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: avatar},
 		Fields:    fields,
+		Color:     colour,
 	}
 
 	return &e, nil
