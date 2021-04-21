@@ -167,12 +167,15 @@ func (an *accountName) fetchInformation() error {
 				}
 
 				var role *discordgo.Role
-				for _, r := range roles {
-					if r.ID == member.Roles[0] {
-						role = r
-						break
+				for _, memberRole := range member.Roles {
+					for _, r := range roles {
+						if r.ID == memberRole && r.Color != 0 { // first role with a colour set
+							role = r
+							break
+						}
 					}
 				}
+
 
 				if role == nil {
 					return

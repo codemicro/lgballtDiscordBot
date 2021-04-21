@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.1.1] - 2021-04-21
+### Fixed
+* Bios now always show the user colour, irrespective of if the top assigned role has a colour or not (it wouldn't do before)
+
 ## [4.1.0] - 2021-04-21
 ### Added
 * User colours to bios
@@ -306,7 +310,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.1...HEAD
+[4.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.7.2...v4.0.0
 [3.7.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v3.7.1...v3.7.2
