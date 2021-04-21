@@ -147,22 +147,23 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					return
 				}
 
-				tracker := &trackedEmbed{
-					accountId:      targetUserId,
-					channelId:      ctx.Message.ChannelID,
-					bios:           bios,
-					timeoutAt:      time.Now().Add(bioTimeoutDuration),
-					requestingUser: ctx.Message.Author.ID,
-				}
-
-				// send first bio
-
 				plurality := &pluralityInfo{
 					CurrentNumber: selectedNumber, // CurrentNumber is only used to show to the user, hence is +1 compared to the target index
 					TotalCount:    totalBios,
 				}
 
 				selectedNumber -= 1
+
+				tracker := &trackedEmbed{
+					accountId:      targetUserId,
+					channelId:      ctx.Message.ChannelID,
+					bios:           bios,
+					timeoutAt:      time.Now().Add(bioTimeoutDuration),
+					requestingUser: ctx.Message.Author.ID,
+					current:        selectedNumber,
+				}
+
+				// send first bio
 
 				var nd nameDriver
 				if bios[selectedNumber].SysMemberID != "" { // account bios will have a blank system member ID
