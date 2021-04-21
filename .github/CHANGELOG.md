@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Bios for systems no longer fail to load any bios if the PluralKit system member list is private
 
 ## [4.0.0] - 2021-04-20
 ### Added

@@ -1,6 +1,7 @@
 package bios
 
 import (
+	"errors"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
@@ -52,10 +53,15 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 			}
 		}
 
+		var warning string
 		// Fetch detailed system member info
 		members, err := pluralkit.MembersBySystemId(systemID)
 		if err != nil {
-			return err
+			if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
+				warning = "\n⚠ Cannot retrieve system member names - member list is private"
+			} else {
+				return err
+			}
 		}
 
 		acc, err := ctx.Session.User(targetUserId)
@@ -66,13 +72,17 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		// make strings containing all the account names
 		var names []string
 		for _, bio := range bios {
-			if systemMember := members.Get(bio.SysMemberID); bio.SysMemberID != "" || systemMember != nil {
-				name := systemMember.Name
-				if systemMember.Nickname != "" {
-					name = systemMember.Nickname
-				}
+			if bio.SysMemberID != "" {
+				if systemMember := members.Get(bio.SysMemberID); systemMember != nil {
+					name := systemMember.Name
+					if systemMember.Nickname != "" {
+						name = systemMember.Nickname
+					}
 
-				names = append(names, fmt.Sprintf("%s (`%s`)", name, systemMember.Id))
+					names = append(names, fmt.Sprintf("%s (`%s`)", name, systemMember.Id))
+				} else {
+					names = append(names, fmt.Sprintf("`%s`", bio.SysMemberID))
+				}
 			} else {
 				name, _, err := common.GetNickname(ctx.Session, acc.ID, ctx.Message.GuildID)
 				if err != nil {
@@ -88,7 +98,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 			bioSelectionText += fmt.Sprintf("**%d** - %s\n", i+1, name)
 		}
 		m, err := ctx.SendMessageEmbed(ctx.Message.ChannelID, &discordgo.MessageEmbed{
-			Description: bioSelectionText,
+			Description: bioSelectionText + warning,
 			Footer: &discordgo.MessageEmbedFooter{
 				Text: `Send another message with the number of the bio you'd like to view - for example, "2"` +
 					"\nYou will still be able to view other bios afterwards.",
