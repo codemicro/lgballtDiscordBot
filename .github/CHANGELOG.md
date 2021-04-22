@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.1.3] - 2021-04-22
+### Fixed
+* Role positions are now properly taken into account when determining what colour to show on bio embeds
+
 ## [4.1.2] - 2021-04-22
 ### Fixed
 * Bio embed colours are now taken from higher priority roles first
@@ -315,7 +319,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.2...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...HEAD
+[4.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.0.0...v4.1.0
