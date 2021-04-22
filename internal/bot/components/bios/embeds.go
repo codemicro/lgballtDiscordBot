@@ -167,7 +167,9 @@ func (an *accountName) fetchInformation() error {
 				}
 
 				var role *discordgo.Role
-				for _, memberRole := range member.Roles {
+				// traverse backwards as highest priority roles are later in the member.Roles slice
+				for i := len(member.Roles) - 1; i >= 0; i -= 1 {
+					memberRole := member.Roles[i]
 					for _, r := range roles {
 						if r.ID == memberRole && r.Color != 0 { // first role with a colour set
 							role = r
