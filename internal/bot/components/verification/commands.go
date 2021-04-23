@@ -159,7 +159,9 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 
 	messageLink := ctx.Arguments["messageLink"].(string)
 
-	_, channelId, messageId, valid := tools.ParseMessageLink(messageLink)
+	guildId, channelId, messageId, valid := tools.ParseMessageLink(messageLink)
+
+	fmt.Println(channelId, messageId)
 
 	if !valid {
 		return ctx.SendErrorMessage("Invalid message link")
@@ -167,6 +169,7 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 
 	mct, err := ctx.Session.ChannelMessage(channelId, messageId)
 	if err != nil {
+		fmt.Println(err)
 		switch e := err.(type) {
 		case *discordgo.RESTError:
 			if e.Response.StatusCode == 404 {
@@ -178,6 +181,9 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 		}
 	}
 
+	mct.GuildID = guildId // v.coreVerification needs this, for some reason it's not set when retrieving the message
+	// using ctx.Session.ChannelMessage
+
 	err = v.coreVerification(&route.MessageContext{
 		CommonContext: ctx.CommonContext,
 		Message:       &discordgo.MessageCreate{Message: mct},
@@ -186,6 +192,7 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 	})
 
 	if err != nil {
+		fmt.Println(err, "A")
 		return err
 	}
 

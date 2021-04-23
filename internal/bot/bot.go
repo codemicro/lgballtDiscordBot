@@ -28,7 +28,7 @@ func Start(state *state.State) error {
 	}
 
 	kit := route.NewKit(session, []string{config.Prefix})
-
+	kit.DebugMode = config.DebugMode
 	kit.ErrorHandler = func(err error) { logging.Error(err) }
 
 	err = registerHandlers(kit, state)

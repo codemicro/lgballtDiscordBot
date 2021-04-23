@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.1.4] - 2021-04-23
+### Fixed
+* `<p>verifyf` no longer errors when run
+  * When retrieving a message using `discordgo.(*Session).ChannelMessage`, the `GuildID` field is not set. This was used by `verification.(*Verification).coreVerify` to retrieve guild roles.
+  * When a message is received from a websocket update, it would have `GuildID` and be okay
+  * Fixed by manually adding the guild ID to the `Message` instance in question.
+  * Introduced in [3.7.0]
+
 ## [4.1.3] - 2021-04-22
 ### Fixed
 * Role positions are now properly taken into account when determining what colour to show on bio embeds
@@ -319,7 +327,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.4...HEAD
+[4.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.0...v4.1.1
