@@ -235,3 +235,86 @@ func (v *Verification) TrackBan(ctx *route.MessageContext) error {
 func (v *Verification) TrackKick(ctx *route.MessageContext) error {
 	return v.coreRecordRemoval(ctx, "kicked")
 }
+
+func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
+
+	fmt.Println("Hello!")
+
+	const (
+		removalThreshold = time.Hour * 24 * 7
+	)
+
+	var (
+		targetGuild = ctx.Message.GuildID
+		toKick      []*discordgo.Member
+
+		lastMemberID string
+		lastLength   = 1000
+	)
+
+	for lastLength >= 1000 {
+
+		_ = ctx.Session.ChannelTyping(ctx.Message.ChannelID)
+
+		guildMembers, err := ctx.Session.GuildMembers(targetGuild, lastMemberID, 1000)
+		if err != nil {
+			return err
+		}
+
+		lastLength = len(guildMembers)
+		lastMemberID = guildMembers[len(guildMembers)-1].User.ID
+
+		for _, member := range guildMembers {
+			parsedJoinTime, err := member.JoinedAt.Parse()
+			if err != nil {
+				continue
+			}
+
+			var hasRequiredRoles bool
+
+		RolesLoop:
+			for _, roleID := range member.Roles {
+				if roleID == config.VerificationIDs.RoleId ||
+					roleID == config.MuteMe.TimeoutRole ||
+					tools.IsStringInSlice(roleID, config.VerificationIDs.ExtraValidRoles) {
+
+					hasRequiredRoles = true
+					break RolesLoop
+				}
+			}
+
+			if !hasRequiredRoles && time.Since(parsedJoinTime) > removalThreshold && !member.User.Bot {
+				toKick = append(toKick, member)
+			}
+		}
+	}
+
+	var kickLog strings.Builder
+
+	for i, member := range toKick {
+
+		if i%10 == 0 {
+			_ = ctx.Session.ChannelTyping(ctx.Message.ChannelID)
+		}
+
+		kickLog.WriteString(member.User.ID)
+		kickLog.WriteRune(' ')
+		kickLog.WriteString(member.User.String())
+
+		if !config.DebugMode {
+			err := ctx.Session.GuildMemberDeleteWithReason(ctx.Message.GuildID, member.User.ID, "Automatic purge, had not verified within 7 days")
+			if err != nil {
+				kickLog.WriteString(" failed: ")
+				kickLog.WriteString(err.Error())
+				logging.Warn(err.Error())
+			}
+		} else {
+			logging.Info(fmt.Sprintf("KICK %s %s (debug mode enabled, no action performed)", member.User.ID, member.User.String()))
+		}
+
+		kickLog.WriteRune('\n')
+	}
+
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Action successful. The following users were kicked:\n```%s```", kickLog.String()))
+	return err
+}

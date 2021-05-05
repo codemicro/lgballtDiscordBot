@@ -38,6 +38,7 @@ type VerificationIds struct {
 	RoleId               string   `json:"assignRoleId"`
 	ModlogChannel        string   `json:"modlogChannel"`
 	ExcludedPronounRoles []string `json:"excludedPronounRoles"`
+	ExtraValidRoles      []string `json:"extraValidRoles"`
 }
 
 type RedditFeedInfo struct {

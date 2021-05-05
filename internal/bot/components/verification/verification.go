@@ -11,15 +11,12 @@ import (
 	"time"
 )
 
-//go:generate msgp -tests=false -io=false -unexported
-//msgp:ignore Verification
-
 const (
 	dataStartMarker = "[STA."
 	dataEndMarker   = ".END]"
 
-	acceptReaction = "✅"
-	rejectReaction = "❌"
+	acceptReaction       = "✅"
+	rejectReaction       = "❌"
 	scrapPronounReaction = "🚮"
 
 	pronounEmbedFieldTitle = "Pronouns"
@@ -49,7 +46,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.FVerify,
 		Invisible: true,
-		Category: meta.CategoryAdminTools,
+		Category:  meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -61,7 +58,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.Verify,
 		Invisible: true,
-		Category: meta.CategoryAdminTools,
+		Category:  meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -76,7 +73,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.TrackBan,
 		Invisible: true,
-		Category: meta.CategoryAdminTools,
+		Category:  meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -91,6 +88,17 @@ func Init(kit *route.Kit, _ *state.State) error {
 		},
 		Run:       comp.TrackKick,
 		Invisible: true,
+		Category:  meta.CategoryAdminTools,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Purge unverified users",
+		Help:        "Kick all users that have no assigned roles and joined more than 7 days ago",
+		CommandText: []string{"purgeUnverified"},
+		Restrictions: []route.CommandRestriction{
+			route.RestrictionByRole(config.AdminRole),
+		},
+		Run:      comp.PurgeUnverifiedMembers,
 		Category: meta.CategoryAdminTools,
 	})
 
