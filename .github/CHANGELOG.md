@@ -332,7 +332,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.4...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.2.0
 [4.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.1...v4.1.2
