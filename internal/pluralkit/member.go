@@ -39,20 +39,28 @@ func (m Members) Get(memberID string) *Member {
 
 func MembersBySystemId(sid string) (Members, error) {
 	var members Members
-	return members, orchestrateRequest(
+	err := orchestrateRequest(
 		fmt.Sprintf(membersBySystemIdUrl, sid),
 		&members,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorSystemNotFound, 403: ErrorMemberListPrivate},
 	)
+	if err != nil {
+		return nil, err
+	}
+	return members, nil
 }
 
 func MemberByMemberId(mid string) (*Member, error) {
 	member := new(Member)
-	return member, orchestrateRequest(
+	err := orchestrateRequest(
 		fmt.Sprintf(memberByMemberIdUrl, mid),
 		member,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorMemberNotFound},
 	)
+	if err != nil {
+		return nil, err
+	}
+	return member, nil
 }

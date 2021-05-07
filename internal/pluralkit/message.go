@@ -26,10 +26,14 @@ type Message struct {
 // MessageById fetches information about a source or proxied message from the PluralKit API
 func MessageById(mid string) (*Message, error) {
 	sys := new(Message)
-	return sys, orchestrateRequest(
+	err := orchestrateRequest(
 		fmt.Sprintf(messageByIdUrl, mid),
 		sys,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorMessageNotFound},
 	)
+	if err != nil {
+		return nil, err
+	}
+	return sys, nil
 }

@@ -27,21 +27,29 @@ type System struct {
 // SystemById fetches a system from the PluralKit API based on its PluralKit ID
 func SystemById(sid string) (*System, error) {
 	sys := new(System)
-	return sys, orchestrateRequest(
+	err := orchestrateRequest(
 		fmt.Sprintf(systemByIdUrl, sid),
 		sys,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorSystemNotFound},
 	)
+	if err != nil {
+		return nil, err
+	}
+	return sys, nil
 }
 
 // SystemByDiscordAccount fetches a system linked to a Discord user ID from the PluralKit API
 func SystemByDiscordAccount(discordUid string) (*System, error) {
 	sys := new(System)
-	return sys, orchestrateRequest(
+	err := orchestrateRequest(
 		fmt.Sprintf(systemByDiscordAccountIdUrl, discordUid),
 		sys,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorAccountHasNoSystem},
 	)
+	if err != nil {
+		return nil, err
+	}
+	return sys, nil
 }
