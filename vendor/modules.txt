@@ -1,0 +1,117 @@
+# github.com/PuerkitoBio/goquery v1.6.0
+## explicit
+github.com/PuerkitoBio/goquery
+# github.com/andybalholm/cascadia v1.1.0
+github.com/andybalholm/cascadia
+# github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+github.com/asaskevich/govalidator
+# github.com/bwmarrin/discordgo v0.23.2
+## explicit
+github.com/bwmarrin/discordgo
+# github.com/codemicro/alib-go v0.0.6
+## explicit
+github.com/codemicro/alib-go/mage/exmg
+github.com/codemicro/alib-go/mage/exsh
+# github.com/codemicro/dgo-toolkit v0.7.1
+## explicit
+github.com/codemicro/dgo-toolkit/route
+# github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+github.com/golang/freetype/raster
+github.com/golang/freetype/truetype
+# github.com/gorilla/websocket v1.4.1
+## explicit
+github.com/gorilla/websocket
+# github.com/hashicorp/errwrap v1.1.0
+## explicit
+github.com/hashicorp/errwrap
+# github.com/hashicorp/go-multierror v1.1.1
+## explicit
+github.com/hashicorp/go-multierror
+# github.com/jinzhu/inflection v1.0.0
+github.com/jinzhu/inflection
+# github.com/jinzhu/now v1.1.1
+github.com/jinzhu/now
+# github.com/json-iterator/go v1.1.10
+github.com/json-iterator/go
+# github.com/magefile/mage v1.11.0
+## explicit
+github.com/magefile/mage/mg
+github.com/magefile/mage/sh
+# github.com/mattn/go-sqlite3 v1.14.6
+## explicit
+github.com/mattn/go-sqlite3
+# github.com/mmcdole/gofeed v1.1.0
+## explicit
+github.com/mmcdole/gofeed
+github.com/mmcdole/gofeed/atom
+github.com/mmcdole/gofeed/extensions
+github.com/mmcdole/gofeed/internal/shared
+github.com/mmcdole/gofeed/json
+github.com/mmcdole/gofeed/rss
+# github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf
+github.com/mmcdole/goxpp
+# github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421
+github.com/modern-go/concurrent
+# github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
+github.com/modern-go/reflect2
+# github.com/patrickmn/go-cache v2.1.0+incompatible
+## explicit
+github.com/patrickmn/go-cache
+# github.com/stretchr/testify v1.4.0
+## explicit
+# github.com/wcharczuk/go-chart/v2 v2.1.0
+## explicit
+github.com/wcharczuk/go-chart/v2
+github.com/wcharczuk/go-chart/v2/drawing
+github.com/wcharczuk/go-chart/v2/matrix
+github.com/wcharczuk/go-chart/v2/roboto
+# golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392
+## explicit
+golang.org/x/crypto/internal/subtle
+golang.org/x/crypto/nacl/secretbox
+golang.org/x/crypto/poly1305
+golang.org/x/crypto/salsa20/salsa
+# golang.org/x/image v0.0.0-20200927104501-e162460cd6b5
+golang.org/x/image/draw
+golang.org/x/image/font
+golang.org/x/image/math/f64
+golang.org/x/image/math/fixed
+# golang.org/x/net v0.0.0-20200301022130-244492dfa37a
+golang.org/x/net/html
+golang.org/x/net/html/atom
+golang.org/x/net/html/charset
+# golang.org/x/sys v0.0.0-20210324051608-47abb6519492
+## explicit
+golang.org/x/sys/cpu
+# golang.org/x/text v0.3.2
+golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/htmlindex
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/japanese
+golang.org/x/text/encoding/korean
+golang.org/x/text/encoding/simplifiedchinese
+golang.org/x/text/encoding/traditionalchinese
+golang.org/x/text/encoding/unicode
+golang.org/x/text/internal/language
+golang.org/x/text/internal/language/compact
+golang.org/x/text/internal/tag
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/language
+golang.org/x/text/runes
+golang.org/x/text/transform
+# gopkg.in/yaml.v2 v2.2.8
+## explicit
+# gorm.io/driver/sqlite v1.1.4
+## explicit
+gorm.io/driver/sqlite
+# gorm.io/gorm v1.20.11
+## explicit
+gorm.io/gorm
+gorm.io/gorm/callbacks
+gorm.io/gorm/clause
+gorm.io/gorm/logger
+gorm.io/gorm/migrator
+gorm.io/gorm/schema
+gorm.io/gorm/utils
