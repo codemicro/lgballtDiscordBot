@@ -935,7 +935,7 @@ func (s *State) OnInterface(se *Session, i interface{}) (err error) {
 				// shadowing of err avoided here since this isn't an error that needs to be handled
 				old, ex := s.Message(t.ChannelID, mID)
 				if ex == nil {
-					t.BeforeDelete = append(t.BeforeDelete, &(*old))
+					t.BeforeDelete[mID] = &(*old)
 				}
 
 				s.messageRemoveByID(t.ChannelID, mID)
