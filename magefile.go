@@ -90,38 +90,39 @@ func EnsureGocloc() error {
 	return nil
 }
 
+func ApplyPatches() error {
+	// read patches index
+	patches := make(map[string]string)
+	{
+		dat, err := ioutil.ReadFile("patches/patches.json")
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(dat, &patches)
+		if err != nil {
+			return err
+		}
+	}
+
+	// apply patches
+	for patch, directory := range patches {
+
+		patchPath := strings.Join([]string{"patches", patch}, string(os.PathSeparator))
+
+		err := sh.Run("git", "apply", "--directory="+directory, "--ignore-space-change", "--ignore-whitespace", patchPath)
+		if err != nil {
+			fmt.Printf("WARNING: Failed to apply Git patch %s (%s)\n", patch, err.Error())
+		}
+	}
+
+	return nil
+}
+
 func PreBuild() error {
 	fmt.Println("Running prebuild tasks")
 
 	if !exsh.IsCmdAvail("gocloc") {
 		return errors.New("gocloc must be installed on your PATH - run `mage installDeps` or see https://github.com/hhatto/gocloc")
-	}
-
-	{
-		// read patches index
-		patches := make(map[string]string)
-		{
-			dat, err := ioutil.ReadFile("patches/patches.json")
-			if err != nil {
-				return err
-			}
-			err = json.Unmarshal(dat, &patches)
-			if err != nil {
-				return err
-			}
-		}
-
-		// apply patches
-		for patch, directory := range patches {
-
-			patchPath := strings.Join([]string{"patches", patch}, string(os.PathSeparator))
-
-			err := sh.Run("git", "apply", "--directory="+directory, "--ignore-space-change", "--ignore-whitespace", patchPath)
-			if err != nil {
-				fmt.Printf("WARNING: Failed to apply Git patch %s (%s)\n", patch, err.Error())
-			}
-		}
-
 	}
 
 	{
