@@ -1,0 +1,30 @@
+diff --git a/events.go b/events.go
+index 87ad7d9..425355e 100644
+--- a/events.go
++++ b/events.go
+@@ -260,6 +260,8 @@ type MessageDeleteBulk struct {
+ 	Messages  []string `json:"ids"`
+ 	ChannelID string   `json:"channel_id"`
+ 	GuildID   string   `json:"guild_id"`
++
++	BeforeDelete []*Message `json:"-"`
+ }
+ 
+ // WebhooksUpdate is the data for a WebhooksUpdate event
+diff --git a/state.go b/state.go
+index 2eeabd8..0a0f33e 100644
+--- a/state.go
++++ b/state.go
+@@ -932,6 +932,12 @@ func (s *State) OnInterface(se *Session, i interface{}) (err error) {
+ 	case *MessageDeleteBulk:
+ 		if s.MaxMessageCount != 0 {
+ 			for _, mID := range t.Messages {
++				// shadowing of err avoided here since this isn't an error that needs to be handled
++				old, ex := s.Message(t.ChannelID, mID)
++				if ex == nil {
++					t.BeforeDelete = append(t.BeforeDelete, &(*old))
++				}
++
+ 				s.messageRemoveByID(t.ChannelID, mID)
+ 			}
+ 		}
