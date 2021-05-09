@@ -25,6 +25,7 @@ type Info struct {
 	Listeners                  ListenerInfo     `json:"listeners"`
 	MuteMe                     MuteMeInfo       `json:"muteMe"`
 	BioFields                  []string         `json:"bioFields"`
+	ActionLogChannel           string           `json:"actionLogChannel"`
 }
 
 type ListenerInfo struct {
@@ -75,6 +76,7 @@ var (
 	Listeners                  ListenerInfo
 	MuteMe                     MuteMeInfo
 	BioFields                  []string
+	ActionLogChannel           string
 )
 
 func init() {
@@ -106,6 +108,7 @@ func init() {
 	Listeners = cfg.Listeners
 	MuteMe = cfg.MuteMe
 	BioFields = cfg.BioFields
+	ActionLogChannel = cfg.ActionLogChannel
 
 	if PkApi.ApiUrl[len(PkApi.ApiUrl)-1] == '/' {
 		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]

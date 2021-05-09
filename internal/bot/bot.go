@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/actionLog"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/info"
@@ -32,6 +33,10 @@ func Start(state *state.State) error {
 	kit.DebugMode = config.DebugMode
 	kit.ErrorHandler = func(err error) { logging.Error(err) }
 
+	if err = actionLog.Setup(session); err != nil {
+		return err
+	}
+
 	err = registerHandlers(kit, state)
 	if err != nil {
 		return err
@@ -40,6 +45,13 @@ func Start(state *state.State) error {
 	err = session.Open()
 	if err != nil {
 		return err
+	}
+
+	if session.State != nil {
+		// used for the action log
+		session.State.TrackChannels = true
+		session.State.TrackMembers = true
+		session.State.MaxMessageCount = 3000
 	}
 
 	go func() {
