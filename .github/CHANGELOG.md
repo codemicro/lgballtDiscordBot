@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * `<p>incidents` and `<p>incidents reset` commands
+### Changed
+* `<p>purgeUnverified` now confirms before executing any kicks
 
 ## [4.3.0] - 2021-05-09
 ### Added

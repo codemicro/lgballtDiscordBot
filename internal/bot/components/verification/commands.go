@@ -238,8 +238,6 @@ func (v *Verification) TrackKick(ctx *route.MessageContext) error {
 
 func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
 
-	fmt.Println("Hello!")
-
 	const (
 		removalThreshold = time.Hour * 24 * 7
 	)
@@ -250,6 +248,8 @@ func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
 
 		lastMemberID string
 		lastLength   = 1000
+
+		kickLog strings.Builder
 	)
 
 	for lastLength >= 1000 {
@@ -272,49 +272,76 @@ func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
 
 			var hasRequiredRoles bool
 
-		RolesLoop:
 			for _, roleID := range member.Roles {
 				if roleID == config.VerificationIDs.RoleId ||
 					roleID == config.MuteMe.TimeoutRole ||
 					tools.IsStringInSlice(roleID, config.VerificationIDs.ExtraValidRoles) {
 
 					hasRequiredRoles = true
-					break RolesLoop
+					break
 				}
 			}
 
 			if !hasRequiredRoles && time.Since(parsedJoinTime) > removalThreshold && !member.User.Bot {
 				toKick = append(toKick, member)
+				kickLog.WriteString(member.User.ID)
+				kickLog.WriteRune(' ')
+				kickLog.WriteString(member.User.String())
+				kickLog.WriteRune('\n')
 			}
 		}
 	}
 
-	var kickLog strings.Builder
-
-	for i, member := range toKick {
-
-		if i%10 == 0 {
-			_ = ctx.Session.ChannelTyping(ctx.Message.ChannelID)
-		}
-
-		kickLog.WriteString(member.User.ID)
-		kickLog.WriteRune(' ')
-		kickLog.WriteString(member.User.String())
-
-		if !config.DebugMode {
-			err := ctx.Session.GuildMemberDeleteWithReason(ctx.Message.GuildID, member.User.ID, "Automatic purge, had not verified within 7 days")
-			if err != nil {
-				kickLog.WriteString(" failed: ")
-				kickLog.WriteString(err.Error())
-				logging.Warn(err.Error())
-			}
-		} else {
-			logging.Info(fmt.Sprintf("KICK %s %s (debug mode enabled, no action performed)", member.User.ID, member.User.String()))
-		}
-
-		kickLog.WriteRune('\n')
+	emb := &discordgo.MessageEmbed{
+		Title: "Confirmation",
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "React to this message with ✅ to continue. (❌ to cancel)",
+		},
+		Description: "The following users will be kicked: ```" + kickLog.String() + "```",
 	}
 
-	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Action successful. The following users were kicked:\n```%s```", kickLog.String()))
+	kickLog.Reset()
+
+	err := ctx.Kit.NewConfirmation(
+		ctx.Message.ChannelID,
+		ctx.Message.Author.ID,
+		emb,
+		func(ctx2 *route.ReactionContext) error {
+			for i, member := range toKick {
+
+				if i%10 == 0 {
+					_ = ctx.Session.ChannelTyping(ctx.Message.ChannelID)
+				}
+
+				if !config.DebugMode {
+					err := ctx.Session.GuildMemberDeleteWithReason(ctx.Message.GuildID, member.User.ID, "Automatic purge, had not verified within 7 days")
+					if err != nil {
+						kickLog.WriteString(member.User.ID)
+						kickLog.WriteRune(' ')
+						kickLog.WriteString(member.User.String())
+						kickLog.WriteString(" failed: ")
+						kickLog.WriteString(err.Error())
+						kickLog.WriteRune('\n')
+						logging.Warn(err.Error())
+					}
+				} else {
+					logging.Info(fmt.Sprintf("KICK %s %s (debug mode enabled, no action performed)", member.User.ID, member.User.String()))
+				}
+			}
+
+			var errors string
+			if len(kickLog.String()) != 0 {
+				errors = fmt.Sprintf(" The following errors were observed:\n```%s```", kickLog.String())
+			}
+
+			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Action(s) successful." + errors)
+			return err
+		},
+		func(ctx *route.ReactionContext) error {
+			_, _ = ctx.Session.ChannelMessageEdit(ctx.Reaction.ChannelID, ctx.Reaction.MessageID, "Cancelled!")
+			return nil
+		},
+	)
+
 	return err
 }
