@@ -96,6 +96,24 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Category: meta.CategoryMisc,
 	})
 
+	kit.AddCommand(&route.Command{
+		Name:        "Reset days since last incident",
+		Help:        "Reset the number of days since the last incident to zero",
+		CommandText: []string{"incidents", "reset"},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Run: comp.ResetSinceLastIncident,
+		Category: meta.CategoryAdminTools,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Days since last incident",
+		Help:        "Show the number of days since the last incident",
+		CommandText: []string{"incidents"},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Run: comp.SinceLastIncident,
+		Category: meta.CategoryAdminTools,
+	})
+
 	return nil
 
 }
