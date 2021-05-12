@@ -64,7 +64,18 @@ func InstallDeps() error {
 		return err
 	}
 
+	mg.Deps(VendorDeps)
 	mg.Deps(EnsureGocloc)
+
+	return nil
+}
+
+func VendorDeps() error {
+	if err := sh.Run("go", "mod", "vendor"); err != nil {
+		return err
+	}
+	// running `go mod vendor` undoes any applied patches
+	mg.Deps(ApplyPatches)
 
 	return nil
 }
@@ -126,8 +137,8 @@ func PreBuild() error {
 	}
 
 	{
-		// gocloc --output-type=json . > internal/buildInfo/clocData
-		gcOut, err := sh.Output("gocloc", "--output-type=json", ".")
+		// gocloc --output-type=json --not-match-d=vendor . > internal/buildInfo/clocData
+		gcOut, err := sh.Output("gocloc", "--output-type=json", "--not-match-d=vendor", ".")
 		if err != nil {
 			return err
 		}
