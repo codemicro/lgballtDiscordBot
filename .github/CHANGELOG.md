@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.4.0] - 2021-05-12
 ### Added
 * `<p>incidents` and `<p>incidents reset` commands
 ### Changed
@@ -341,7 +343,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...HEAD
+[4.4.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.2.0
 [4.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.1.4
