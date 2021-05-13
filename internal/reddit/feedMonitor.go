@@ -19,8 +19,6 @@ func subMonitorSequencer(state *state.State, info config.RedditFeedInfo, ts *dis
 
 	var idCache []string
 
-	state.AddGoroutine()
-
 	ticker := time.NewTicker(time.Duration(info.Interval) * time.Minute)
 	// ticker = time.NewTicker(time.Second * 10)
 	finished := make(chan bool)

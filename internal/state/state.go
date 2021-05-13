@@ -34,15 +34,12 @@ func (s *State) WaitUntilAllComplete(timeout time.Duration) (timedOut bool) {
 	return <-c
 }
 
-func (s *State) AddGoroutine() {
-	s.Finishes.Add(1)
-}
-
 func (s *State) FinishGoroutine() {
 	s.Finishes.Done()
 }
 
 func (s *State) WaitUntilShutdownTrigger() {
+	s.Finishes.Add(1)
 	s.Notifier.Wait()
 }
 

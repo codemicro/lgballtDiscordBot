@@ -11,8 +11,6 @@ import (
 
 func (mm *MuteMe) startMuteRemovalWorker(session *discordgo.Session, st *state.State) {
 
-	st.AddGoroutine()
-
 	ticker := time.NewTicker(time.Minute)
 	finished := make(chan bool)
 
