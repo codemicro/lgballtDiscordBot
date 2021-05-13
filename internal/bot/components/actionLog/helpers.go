@@ -2,27 +2,32 @@ package actionLog
 
 import "github.com/bwmarrin/discordgo"
 
-func getAuthorMention(m *discordgo.Message) string {
+const (
+	unknownAuthor = "`<unknown>`"
+	cannotGetContent = "unable to retrieve content"
+)
+
+func getAuthorMention(m *discordgo.Message) (string, bool) {
 	if m != nil && m.Author != nil {
-		return m.Author.Mention()
+		return m.Author.Mention(), true
 	}
-	return "`<unknown>`"
+	return unknownAuthor, false
 }
 
-func getAuthorUsername(m *discordgo.Message) string {
+func getAuthorUsername(m *discordgo.Message) (string, bool) {
 	if m != nil && m.Author != nil {
-		return m.Author.String()
+		return m.Author.String(), true
 	}
-	return "`<unknown>`"
+	return unknownAuthor, false
 }
 
-func getContent(m *discordgo.Message) string {
+func getContent(m *discordgo.Message) (string, bool) {
 	if m != nil {
 		if x := m.ContentWithMentionsReplaced(); len(x) != 0 {
-			return x
+			return x, true
 		}
 	}
-	return "unable to retrieve content"
+	return cannotGetContent, false
 }
 
 func wasBot(m *discordgo.Message) bool {

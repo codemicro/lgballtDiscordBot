@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* Reduce amount of clutter in action log messages
+  * Adds filters for when message content or author information cannot be received and changes the log output accordingly
 
 ## [4.4.0] - 2021-05-12
 ### Added

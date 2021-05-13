@@ -29,37 +29,61 @@ func messageUpdate(s *discordgo.Session, mu *discordgo.MessageUpdate) {
 	var files []*discordgo.File
 	var sb strings.Builder
 
-	sb.WriteString("**Message updated** from ")
-	sb.WriteString(getAuthorMention(mu.Message))
+	sb.WriteString("**Message updated**")
+	author, foundAuthor := getAuthorMention(mu.Message)
 
-	if pkMessage != nil {
-		sb.WriteString(" (")
-		sb.WriteString(tools.MakePing(pkMessage.AuthorUserId))
-		sb.WriteString(")")
+	if foundAuthor {
+		sb.WriteString(" from ")
+		sb.WriteString(author)
+
+		if pkMessage != nil {
+			sb.WriteString(" (")
+			sb.WriteString(tools.MakePing(pkMessage.AuthorUserId))
+			sb.WriteString(")")
+		}
 	}
 
 	sb.WriteString(" in ")
 	sb.WriteString(tools.MakeChannelMention(mu.ChannelID))
 
-	previousContent := getContent(mu.BeforeUpdate)
-	newContent := getContent(mu.Message)
+	sb.WriteString(" (")
+	sb.WriteString(tools.MakeMessageLink(mu.GuildID, mu.ChannelID, mu.ID))
+	sb.WriteRune(')')
+
+	previousContent, previousFound := getContent(mu.BeforeUpdate)
+	newContent, newFound := getContent(mu.Message)
 
 	if len(previousContent)+len(newContent) > 1500 {
-		files = append(files, &discordgo.File{
-			Name:        "before.txt",
-			ContentType: "text/plain",
-			Reader:      strings.NewReader(previousContent),
-		}, &discordgo.File{
-			Name:        "after.txt",
-			ContentType: "text/plain",
-			Reader:      strings.NewReader(newContent),
-		})
+
+		if previousFound {
+			files = append(files, &discordgo.File{
+				Name:        "before.txt",
+				ContentType: "text/plain",
+				Reader:      strings.NewReader(previousContent),
+			})
+		}
+
+		if newFound {
+			files = append(files, &discordgo.File{
+				Name:        "after.txt",
+				ContentType: "text/plain",
+				Reader:      strings.NewReader(newContent),
+			})
+		}
+
 	} else {
-		sb.WriteString("\n**Old**: `")
-		sb.WriteString(previousContent)
-		sb.WriteString("`\n**New**: `")
-		sb.WriteString(newContent)
-		sb.WriteString("`\n")
+
+		if previousFound {
+			sb.WriteString("\n**Old**: `")
+			sb.WriteString(previousContent)
+			sb.WriteRune('`')
+		}
+
+		if newFound {
+			sb.WriteString("\n**New**: `")
+			sb.WriteString(newContent)
+			sb.WriteRune('`')
+		}
 	}
 
 	if err = log(s, eventTypeMessageUpdate, sb.String(), files...); err != nil {
@@ -93,33 +117,44 @@ func messageDelete(s *discordgo.Session, md *discordgo.MessageDelete) {
 		}
 	}
 
+	author, foundAuthor := getAuthorMention(md.BeforeDelete)
+	messageContent, foundContent := getContent(md.BeforeDelete)
+
 	var files []*discordgo.File
 	var sb strings.Builder
 
-	sb.WriteString("**Message deleted** from ")
-	sb.WriteString(getAuthorMention(md.BeforeDelete))
+	sb.WriteString("**Message deleted**")
 
-	if pkMessage != nil {
-		sb.WriteString(" (")
-		sb.WriteString(tools.MakePing(pkMessage.AuthorUserId))
-		sb.WriteString(")")
+	if foundAuthor {
+		sb.WriteString(" from ")
+		sb.WriteString(author)
+
+		if pkMessage != nil {
+			sb.WriteString(" (")
+			sb.WriteString(tools.MakePing(pkMessage.AuthorUserId))
+			sb.WriteString(")")
+		}
 	}
 
 	sb.WriteString(" in ")
 	sb.WriteString(tools.MakeChannelMention(md.ChannelID))
 
-	messageContent := getContent(md.BeforeDelete)
+	sb.WriteString(" (ID ")
+	sb.WriteString(md.ID)
+	sb.WriteRune(')')
 
-	if len(messageContent) > 1500 {
-		files = append(files, &discordgo.File{
-			Name:        "message.txt",
-			ContentType: "text/plain",
-			Reader:      strings.NewReader(messageContent),
-		})
-	} else {
-		sb.WriteString(": `")
-		sb.WriteString(messageContent)
-		sb.WriteString("`")
+	if foundContent {
+		if len(messageContent) > 1500 {
+			files = append(files, &discordgo.File{
+				Name:        "message.txt",
+				ContentType: "text/plain",
+				Reader:      strings.NewReader(messageContent),
+			})
+		} else {
+			sb.WriteString(": `")
+			sb.WriteString(messageContent)
+			sb.WriteString("`")
+		}
 	}
 
 	err = log(s, eventTypeMessageDelete, sb.String(), files...)
@@ -149,9 +184,11 @@ func messageDeleteBulk(s *discordgo.Session, mdb *discordgo.MessageDeleteBulk) {
 
 		fileBuilder.WriteRune(' ')
 
-		fileBuilder.WriteString(getAuthorUsername(fromState))
+		author, _ := getAuthorUsername(fromState)
+		fileBuilder.WriteString(author)
 		fileBuilder.WriteString(": ")
-		fileBuilder.WriteString(getContent(fromState))
+		content, _ := getContent(fromState)
+		fileBuilder.WriteString(content)
 		fileBuilder.WriteRune('\n')
 	}
 
