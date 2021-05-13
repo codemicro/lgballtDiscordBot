@@ -1,14 +1,18 @@
 package misc
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"os"
 	"sync"
+	"time"
 )
 
 type Misc struct {
@@ -18,7 +22,7 @@ type Misc struct {
 
 }
 
-func Init(kit *route.Kit, _ *state.State) error {
+func Init(kit *route.Kit, runState *state.State) error {
 
 	comp := new(Misc)
 	comp.helpEmbedOnce = new(sync.Once)
@@ -114,6 +118,28 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Category: meta.CategoryAdminTools,
 	})
 
+	kit.AddCommand(&route.Command{
+		Name:        "Shut down bot",
+		CommandText: []string{"shutdown"},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Run: func(ctx *route.MessageContext) error {
+			logging.Info(fmt.Sprintf("Shutting down by request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
+			_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "***oh no what no A-[the earth stops rotating]***")
+			runState.TriggerShutdown()
+			timedOut := runState.WaitUntilAllComplete(time.Second * 10)
+			if timedOut {
+				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown timeout exceeded, forcibly shutting down")
+				logging.Warn("Shutdown timeout exceeded, forcibly shutting down")
+			} else {
+				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown successful, goodbye.")
+			}
+			fmt.Println("Shutting down...")
+			os.Exit(0)
+			return nil
+		},
+		Category: meta.CategoryAdminTools,
+	})
+	
 	return nil
 
 }
