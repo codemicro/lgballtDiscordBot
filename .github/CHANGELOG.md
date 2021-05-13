@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.5.0] - 2021-05-13
 ### Added
 * `<p>shutdown` command
 ### Changed
@@ -351,6 +353,7 @@ Now it compiles!
 * Initial release with `bio` component
 
 [Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...HEAD
+[4.5.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...v4.5.0
 [4.4.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.1.3...v4.2.0
