@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.5.1] - 2021-05-14
 ### Changed
 * Bio commands that deal with adding reactions/deleting messages now interact with webhook messages sent by PluralKit if possible (as opposed to the account message that has subsequently been deleted)
 
@@ -354,7 +356,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.1...HEAD
+[4.5.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...v4.5.0
 [4.4.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.2.0...v4.3.0
