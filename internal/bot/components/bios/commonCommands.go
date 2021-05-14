@@ -7,6 +7,7 @@ import (
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	"strconv"
 	"sync"
@@ -124,7 +125,18 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 			var err error
 			handlerOnce.Do(func() {
 				defer func() {
-					_ = ctx.Session.ChannelMessageDelete(ctxb.Message.ChannelID, ctxb.Message.ID)
+
+					// When a message is proxied by PluralKit, this will also delete the proxied message
+					// TODO: turn this into a standalone function
+					targetMessageID := ctxb.Message.ID
+					pkMsg, err := pluralkit.MessageById(targetMessageID)
+					if err != nil {
+						logging.Warn(err.Error())
+					} else if pkMsg != nil {
+						targetMessageID = pkMsg.Id
+					}
+
+					_ = ctx.Session.ChannelMessageDelete(ctxb.Message.ChannelID, targetMessageID)
 					go ctx.Kit.RemoveTemporaryMessageHandler(handlerNumber)
 				}()
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 )
 
 func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate bool, ctx *route.MessageContext) error {
@@ -40,8 +42,19 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 		return err
 	}
 
+	// When a message is proxied by PluralKit, this will apply the reactions to the correct message (and not the one
+	// that's just been/just about to be deleted)
+	// TODO: Turn this into a standalone function
+	targetMessageID := ctx.Message.ID
+	pkMsg, err := pluralkit.MessageById(targetMessageID)
+	if err != nil {
+		logging.Warn(err.Error())
+	} else if pkMsg != nil {
+		targetMessageID = pkMsg.Id
+	}
+
 	// react to message with a check mark to signify it worked
-	err = ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
+	err = ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, targetMessageID, "✅")
 	return err
 }
 
@@ -72,9 +85,20 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 		return err
 	}
 
+	// When a message is proxied by PluralKit, this will apply the reactions to the correct message (and not the one
+	// that's just been/just about to be deleted)
+	// TODO: Turn this into a standalone function
+	targetMessageID := ctx.Message.ID
+	pkMsg, err := pluralkit.MessageById(targetMessageID)
+	if err != nil {
+		logging.Warn(err.Error())
+	} else if pkMsg != nil {
+		targetMessageID = pkMsg.Id
+	}
+
 	// react to message with a check mark to signify it worked
 	for _, v := range []string{"🗑", "✅"} {
-		err = ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, v)
+		err = ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, targetMessageID, v)
 		if err != nil {
 			return err
 		}

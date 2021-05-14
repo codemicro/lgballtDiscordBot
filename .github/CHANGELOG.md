@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* Bio commands that deal with adding reactions/deleting messages now interact with webhook messages sent by PluralKit if possible (as opposed to the account message that has subsequently been deleted)
 
 ## [4.5.0] - 2021-05-13
 ### Added
