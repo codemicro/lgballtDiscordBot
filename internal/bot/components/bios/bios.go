@@ -10,6 +10,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
+	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
 	"sync"
 	"time"
@@ -57,8 +58,8 @@ var (
 			{Name: "Creating a bio", Value: "Unlike with regular bios for singlets, you need to explicitly create a bio for a system member before you can edit bio fields. This can be done using `$bio import <member ID>`, where `member ID` is the PluralKit member ID that you would like to import. If anything is in the birthday, pronouns or description fields, they will be automatically copied into the new bio."},
 			{Name: "Updating bio fields", Value: "You can update and remove bio fields in a very similar fashion to bios for singlets, namely using the following two commands: `$bio clear <member ID> <field>` to remove a field and `$bio set <member ID> <field> <new contents>` to update a field's value. Field names are the same as bios for singlets, which can be found in `$bio help`."},
 			{Name: "Deleting a system member bio", Value: "To delete a system member bio, simply remove every field that's present in it using `$bio clear <member ID> <field>`. This will trigger the bot to automatically delete the bio entry from the database."},
-			{Name: "Viewing system member bios", Value: "System member bios can be viewed using the same command as you would use to view singlet bios, namely `$bio [ping or user ID]`. If a user account has multiple bios associated with it, it will show a carousel-type interface, allowing you to scroll between bios.\nCurrently, this is not well optimised for viewing accounts that have large numbers of associated bios, and may be a little cumbersome to use."},
-			{Name: "Anything else?", Value: "Be aware that any changes you make in a bio for a system member will not be replicated in the bio that PluralKit stores for that member. Using bios for systems doesn't affect your ability to use regular bios.\nIf you have questions, encounter an issue or have a suggestion, feel free to ping Abi! (0x414b#8669)"},
+			{Name: "Viewing system member bios", Value: "System member bios can be viewed using the same command as you would use to view singlet bios, namely `$bio [ping or user ID]`. If a user account has multiple bios associated with it, it will ask which bio you would like to view first, afterwards showing a carousel-type interface that will allowing you to scroll between bios."},
+			{Name: "Anything else?", Value: "Be aware that any changes you make in a bio for a system member will not be replicated in the bio that PluralKit stores for that member. Using bios for systems doesn't affect your ability to use regular bios.\nIf you have questions, encounter an issue or have a suggestion, feel free to ping Abi! (" + tools.MakePing(config.OwnerId) + ")"},
 		},
 	}
 )
