@@ -12,9 +12,6 @@ import (
 )
 
 const (
-	dataStartMarker = "[STA."
-	dataEndMarker   = ".END]"
-
 	acceptReaction       = "✅"
 	rejectReaction       = "❌"
 	scrapPronounReaction = "🚮"
