@@ -40,7 +40,6 @@ func Build() error {
 	mg.Deps(InstallDeps)
 	mg.Deps(PreBuild)
 
-	fmt.Println("Building")
 	_ = os.Mkdir("build", os.ModeDir)
 
 	var fileExtension string
@@ -54,12 +53,11 @@ func Build() error {
 		return err
 	}
 
-	fmt.Println("Successfully built and written to", outputFilename)
+	fmt.Println(outputFilename)
 	return nil
 }
 
 func InstallDeps() error {
-	fmt.Println("Installing dependencies")
 	if err := sh.Run("go", "mod", "download"); err != nil {
 		return err
 	}
@@ -82,8 +80,6 @@ func VendorDeps() error {
 
 func EnsureGocloc() error {
 	if !exsh.IsCmdAvail("gocloc") {
-		fmt.Println("Installing gocloc")
-
 		if err := sh.RunWith(map[string]string{"GO111MODULE": "off"}, "go", "get", "-u", "github.com/hhatto/gocloc/cmd/gocloc"); err != nil {
 			return err
 		}
@@ -94,7 +90,7 @@ func EnsureGocloc() error {
 
 	} else {
 		if mg.Verbose() {
-			fmt.Println("Skipping gocloc install (found in PATH)")
+			fmt.Fprintln(os.Stderr, "Skipping gocloc install (found in PATH)")
 		}
 	}
 
@@ -130,8 +126,6 @@ func ApplyPatches() error {
 }
 
 func PreBuild() error {
-	fmt.Println("Running prebuild tasks")
-
 	if !exsh.IsCmdAvail("gocloc") {
 		return errors.New("gocloc must be installed on your PATH - run `mage installDeps` or see https://github.com/hhatto/gocloc")
 	}
@@ -253,7 +247,9 @@ func (Docker) Build() error {
 	mg.Deps(EnsureGocloc)
 	mg.Deps(PreBuild)
 
-	fmt.Println("Building Docker image as version", buildVersion)
+	if mg.Verbose() {
+		fmt.Fprintln(os.Stderr, "Building Docker image as version", buildVersion)
+	}
 
 	// docker build . --file Dockerfile --tag $IMAGE_NAME
 	return sh.Run("docker", "build", ".", "--file", "Dockerfile", "--tag", dockerImageTag)
@@ -289,7 +285,9 @@ func (Docker) Publish(imageId string) error {
 
 	imageId = fmt.Sprintf(strings.ToLower(imageId), dockerImageTag)
 
-	fmt.Println("Publishing Docker image as", imageId)
+	if mg.Verbose() {
+		fmt.Fprintln(os.Stderr, "Publishing Docker image as", imageId)
+	}
 
 	// docker tag $IMAGE_NAME $IMAGE_ID
 	if err := sh.Run("docker", "tag", dockerImageTag, imageId); err != nil {
