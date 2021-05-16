@@ -7,6 +7,8 @@ type MessageContext struct {
 	Message   *discordgo.MessageCreate
 	Arguments map[string]interface{}
 	Raw       string
+	// Command must not be modified
+	Command   *Command
 }
 
 // SendErrorMessage sends a Discord message containing error information using kit.UserErrorFunc

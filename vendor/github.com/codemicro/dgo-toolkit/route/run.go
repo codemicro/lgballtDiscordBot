@@ -63,10 +63,11 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	ctx.Raw = message.Content
 	b.tempMessageHandlerMux.RLock()
 	for n, r := range b.tempMessageHandlerSet {
-		r := r // this is a loop var and can change before the function is actually executed in the goroutine, which
+		x := r // this is a loop var and can change before the function is actually executed in the goroutine, which
 		// would be bad
 		go func() {
-			err := r(&(*ctx)) // that horrendous thing clones ctx
+			y := *ctx // clone ctx
+			err := x(&y)
 			if err != nil {
 				b.handleError(err, "error running temporary message handler", strconv.Itoa(n))
 			}
@@ -229,6 +230,8 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 	ctx.Raw = trimmedContent
 	ctx.Arguments = runArguments
+	y := *runCommand
+	ctx.Command = &y
 
 	if err := b.runMiddlewares(MiddlewareTriggerValid, ctx); err != nil {
 		b.handleError(err, "error running middleware")

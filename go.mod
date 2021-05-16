@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.6.0
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/codemicro/alib-go v0.0.6
-	github.com/codemicro/dgo-toolkit v0.7.1
+	github.com/codemicro/dgo-toolkit v0.8.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
