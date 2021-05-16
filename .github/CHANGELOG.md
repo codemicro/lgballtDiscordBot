@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.6.1] - 2021-05-16
+### Fixed
+* Verification error message actually refers to the right thing
+
 ## [4.6.0] - 2021-05-16
 ### Added
 * Basic command and PluralKit request analytics
@@ -369,7 +373,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.1...HEAD
+[4.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.4.0...v4.5.0

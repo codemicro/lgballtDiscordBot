@@ -138,8 +138,8 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 	}
 
 	if len(command) < 1 {
-		return ctx.SendErrorMessage("You're missing your error message, which probably means you didn't read " +
-			"the rules. Read " + tools.MakeChannelMention("702328069309857852") + ".")
+		return ctx.SendErrorMessage("You're missing your verification message, which probably means you " +
+			"didn't read the rules. Read " + tools.MakeChannelMention("702328069309857852") + ".")
 	}
 
 	err := v.coreVerification(ctx)
