@@ -3,6 +3,7 @@ package pluralkit
 import (
 	"errors"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/analytics"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 )
 
@@ -48,6 +49,7 @@ func MembersBySystemId(sid string) (Members, error) {
 	if err != nil {
 		return nil, err
 	}
+	go analytics.ReportPluralKitRequest("Members by system ID")
 	return members, nil
 }
 
@@ -62,5 +64,6 @@ func MemberByMemberId(mid string) (*Member, error) {
 	if err != nil {
 		return nil, err
 	}
+	go analytics.ReportPluralKitRequest("Member by ID")
 	return member, nil
 }

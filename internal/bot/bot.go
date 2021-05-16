@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
+	"github.com/codemicro/lgballtDiscordBot/internal/analytics"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/actionLog"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/bios"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/chatchart"
@@ -132,6 +133,16 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 	}
 
 	kit.CreateHandlers()
+
+	kit.AddMiddleware(&route.Middleware{
+		Name: "Command analytics",
+		Run: func(i interface{}) error {
+			ctx := i.(*route.MessageContext)
+			go analytics.ReportCommandUse(ctx.Command.Name)
+			return nil
+		},
+		Trigger: route.MiddlewareTriggerValid,
+	})
 
 	return nil
 }

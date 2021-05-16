@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Added
+* Basic command and PluralKit request analytics
+  * Adds `analytics_events` table to database
 ### Changed
 * Verification: updated error message when verification text is missing
 * Bios: update system help dialog to include information about new bio picker introduced in [4.0.0].
