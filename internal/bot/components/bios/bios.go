@@ -1,6 +1,8 @@
 package bios
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
@@ -9,10 +11,12 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/codemicro/lgballtDiscordBot/internal/markdown"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
 	"sync"
+	"text/template"
 	"time"
 )
 
@@ -40,29 +44,53 @@ const (
 var (
 	helpEmbed = &discordgo.MessageEmbed{
 		Title: "Bios help",
-		Fields: []*discordgo.MessageEmbedField{
-			{Name: "What are bios?", Value: "Think of Bios like ID cards. Input responses for pre-defined fields such as a Pronouns field or a Sexuality field, and then your responses get put into a nice Bio card which can be viewed by anyone using `$bio [@username]`. \n\nIf you just want to get your own, start by filling in any of the below fields!"},
-			{Name: "How do I fill out these fields?", Value: "Run `$bio set [field] [value]`. For example, `$bio set Pronouns She/Her` would set the Pronouns field of your Bio to \"She/Her\".\n\nTo remove a field, run `$bio clear [field]` with no other arguments."},
-			{Name: "What fields can I fill in?", Value: fmt.Sprintf("The current fields are:\n```yml\n%s\n```", strings.Join(config.BioFields, "\n"))},
-			{Name: "What about bios for systems?", Value: "I'm glad you asked! Run `$bio syshelp` for more information about bios for systems."},
-			{Name: "I think a new field should be added. How can I request one?", Value: "Request new fields in <#698575463278313583>."},
-			{Name: "How do I view someone's Bio without mentioning them?", Value: "User IDs can be used instead of mentioning a user. To get a User ID, first enable Developer Mode by going to User Settings, Appearance, and toggling it to on. After that, right click a username on desktop or tap the 3 dots on a profile card on mobile then click \"Copy ID\". \nNow just run `$bio [UserID]` to view their Bio. For example, `$bio 516962733497778176`"},
-			{Name: "Anything else I should know?", Value: "- You don't need to wipe a field to put in new info. Just run `$bio set [field] [text]` to overwrite it.\n- If you end up in a situation where you have no fields left in your bio because you've removed them all, your entire bio is deleted."},
-			{Name: "TL;DR/Commands", Value: "- View your own Bio with `$bio`, another user's with `$bio [user id or mention]`\n- Fill in a field with `$bio set [field] [text]`. Fields can be overwritten with the same command.\n- Wipe a field with `$bio clear [field]`"},
-		},
 	}
 
 	systemHelpEmbed = &discordgo.MessageEmbed{
 		Title: "Bios for systems",
-		Fields: []*discordgo.MessageEmbedField{
-			{Name: "Creating a bio", Value: "Unlike with regular bios for singlets, you need to explicitly create a bio for a system member before you can edit bio fields. This can be done using `$bio import <member ID>`, where `member ID` is the PluralKit member ID that you would like to import. If anything is in the birthday, pronouns or description fields, they will be automatically copied into the new bio."},
-			{Name: "Updating bio fields", Value: "You can update and remove bio fields in a very similar fashion to bios for singlets, namely using the following two commands: `$bio clear <member ID> <field>` to remove a field and `$bio set <member ID> <field> <new contents>` to update a field's value. Field names are the same as bios for singlets, which can be found in `$bio help`."},
-			{Name: "Deleting a system member bio", Value: "To delete a system member bio, simply remove every field that's present in it using `$bio clear <member ID> <field>`. This will trigger the bot to automatically delete the bio entry from the database."},
-			{Name: "Viewing system member bios", Value: "System member bios can be viewed using the same command as you would use to view singlet bios, namely `$bio [ping or user ID]`. If a user account has multiple bios associated with it, it will ask which bio you would like to view first, afterwards showing a carousel-type interface that will allowing you to scroll between bios."},
-			{Name: "Anything else?", Value: "Be aware that any changes you make in a bio for a system member will not be replicated in the bio that PluralKit stores for that member. Using bios for systems doesn't affect your ability to use regular bios.\nIf you have questions, encounter an issue or have a suggestion, feel free to ping Abi! (" + tools.MakePing(config.OwnerId) + ")"},
-		},
 	}
 )
+
+//go:embed biosHelp.md
+var helpMarkdown string
+
+//go:embed biosSyshelp.md
+var syshelpMarkdown string
+
+func init() {
+	generateFields := func(sourceTpl string, data interface{}, emb *discordgo.MessageEmbed) error {
+
+		tplParsed, err := template.New("").Parse(sourceTpl)
+		if err != nil {
+			return err
+		}
+
+		tpld := new(bytes.Buffer)
+		if err = tplParsed.Execute(tpld, data); err != nil {
+			return err
+		}
+
+		for _, v := range markdown.SplitByHeader(tpld.String()) {
+			emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{Name: v.Title, Value: v.Content})
+		}
+
+		return nil
+	}
+
+	err := generateFields(helpMarkdown, struct {
+		Fields string
+	}{Fields: strings.Join(config.BioFields, "\n")}, helpEmbed)
+	if err != nil {
+		panic(err)
+	}
+
+	err = generateFields(syshelpMarkdown, struct {
+		Ping string
+	}{Ping: tools.MakePing(config.OwnerId)}, systemHelpEmbed)
+	if err != nil {
+		panic(err)
+	}
+}
 
 func Init(kit *route.Kit, _ *state.State) error {
 

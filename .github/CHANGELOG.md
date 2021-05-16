@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 * Verification: updated error message when verification text is missing
 * Bios: update system help dialog to include information about new bio picker introduced in [4.0.0].
+* Move bio help dialog text to external Markdown files for easy editing
+  * This also introduces the `internal/markdown` package
 
 ## [4.5.1] - 2021-05-14
 ### Changed
