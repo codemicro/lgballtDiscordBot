@@ -130,7 +130,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					// TODO: turn this into a standalone function
 					targetMessageID := ctxb.Message.ID
 					pkMsg, err := pluralkit.MessageById(targetMessageID)
-					if err != nil {
+					if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
 						logging.Warn(err.Error())
 					} else if pkMsg != nil {
 						targetMessageID = pkMsg.Id

@@ -1,6 +1,7 @@
 package bios
 
 import (
+	"errors"
 	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
@@ -29,7 +30,7 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 
 	if !hasBio {
 		if isSysmate {
-			err = ctx.SendErrorMessage(fmt.Sprintf("This member is not registered to your Discord account with" +
+			err = ctx.SendErrorMessage(fmt.Sprintf("This member is not registered to your Discord account with"+
 				" the bot. Please import this member using `$bio import %s`", bdt.SysMemberID))
 			return err
 		}
@@ -47,7 +48,7 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 	// TODO: Turn this into a standalone function
 	targetMessageID := ctx.Message.ID
 	pkMsg, err := pluralkit.MessageById(targetMessageID)
-	if err != nil {
+	if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
 		logging.Warn(err.Error())
 	} else if pkMsg != nil {
 		targetMessageID = pkMsg.Id
@@ -90,7 +91,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 	// TODO: Turn this into a standalone function
 	targetMessageID := ctx.Message.ID
 	pkMsg, err := pluralkit.MessageById(targetMessageID)
-	if err != nil {
+	if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
 		logging.Warn(err.Error())
 	} else if pkMsg != nil {
 		targetMessageID = pkMsg.Id

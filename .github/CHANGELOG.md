@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Bios: update system help dialog to include information about new bio picker introduced in [4.0.0].
 * Move bio help dialog text to external Markdown files for easy editing
   * This also introduces the `internal/markdown` package
+### Fixed
+* Checks for PluralKit proxied messages in bios no longer generate warnings for messages not found (404) 
+  * A 404 just means that the message wasn't proxied
 
 ## [4.5.1] - 2021-05-14
 ### Changed
