@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.7.1] - 2021-06-01
+### Fixed
+* `<p>uwu` now converts `l>w` and `r>w`
+
 ## [4.7.0] - 2021-06-01
 ### Added
 * Tone tag lookup commands
@@ -383,7 +387,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.1...HEAD
+[4.7.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.0...v4.7.1
 [4.7.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.1...v4.7.0
 [4.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.1...v4.6.0
