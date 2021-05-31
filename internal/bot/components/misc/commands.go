@@ -267,3 +267,10 @@ func (*Misc) GetMyData(ctx *route.MessageContext) error {
 	}
 	return nil
 }
+
+func (*Misc) Uwuify(ctx *route.MessageContext) error {
+	toUwu := ctx.Arguments["toUwu"].(string)
+	replacer := strings.NewReplacer("u", "uwu", "o", "owo")
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, replacer.Replace(toUwu))
+	return err
+}

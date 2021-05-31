@@ -139,6 +139,16 @@ func Init(kit *route.Kit, runState *state.State) error {
 		},
 		Category: meta.CategoryAdminTools,
 	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "uwuify",
+		CommandText: []string{"uwu"},
+		Arguments: []route.Argument{
+			{Name: "toUwu", Type: route.RemainingString},
+		},
+		Run: comp.Uwuify,
+		Category: meta.CategoryFun,
+	})
 	
 	return nil
 
