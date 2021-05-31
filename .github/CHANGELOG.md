@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * Also adds `toV47.py` migration script to automatically fill the database with a set of tone tags prior to first use
 ### Changed
 * The previous incident counter streak is now shown when the `<p>indicents reset` command is run
+* Improved chatchart chart and response formatting
 
 ## [4.6.1] - 2021-05-16
 ### Fixed

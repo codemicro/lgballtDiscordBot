@@ -16,7 +16,7 @@ import (
 const (
 	maxMessages      = 5000
 	percentThreshold = 1
-	usernameMaxLen   = 17
+	usernameMaxLen   = 16
 )
 
 type percentageWithLabel struct {
@@ -139,17 +139,21 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	}
 
 	// make graph
+	barWidth := 25
+	barSpacing := 10
+
 	pie := chart.BarChart{
-		// Width:  1024,
+		Width: 25 + (len(chartValues) * (barWidth + barSpacing)),
 		// Height: 1024,
 		Background: chart.Style{
 			Padding: chart.Box{
 				Bottom: 100,
 			},
 		},
-		BarWidth: 20,
-		Bars:     chartValues,
-		XAxis:    chart.Style{TextRotationDegrees: 90},
+		BarWidth:   25,
+		BarSpacing: 10,
+		Bars:       chartValues,
+		XAxis:      chart.Style{TextRotationDegrees: 90},
 	}
 
 	buffer := bytes.NewBuffer([]byte{})
@@ -161,14 +165,16 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// form an embed
 	emb := &discordgo.MessageEmbed{
-		Description: fmt.Sprintf("Chatchart for %s\n", tools.MakeChannelMention(crx.ID)),
-		Image:       &discordgo.MessageEmbedImage{URL: "attachment://chart.png"},
+		Title: fmt.Sprintf("Chatchart for #%s", crx.Name),
+		Image: &discordgo.MessageEmbedImage{URL: "attachment://chart.png"},
 	}
 
 	// add fields to embed
 	for _, des := range messageUserPercentages {
-		emb.Description += fmt.Sprintf("\n**%s**: %.2f%%", des.Label, des.Percentage)
+		emb.Description += fmt.Sprintf("**%s**: %.2f%%\n", des.Label, des.Percentage)
 	}
+
+	emb.Description = strings.TrimSpace(emb.Description)
 
 	// send image to user with ping
 
