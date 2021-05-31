@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.7.0] - 2021-06-01
 ### Added
 * Tone tag lookup commands
   * `<p>toneTag lookup <shorthand>`, `<p>toneTag list`, `<p>toneTag new <shorthand> <description>`
@@ -381,7 +383,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.1...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.0...HEAD
+[4.7.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.1...v4.7.0
 [4.6.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.1...v4.6.0
 [4.5.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.5.0...v4.5.1
