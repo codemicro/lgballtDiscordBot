@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* The previous incident counter streak is now shown when the `<p>indicents reset` command is run
 
 ## [4.6.1] - 2021-05-16
 ### Fixed

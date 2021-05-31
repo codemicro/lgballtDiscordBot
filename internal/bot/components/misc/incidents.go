@@ -65,20 +65,34 @@ func makeIncidentImage(daysSince string, output io.Writer) error {
 	return png.Encode(output, img)
 }
 
-func (*Misc) SinceLastIncident(ctx *route.MessageContext) error {
+func getTimeSinceLastIncident() (time.Duration, error, bool) {
 
 	dat, err := ioutil.ReadFile("lastIncident")
 	if err != nil {
-		return err
+		return 0, err, false
 	}
 
 	i, err := strconv.ParseInt(string(dat), 10, 64)
 	if err != nil {
-		return ctx.SendErrorMessage("corrupted incident date: " + err.Error())
+		return 0, fmt.Errorf("corrupted incident date: %s", err.Error()), true
 	}
 	previousTime := time.Unix(i, 0)
 
-	daysSince := int64(time.Since(previousTime).Hours()) / 24
+	return time.Since(previousTime), nil, false
+}
+
+func (*Misc) SinceLastIncident(ctx *route.MessageContext) error {
+
+	timeSince, err, userErr := getTimeSinceLastIncident()
+	if err != nil {
+		if userErr {
+			return ctx.SendErrorMessage(err.Error())
+		} else {
+			return err
+		}
+	}
+
+	daysSince := int64(timeSince.Hours()) / 24
 	daysSinceString := strconv.FormatInt(daysSince, 10)
 
 	bb := new(bytes.Buffer)
@@ -103,6 +117,17 @@ func (*Misc) SinceLastIncident(ctx *route.MessageContext) error {
 
 func (*Misc) ResetSinceLastIncident(ctx *route.MessageContext) error {
 
+	timeSince, err, userErr := getTimeSinceLastIncident()
+	if err != nil {
+		if userErr {
+			return ctx.SendErrorMessage(err.Error())
+		} else {
+			return err
+		}
+	}
+
+	daysSince := int64(timeSince.Hours()) / 24
+
 	currentTime := time.Now().Unix()
 	asBytes := []byte(strconv.FormatInt(currentTime, 10))
 
@@ -110,6 +135,6 @@ func (*Misc) ResetSinceLastIncident(ctx *route.MessageContext) error {
 		return err
 	}
 
-	_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Counter reset :(")
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Counter reset :(\nIt's been %d days since the last incident", daysSince))
 	return err
 }
