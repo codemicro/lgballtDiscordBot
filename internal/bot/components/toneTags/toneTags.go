@@ -20,7 +20,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "tag", Type: route.String},
 		},
-		Run:         comp.Lookup,
+		Run:      comp.Lookup,
 		Category: meta.CategoryMisc,
 	})
 
@@ -29,7 +29,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "List all tone tags known to the bot",
 		CommandText: []string{"toneTag", "list"},
 		Run:         comp.List,
-		Category: meta.CategoryMisc,
+		Category:    meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -43,7 +43,20 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Restrictions: []route.CommandRestriction{
 			route.RestrictionByRole(config.AdminRole),
 		},
-		Run:         comp.Create,
+		Run:      comp.Create,
+		Category: meta.CategoryMisc,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Delete a tone tag",
+		CommandText: []string{"toneTag", "delete"},
+		Arguments: []route.Argument{
+			{Name: "tag", Type: route.String},
+		},
+		Restrictions: []route.CommandRestriction{
+			route.RestrictionByRole(config.AdminRole),
+		},
+		Run:      comp.Delete,
 		Category: meta.CategoryMisc,
 	})
 

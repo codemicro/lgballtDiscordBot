@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ## [4.7.2] - 2021-06-05
+### Added
+* Tone tag delete command (`<p>tonetag delete`)
 ### Fixed
 * Admin commands page of the help embed will now show
   * This was due to the shutdown command not having any help text

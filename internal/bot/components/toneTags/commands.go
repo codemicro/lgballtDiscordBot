@@ -129,3 +129,16 @@ func (*ToneTags) Create(ctx *route.MessageContext) error {
 	return ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
 }
 
+func (*ToneTags) Delete(ctx *route.MessageContext) error {
+	tag := ctx.Arguments["tag"].(string)
+	tag = sanitiseShorthand(tag)
+
+	dbTag := &db.ToneTag{
+		Shorthand: tag,
+	}
+	err := dbTag.Delete()
+	if err != nil {
+		return err
+	}
+	return ctx.Session.MessageReactionAdd(ctx.Message.ChannelID, ctx.Message.ID, "✅")
+}
