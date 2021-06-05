@@ -37,4 +37,4 @@ jobs:
         run: sleep 10
       -
         name: Notify Watchtower
-        run: "curl -H \"Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN }}\" localhost:8080/v1/update"
+        run: "curl -H \"Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN }}\" https://www.tdpain.net/api/watchtower/v1/update"
