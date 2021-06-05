@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Forced verifications no longer strip the first word off the message
 
 ## [4.7.2] - 2021-06-05
 ### Added

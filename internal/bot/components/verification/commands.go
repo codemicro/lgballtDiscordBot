@@ -13,11 +13,7 @@ import (
 	"time"
 )
 
-func (*Verification) coreVerification(ctx *route.MessageContext) error {
-
-	command := strings.Fields(ctx.Raw)[1:]
-
-	verificationText := strings.Join(command, " ")
+func (*Verification) coreVerification(ctx *route.MessageContext, verificationText string) error {
 
 	if len(verificationText) > 1500 {
 		return ctx.SendErrorMessage("Sorry, that message is too long! Please keep your verification text to" +
@@ -142,7 +138,7 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 			"didn't read the rules. Read " + tools.MakeChannelMention("702328069309857852") + ".")
 	}
 
-	err := v.coreVerification(ctx)
+	err := v.coreVerification(ctx, strings.Join(strings.Fields(ctx.Raw)[1:], " "))
 	if err != nil {
 		return err
 	}
@@ -189,7 +185,7 @@ func (v *Verification) FVerify(ctx *route.MessageContext) error {
 		Message:       &discordgo.MessageCreate{Message: mct},
 		Arguments:     nil,
 		Raw:           mct.Content,
-	})
+	}, mct.Content)
 
 	if err != nil {
 		fmt.Println(err, "A")
