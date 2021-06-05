@@ -16,10 +16,8 @@ import (
 )
 
 type Misc struct {
-
-	helpEmbeds []*discordgo.MessageEmbed
+	helpEmbeds    []*discordgo.MessageEmbed
 	helpEmbedOnce *sync.Once
-
 }
 
 func Init(kit *route.Kit, runState *state.State) error {
@@ -36,7 +34,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 				return message.Author.ID, nil
 			}},
 		},
-		Run: comp.Avatar,
+		Run:      comp.Avatar,
 		Category: meta.CategoryMisc,
 	})
 
@@ -47,7 +45,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "emoji", Type: route.String},
 		},
-		Run: comp.Emoji,
+		Run:      comp.Emoji,
 		Category: meta.CategoryMisc,
 	})
 
@@ -58,7 +56,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "messageLink", Type: route.URL},
 		},
-		Run: comp.StealEmojis,
+		Run:      comp.StealEmojis,
 		Category: meta.CategoryMisc,
 	})
 
@@ -68,7 +66,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		CommandText: []string{"help"},
 		Run:         comp.Help,
 		Invisible:   true,
-		Category: meta.CategoryMisc,
+		Category:    meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
@@ -80,7 +78,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 				return tools.IsStringInSlice(message.ChannelID, config.Listeners.AllowedChannels), nil
 			},
 		},
-		Run: comp.ListenToMe,
+		Run:      comp.ListenToMe,
 		Category: meta.CategoryMisc,
 	})
 
@@ -88,39 +86,39 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Name:        "Forget me",
 		Help:        "Delete all data associated with your Discord account from the bot database",
 		CommandText: []string{"forgetme"},
-		Run: comp.ForgetMe,
-		Category: meta.CategoryMisc,
+		Run:         comp.ForgetMe,
+		Category:    meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
 		Name:        "Dump your data",
 		Help:        "Get a dump of all the data associated with your Discord user ID in the bot database",
 		CommandText: []string{"mydata"},
-		Run: comp.GetMyData,
-		Category: meta.CategoryMisc,
+		Run:         comp.GetMyData,
+		Category:    meta.CategoryMisc,
 	})
 
 	kit.AddCommand(&route.Command{
-		Name:        "Reset days since last incident",
-		Help:        "Reset the number of days since the last incident to zero",
-		CommandText: []string{"incidents", "reset"},
+		Name:         "Reset days since last incident",
+		Help:         "Reset the number of days since the last incident to zero",
+		CommandText:  []string{"incidents", "reset"},
 		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
-		Run: comp.ResetSinceLastIncident,
-		Category: meta.CategoryAdminTools,
+		Run:          comp.ResetSinceLastIncident,
+		Category:     meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
-		Name:        "Days since last incident",
-		Help:        "Show the number of days since the last incident",
-		CommandText: []string{"incidents"},
+		Name:         "Days since last incident",
+		Help:         "Show the number of days since the last incident",
+		CommandText:  []string{"incidents"},
 		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
-		Run: comp.SinceLastIncident,
-		Category: meta.CategoryAdminTools,
+		Run:          comp.SinceLastIncident,
+		Category:     meta.CategoryAdminTools,
 	})
 
 	kit.AddCommand(&route.Command{
-		Name:        "Shut down bot",
-		CommandText: []string{"shutdown"},
+		Name:         "Shut down bot",
+		CommandText:  []string{"shutdown"},
 		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
 		Run: func(ctx *route.MessageContext) error {
 			logging.Info(fmt.Sprintf("Shutting down by request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
@@ -146,10 +144,10 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Arguments: []route.Argument{
 			{Name: "toUwu", Type: route.RemainingString},
 		},
-		Run: comp.Uwuify,
+		Run:      comp.Uwuify,
 		Category: meta.CategoryFun,
 	})
-	
+
 	return nil
 
 }

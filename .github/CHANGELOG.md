@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Admin commands page of the help embed will now show
+  * This was due to the shutdown command not having any help text
+  * This has been mitigated by adding filler text in place of the command description if none is provided
 
 ## [4.7.1] - 2021-06-01
 ### Fixed

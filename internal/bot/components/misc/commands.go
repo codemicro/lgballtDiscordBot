@@ -146,8 +146,15 @@ func (s *Misc) Help(ctx *route.MessageContext) error {
 					warnEmoji = "⚠"
 				}
 
+				var commandDescription string
+				if len(command.Description) == 0 {
+					commandDescription = "No description"
+				} else {
+					commandDescription = command.Description
+				}
+
 				f.Name = command.Name + fmt.Sprintf(" - **`%s%s%s`** %s", command.CommandText, sep, strings.TrimSpace(args), warnEmoji)
-				f.Value = fmt.Sprintf("%s\n%s", command.Description, argInfo)
+				f.Value = fmt.Sprintf("%s\n%s", commandDescription, argInfo)
 				emb.Fields = append(emb.Fields, f)
 			}
 
