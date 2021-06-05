@@ -32,3 +32,9 @@ jobs:
         with:
           version: latest
           args: -v setBuildVersion ${{ steps.get_version.outputs.VERSION }} docker:build docker:login ghcr.io codemicro docker:publish "ghcr.io/${{ github.repository }}/%s:latest"
+      -
+        name: Wait 10 seconds
+        run: sleep 10
+      -
+        name: Notify Watchtower
+        run: "curl -H \"Authorization: Bearer ${{ secrets.WATCHTOWER_HTTP_API_TOKEN }}\" localhost:8080/v1/update"
