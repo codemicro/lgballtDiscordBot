@@ -12,10 +12,10 @@ index 87ad7d9..9bc5ce5 100644
  
  // WebhooksUpdate is the data for a WebhooksUpdate event
 diff --git a/state.go b/state.go
-index 2eeabd8..6317fc8 100644
+index 2eeabd8..2987c84 100644
 --- a/state.go
 +++ b/state.go
-@@ -931,7 +931,14 @@ func (s *State) OnInterface(se *Session, i interface{}) (err error) {
+@@ -931,7 +931,15 @@ func (s *State) OnInterface(se *Session, i interface{}) (err error) {
  		}
  	case *MessageDeleteBulk:
  		if s.MaxMessageCount != 0 {
@@ -24,7 +24,8 @@ index 2eeabd8..6317fc8 100644
 +				// shadowing of err avoided here since this isn't an error that needs to be handled
 +				old, ex := s.Message(t.ChannelID, mID)
 +				if ex == nil {
-+					t.BeforeDelete[mID] = &(*old)
++					oldCopy := *old
++					t.BeforeDelete[mID] = &oldCopy
 +				}
 +
  				s.messageRemoveByID(t.ChannelID, mID)

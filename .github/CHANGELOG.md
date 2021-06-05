@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Admin commands page of the help embed will now show
   * This was due to the shutdown command not having any help text
   * This has been mitigated by adding filler text in place of the command description if none is provided
+* Update DiscordGo patch to correctly copy `*Message` instances
 
 ## [4.7.1] - 2021-06-01
 ### Fixed
