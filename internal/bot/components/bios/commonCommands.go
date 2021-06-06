@@ -60,6 +60,8 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		if err != nil {
 			if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
 				warning = "\n⚠ Cannot retrieve system member names - member list is private"
+			} else if errors.Is(err, pluralkit.ErrorSystemNotFound) {
+				warning = "\n⚠ Cannot retrieve system member names - system not found"
 			} else {
 				return err
 			}
