@@ -6,4 +6,5 @@ RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflag
 FROM alpine
 COPY --from=builder /build/main /
 WORKDIR /run
+LABEL com.centurylinklabs.watchtower.stop-signal="SIGINT"
 CMD ["../main"]
