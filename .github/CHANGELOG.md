@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.7.5] - 2021-06-06
 ### Added
 * Added channel link to `#rules-welcome` on verification fail text
 ### Fixed
@@ -407,7 +409,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.4...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.5...HEAD
+[4.7.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.4...v4.7.5
 [4.7.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.3...v4.7.4
 [4.7.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.2...v4.7.3
 [4.7.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.1...v4.7.2
