@@ -134,8 +134,8 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 	}
 
 	if len(command) < 1 {
-		return ctx.SendErrorMessage("You're missing your verification message, which probably means you " +
-			"didn't read the rules. Read " + tools.MakeChannelMention("702328069309857852") + ".")
+		return ctx.SendErrorMessage(fmt.Sprintf("You're missing your verification message, which probably means you "+
+			"didn't read the rules. Read %s and %s.", tools.MakeChannelMention("702328069309857852"), tools.MakeChannelMention("698572983458988103")))
 	}
 
 	err := v.coreVerification(ctx, strings.Join(strings.Fields(ctx.Raw)[1:], " "))
@@ -330,7 +330,7 @@ func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
 				errors = fmt.Sprintf(" The following errors were observed:\n```%s```", kickLog.String())
 			}
 
-			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Action(s) successful." + errors)
+			_, err := ctx.SendMessageString(ctx.Message.ChannelID, "Action(s) successful."+errors)
 			return err
 		},
 		func(ctx *route.ReactionContext) error {
