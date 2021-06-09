@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.7.6] - 2021-06-08
 ### Changed
 * Add `LABEL com.centurylinklabs.watchtower.stop-signal="SIGINT"` to Dockerfile
+* Replace occurrences of `0x414b` with `0xAb1`
 
 ## [4.7.5] - 2021-06-06
 ### Added
@@ -411,7 +414,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.5...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.6...HEAD
+[4.7.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.5...v4.7.6
 [4.7.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.4...v4.7.5
 [4.7.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.3...v4.7.4
 [4.7.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.2...v4.7.3

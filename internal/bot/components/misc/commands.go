@@ -221,7 +221,7 @@ func (*Misc) ForgetMe(ctx *route.MessageContext) error {
 		Description: "This includes any information that can be tied to your Discord user ID, like bio data for your " +
 			"account (including system bios, if applicable).\nRecords of failed verifications, bans or kicks will not" +
 			" be removed due to the nature of how this data is stored.\nAnything removed will **not** be recoverable." +
-			" For more information, contact Abi (0x414b#8669).",
+			" For more information, contact Abi (0xAb1#8669).",
 	}
 
 	return ctx.Kit.NewConfirmation(
