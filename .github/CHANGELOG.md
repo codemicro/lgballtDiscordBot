@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Fixed
 * Newlines are no longer replaced with spaces in verification messages
+* Remove useless steps from verification pronoun detection
 
 ## [4.7.6] - 2021-06-08
 ### Changed

@@ -40,11 +40,6 @@ func FindPronounsInString(in string, possiblePronouns []PronounRole) (o []Pronou
 	for _, match := range matches {
 
 		splitMatch := strings.Split(match, "/")
-		// If the match has no `/` character, it will be included in its entirety. If this does not happen, we should
-		// add it manually so it can still be checked as a whole thing
-		if len(splitMatch) != 1 {
-			splitMatch = append(splitMatch, match)
-		}
 
 		for _, matchPart := range splitMatch {
 
@@ -55,9 +50,6 @@ func FindPronounsInString(in string, possiblePronouns []PronounRole) (o []Pronou
 				}
 
 				splitPronoun := strings.Split(pronoun.Name, "/")
-				if len(splitPronoun) != 1 {
-					splitPronoun = append(splitPronoun, pronoun.Name)
-				}
 
 				for _, pronounPart := range splitPronoun {
 					if strings.EqualFold(pronounPart, matchPart) {
