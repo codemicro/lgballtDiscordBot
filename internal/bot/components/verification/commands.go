@@ -126,7 +126,7 @@ func (*Verification) coreVerification(ctx *route.MessageContext, verificationTex
 
 func (v *Verification) Verify(ctx *route.MessageContext) error {
 
-	command := strings.Fields(ctx.Raw)[1:]
+	command := strings.Split(ctx.Raw, " ")[1:]
 
 	// check ratelimit
 	if val, found := v.ratelimit[ctx.Message.Author.ID]; found && time.Now().Before(val) {
@@ -138,7 +138,7 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 			"didn't read the rules. Read %s and %s.", tools.MakeChannelMention("702328069309857852"), tools.MakeChannelMention("698572983458988103")))
 	}
 
-	err := v.coreVerification(ctx, strings.Join(strings.Fields(ctx.Raw)[1:], " "))
+	err := v.coreVerification(ctx, strings.Join(command, " "))
 	if err != nil {
 		return err
 	}
