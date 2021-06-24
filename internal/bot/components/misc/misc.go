@@ -148,6 +148,14 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Category: meta.CategoryFun,
 	})
 
+	kit.AddCommand(&route.Command{
+		Name:        "Spoiler",
+		Help:        "Spoiler any attached images - useful if you're on mobile and need to CW something.",
+		CommandText: []string{"spoiler"},
+		Run:         comp.SpoilerThis,
+		Category:    meta.CategoryMisc,
+	})
+
 	return nil
 
 }
