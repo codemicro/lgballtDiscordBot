@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Attempted to fix Reddit rate-limiting problems
+  * Stagger subreddit monitor starts
+  * Add proper user agent
+  z* Add delay and retry for the first rate-limit response per action run
 
 ## [4.8.0] - 2021-06-24
 ### Added

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
@@ -57,14 +58,38 @@ var (
 
 func subMonitorAction(info config.RedditFeedInfo, idCache *[]string, ts *discordgo.Session) {
 
+	var hasRestarted bool
+
+ActionStart:
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	fp := gofeed.NewParser()
+	fp.UserAgent = fmt.Sprintf("discord:lgballtDiscordBot:v%s (by /u/td_brokeit)", buildInfo.Version)
 	feed, err := fp.ParseURLWithContext(info.RssUrl, ctx)
 	if err != nil {
+
+		if te, ok := err.(gofeed.HTTPError); ok {
+			if te.StatusCode == 429 && !hasRestarted {
+				// ratelimit has been hit, for the first time this run
+
+				pauseDuration := 1
+
+				if pauseDuration < info.Interval {
+					// If we don't get here, it means that the time we want to wait is less than the interval between
+					// feed checks. In that case, we abandon ship here to prevent having multiple request workers
+					// running at once.
+					time.Sleep(time.Minute * time.Duration(pauseDuration))
+					hasRestarted = true
+					goto ActionStart // >:) sorry not really sorry
+				}
+
+			}
+		}
+
 		logging.Error(err, fmt.Sprintf("failed to fetch RSS feed from URL %s within specified timeout",
 			info.RssUrl))
 		return
+
 	}
 
 	// This is used for when the action runs the first time so old messages aren't posted like forty times whenever the
