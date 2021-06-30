@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.8.2] - 2021-06-30
+### Fixed
+* Reddit: fixed use of loop variable in a goroutine
+  * This could cause a given Reddit feed to have multiple monitors running on it, causing individual posts to be posted multiple times 
+
 ## [4.8.1] - 2021-06-30
 ### Fixed
 * Verification reaction handler: add handling for users that have left before being verified
@@ -432,7 +437,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.1...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.2...HEAD
+[4.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.1...v4.8.2
 [4.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.0...v4.8.1
 [4.8.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.7...v4.8.0
 [4.7.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.6...v4.7.7

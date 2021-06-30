@@ -22,6 +22,7 @@ func Start(state *state.State) error {
 	}
 
 	for _, sub := range config.RedditFeeds {
+		sub := sub
 		go func() {
 			// Stagger timer starts - Reddit only likes you to send at most 1 request every two seconds.
 			// This is hacky way to try and ensure that happens
