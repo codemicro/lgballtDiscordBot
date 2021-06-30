@@ -10,6 +10,12 @@ import (
 
 func Start(state *state.State) error {
 
+	if config.DebugMode {
+		// Don't run Reddit feeds if we're working in debug mode to prevent accidentally sending rather a lot of
+		// requests to Reddit in a short space of time. They tend not to like that.
+		return nil
+	}
+
 	ts, err := discordgo.New()
 	if err != nil {
 		return err

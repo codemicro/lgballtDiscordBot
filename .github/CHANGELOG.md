@@ -10,7 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Attempted to fix Reddit rate-limiting problems
   * Stagger subreddit monitor starts
   * Add proper user agent
-  z* Add delay and retry for the first rate-limit response per action run
+  * Add delay and retry for the first rate-limit response per action run
+  * Don't run feed monitors when running in debug mode
 
 ## [4.8.0] - 2021-06-24
 ### Added
