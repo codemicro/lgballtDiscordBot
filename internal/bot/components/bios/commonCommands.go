@@ -149,6 +149,9 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 						return
 					}
 					err = ctx.Session.ChannelMessageDelete(m.ChannelID, m.ID)
+					if err != nil {
+						logging.Warn(err.Error())
+					}
 					return
 				}
 
@@ -158,6 +161,9 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 						return
 					}
 					err = ctx.Session.ChannelMessageDelete(m.ChannelID, m.ID)
+					if err != nil {
+						logging.Warn(err.Error())
+					}
 					return
 				}
 
@@ -208,8 +214,6 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 						return
 					}
 				}
-
-				return
 			})
 			return err
 		})

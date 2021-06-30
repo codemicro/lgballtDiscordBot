@@ -184,7 +184,7 @@ func (s *Misc) ListenToMe(ctx *route.MessageContext) error {
 		Type:  "rich",
 		Title: "Disclaimer",
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: fmt.Sprintf("React to this message with ✅ if you wish to ping for listeners. (❌ to cancel)"),
+			Text: "React to this message with ✅ if you wish to ping for listeners. (❌ to cancel)",
 		},
 		Description: listenerText,
 	}
@@ -216,7 +216,7 @@ func (*Misc) ForgetMe(ctx *route.MessageContext) error {
 		Type:  "rich",
 		Title: "This will delete all data associated with your Discord account from the bot database",
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: fmt.Sprintf("React with ✅ if you still wish to delete all your data. (❌ to cancel)"),
+			Text: "React with ✅ if you still wish to delete all your data. (❌ to cancel)",
 		},
 		Description: "This includes any information that can be tied to your Discord user ID, like bio data for your " +
 			"account (including system bios, if applicable).\nRecords of failed verifications, bans or kicks will not" +

@@ -100,6 +100,9 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 							ID:      m.ID,
 							Channel: m.ChannelID,
 						})
+						if err != nil {
+							return err
+						}
 
 						return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 					}
@@ -152,6 +155,9 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		ID:      m.ID,
 		Channel: m.ChannelID,
 	})
+	if err != nil {
+		return err
+	}
 
 	return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 }

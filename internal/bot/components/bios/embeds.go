@@ -60,7 +60,6 @@ func (sn *systemName) fetchInformation() error {
 		if member.Colour != "" {
 			var col int64
 			col, err = strconv.ParseInt(member.Colour, 16, 32)
-			(fmt.Sprint(col))
 			if err != nil {
 				return
 			}
@@ -125,7 +124,6 @@ type accountName struct {
 
 	plurality *pluralityInfo
 
-	user    *discordgo.User
 	session *discordgo.Session
 
 	once *sync.Once
