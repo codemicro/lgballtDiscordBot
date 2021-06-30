@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.8.1] - 2021-06-30
 ### Fixed
 * Verification reaction handler: add handling for users that have left before being verified
 * Attempted to fix Reddit rate-limiting problems
@@ -430,7 +432,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.1...HEAD
+[4.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.0...v4.8.1
 [4.8.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.7...v4.8.0
 [4.7.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.6...v4.7.7
 [4.7.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.7.5...v4.7.6
