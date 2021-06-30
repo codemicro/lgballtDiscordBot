@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Fixed
+* Verification reaction handler: add handling for users that have left before being verified
 * Attempted to fix Reddit rate-limiting problems
   * Stagger subreddit monitor starts
   * Add proper user agent

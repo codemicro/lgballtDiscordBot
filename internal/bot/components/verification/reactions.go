@@ -37,10 +37,10 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		m.Embeds[0].Fields = m.Embeds[0].Fields[:n]
 
 		if _, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
-			Content:         &m.Content,
-			Embed:           m.Embeds[0],
-			ID:              m.ID,
-			Channel:         m.ChannelID,
+			Content: &m.Content,
+			Embed:   m.Embeds[0],
+			ID:      m.ID,
+			Channel: m.ChannelID,
 		}); err != nil {
 			return err
 		}
@@ -79,6 +79,33 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 		for _, role := range rolesToAdd {
 			if err = ctx.Session.GuildMemberRoleAdd(ctx.Reaction.GuildID, userID, role); err != nil {
+				// typically, this means that the user we're referring to has left the guild
+				// in that case, let's clear the embed
+
+				if de, ok := err.(*discordgo.RESTError); ok {
+					if de.Response.StatusCode == 404 {
+						// user not found (has left?)
+						m.Embeds[0].Fields = append(m.Embeds[0].Fields, &discordgo.MessageEmbedField{
+							Name:   "🤔 User not found",
+							Value:  fmt.Sprintf("It looks like %s left before a decision was reached.", tools.MakePing(userID)),
+							Inline: false,
+						})
+
+						m.Embeds[0].Footer = nil
+
+						var x string
+						_, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
+							Content: &x,
+							Embed:   m.Embeds[0],
+							ID:      m.ID,
+							Channel: m.ChannelID,
+						})
+
+						return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
+					}
+				}
+
+				_, _ = ctx.SendMessageString(ctx.Reaction.ChannelID, err.Error())
 				return err
 			}
 		}
@@ -112,17 +139,18 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 	m.Embeds[0].Fields = append(m.Embeds[0].Fields, &discordgo.MessageEmbedField{
 		Name:   fmt.Sprintf("%s Decision", actionEmoji),
-		Value:  fmt.Sprintf("Verification request was %s by %s at %s", actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format(time.RFC822)),
+		Value:  fmt.Sprintf("%s was %s by %s at %s", tools.MakePing(userID), actionTaken, tools.MakePing(reactingUser.ID), time.Now().Format(time.RFC822)),
 		Inline: false,
 	})
 
 	m.Embeds[0].Footer = nil
 
+	var x string
 	_, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
-		Content:         &m.Content,
-		Embed:           m.Embeds[0],
-		ID:              m.ID,
-		Channel:         m.ChannelID,
+		Content: &x,
+		Embed:   m.Embeds[0],
+		ID:      m.ID,
+		Channel: m.ChannelID,
 	})
 
 	return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
