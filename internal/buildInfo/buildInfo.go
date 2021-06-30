@@ -1,3 +1,4 @@
+//nolint:typecheck // the embedded files can cause problems when they cannot be found, since they're not committed and created by mage in CI
 package buildInfo
 
 import (
