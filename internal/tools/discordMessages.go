@@ -93,7 +93,7 @@ func ParsePing(ping string) (string, bool) {
 }
 
 func MakePing(uid string) string {
-	return "<@!" + uid + ">"
+	return "<@" + uid + ">"
 }
 
 func MakeRolePing(rid string) string {
