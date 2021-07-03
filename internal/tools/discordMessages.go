@@ -82,7 +82,7 @@ func MakeChannelMention(channelId string) string {
 	return "<#" + channelId + ">"
 }
 
-var idFromPingRegex = regexp.MustCompile(`<@!(.+)>`)
+var idFromPingRegex = regexp.MustCompile(`<@!?(.+)>`)
 
 func ParsePing(ping string) (string, bool) {
 	if idFromPingRegex.MatchString(ping) {

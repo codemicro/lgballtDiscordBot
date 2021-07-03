@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.8.4] - 2021-07-03
+### Fixed
+* Updated ping detection regex to detect pings in the format `<@userid>`
+
 ## [4.8.3] - 2021-07-03
 ### Changed
 * Ensure that all generated user pings are in the format `<@userid>`
@@ -443,7 +447,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.3...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...HEAD
+[4.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.3...v4.8.4
 [4.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.2...v4.8.3
 [4.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.1...v4.8.2
 [4.8.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.0...v4.8.1
