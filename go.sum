@@ -14,6 +14,8 @@ github.com/codemicro/dgo-toolkit v0.7.1 h1:T5CHJc56YGzen6BCA3HRMudMJiwGn/iVVwcyo
 github.com/codemicro/dgo-toolkit v0.7.1/go.mod h1:SfeyvPVg1Brngjs476YfrwvKHptGFmINV22RyvNURXA=
 github.com/codemicro/dgo-toolkit v0.8.0 h1:TL4P7j5pEmye2FkN3AOU1zTv0CWqr/z8BxXqVuJDgyA=
 github.com/codemicro/dgo-toolkit v0.8.0/go.mod h1:SfeyvPVg1Brngjs476YfrwvKHptGFmINV22RyvNURXA=
+github.com/codemicro/dgo-toolkit v0.8.1 h1:mPDHHITGrAbhRnW6YSbGFptMKTtkSwlMUC1wsiNomVo=
+github.com/codemicro/dgo-toolkit v0.8.1/go.mod h1:SfeyvPVg1Brngjs476YfrwvKHptGFmINV22RyvNURXA=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

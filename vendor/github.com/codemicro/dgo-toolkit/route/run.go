@@ -45,7 +45,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	// check if the message has a given prefix
 	var trimmedContent string
 	for _, prefix := range b.Prefixes {
-		// slightly modified version of strings.HasPrefix
+		// case insensitive version of strings.HasPrefix
 		if b.hasPrefix(message.Content, prefix) {
 			trimmedContent = b.trimPrefix(message.Content, prefix)
 			break
@@ -63,11 +63,12 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	ctx.Raw = message.Content
 	b.tempMessageHandlerMux.RLock()
 	for n, r := range b.tempMessageHandlerSet {
-		x := r // this is a loop var and can change before the function is actually executed in the goroutine, which
+		// these are loop vars var and can change before the function they're actually used in the goroutine, which
 		// would be bad
+		r, n := r, n
 		go func() {
 			y := *ctx // clone ctx
-			err := x(&y)
+			err := r(&y)
 			if err != nil {
 				b.handleError(err, "error running temporary message handler", strconv.Itoa(n))
 			}

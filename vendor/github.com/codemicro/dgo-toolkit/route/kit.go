@@ -23,11 +23,13 @@ type Kit struct {
 
 	commandSet            []*Command
 	tempMessageHandlerSet map[int]MessageRunFunc
+	tempMessageIdCounter  int
 	tempMessageHandlerMux *sync.RWMutex
 
-	reactionSet      []*Reaction
-	tempReactionSet  map[int]*Reaction
-	tempReactionsMux *sync.RWMutex
+	reactionSet           []*Reaction
+	tempReactionSet       map[int]*Reaction
+	tempReactionIdCounter int
+	tempReactionsMux      *sync.RWMutex
 
 	middlewareSet []*Middleware
 }
@@ -40,9 +42,9 @@ func NewKit(session *discordgo.Session, prefixes []string) *Kit {
 		UserErrorFunc: func(s string) string {
 			return "❌ **Error:** " + s
 		},
-		tempReactionSet:  make(map[int]*Reaction),
-		tempReactionsMux: new(sync.RWMutex),
-		tempMessageHandlerSet:  make(map[int]MessageRunFunc),
+		tempReactionSet:       make(map[int]*Reaction),
+		tempReactionsMux:      new(sync.RWMutex),
+		tempMessageHandlerSet: make(map[int]MessageRunFunc),
 		tempMessageHandlerMux: new(sync.RWMutex),
 	}
 }
@@ -85,7 +87,8 @@ func (b *Kit) AddCommand(commands ...*Command) {
 // AddTemporaryMessageHandler creates registers a temporary message handler and returns the created handler's ID.
 func (b *Kit) AddTemporaryMessageHandler(handler MessageRunFunc) int {
 	b.tempMessageHandlerMux.Lock()
-	n := len(b.tempMessageHandlerSet)
+	n := b.tempMessageIdCounter
+	b.tempMessageIdCounter += 1
 	b.tempMessageHandlerSet[n] = handler
 	b.tempMessageHandlerMux.Unlock()
 	return n
@@ -107,7 +110,10 @@ func (b *Kit) AddReaction(reactions ...*Reaction) {
 // AddTemporaryReaction creates registers a temporary reaction handler and returns the created handler's ID.
 func (b *Kit) AddTemporaryReaction(reaction *Reaction) int {
 	b.tempReactionsMux.Lock()
-	n := len(b.tempReactionSet)
+
+	n := b.tempReactionIdCounter
+	b.tempMessageIdCounter += 1
+
 	b.tempReactionSet[n] = reaction
 	b.tempReactionsMux.Unlock()
 	return n
