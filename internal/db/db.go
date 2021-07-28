@@ -36,7 +36,7 @@ func init() {
 		os.Exit(1)
 	}
 
-	err = Conn.AutoMigrate(&UserBio{}, &ReactionRole{}, &userBan{}, &userKick{}, &VerificationFail{}, &UserMute{}, &AnalyticsEvent{}, &ToneTag{})
+	err = Conn.AutoMigrate(&UserBio{}, &ReactionRole{}, &userBan{}, &userKick{}, &VerificationFail{}, &UserMute{}, &ToneTag{})
 	if err != nil {
 		logging.Error(err, "Failed to run database migrations")
 		os.Exit(1)

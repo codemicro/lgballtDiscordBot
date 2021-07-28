@@ -1,34 +1,41 @@
 package analytics
 
 import (
-	"github.com/codemicro/lgballtDiscordBot/internal/db"
+	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/logging"
-	"time"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
 )
 
-func newAnalyticsEvent(eventType, event string) *db.AnalyticsEvent {
-	return &db.AnalyticsEvent{
-		Time:      time.Now(),
-		EventType: eventType,
-		Event:     event,
-	}
+func init() {
+	http.Handle("/metrics", promhttp.Handler())
+	go func() {
+		logging.Info("Running Prometheus HTTP server at " + config.PrometheusAddress)
+		err := http.ListenAndServe(config.PrometheusAddress, nil)
+		if err != nil {
+			logging.Error(err, "Failed to start Prometheus HTTP server")
+		}
+	}()
 }
 
-const (
-	commandUseEventType = "commandUse"
-	pluralkitRequestEventType = "pkRequest"
+var (
+	counterCommandsRun = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "lgballtbot_commands_run",
+		Help:        "Commands run",
+	}, []string{"command"})
+
+	counterPluralKitRequests = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name:        "lgballtbot_pluralkit_requests",
+		Help:        "Requests made to the PluralKit API",
+	}, []string{"request"})
 )
 
 func ReportCommandUse(commandName string) {
-	err := newAnalyticsEvent(commandUseEventType, commandName).Create()
-	if err != nil {
-		logging.Warn("Analytics event create: " + err.Error())
-	}
+	go counterCommandsRun.WithLabelValues(commandName).Inc()
 }
 
 func ReportPluralKitRequest(requestName string) {
-	err := newAnalyticsEvent(pluralkitRequestEventType, requestName).Create()
-	if err != nil {
-		logging.Warn("Analytics event create: " + err.Error())
-	}
+	go counterPluralKitRequests.WithLabelValues(requestName).Inc()
 }

@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+* Replaced old DB-based analytics with Prometheus-based monitoring
+### Removed
+* `db.AnalyticsEvent` type
+
 ## [4.8.4] - 2021-07-03
 ### Fixed
 * Updated ping detection regex to detect pings in the format `<@userid>`
