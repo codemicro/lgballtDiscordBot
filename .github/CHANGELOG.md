@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.8.5] - 2021-07-28
 ### Changed
 * Replaced old DB-based analytics with Prometheus-based monitoring
 ### Removed
@@ -452,7 +453,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...HEAD
+[4.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...v4.8.5
 [4.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.3...v4.8.4
 [4.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.2...v4.8.3
 [4.8.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.1...v4.8.2
