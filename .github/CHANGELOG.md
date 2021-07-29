@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.8.7] - 2021-07-29
+### Fixed
+* `<p>restart` and `<p>goroutinestack` can now only be run by the user with the ID `config.OwnerId`
+  * Before, it was anyone that *wasn't* that user could run it. Which was very wrong.
+
 ## [4.8.6] - 2021-07-29
 ### Added
 * `<p>restart` command
@@ -458,7 +463,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...HEAD
+[4.8.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...v4.8.7
 [4.8.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...v4.8.6
 [4.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...v4.8.5
 [4.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.3...v4.8.4

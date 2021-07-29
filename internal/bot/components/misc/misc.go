@@ -142,7 +142,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Name:        "Restart bot",
 		CommandText: []string{"restart"},
 		Restrictions: []route.CommandRestriction{func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
-			return message.Author.ID != config.OwnerId, nil
+			return message.Author.ID == config.OwnerId, nil
 		}},
 		Run: func(ctx *route.MessageContext) error {
 			logging.Info(fmt.Sprintf("Restarting request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
@@ -165,7 +165,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Name: "Goroutine stacktrace",
 		CommandText: []string{"goroutinestack"},
 		Restrictions: []route.CommandRestriction{func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
-			return message.Author.ID != config.OwnerId, nil
+			return message.Author.ID == config.OwnerId, nil
 		}},
 		Run:       comp.GoroutineStack,
 		Invisible: true,
