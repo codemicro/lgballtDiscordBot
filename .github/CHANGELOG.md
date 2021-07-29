@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.8.6] - 2021-07-29
 ### Added
 * `<p>restart` command
 * `<p>goroutinestack` goroutine stack dump command
@@ -456,7 +458,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...HEAD
+[4.8.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...v4.8.6
 [4.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...v4.8.5
 [4.8.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.3...v4.8.4
 [4.8.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.2...v4.8.3
