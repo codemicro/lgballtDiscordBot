@@ -129,10 +129,33 @@ func Init(kit *route.Kit, runState *state.State) error {
 				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown timeout exceeded, forcibly shutting down")
 				logging.Warn("Shutdown timeout exceeded, forcibly shutting down")
 			} else {
-				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown successful, goodbye.")
+				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown successful, goodbye!")
 			}
 			fmt.Println("Shutting down...")
 			os.Exit(0)
+			return nil
+		},
+		Category: meta.CategoryAdminTools,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Restart bot",
+		CommandText: []string{"restart"},
+		Restrictions: []route.CommandRestriction{func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
+			return message.Author.ID != config.OwnerId, nil
+		}},
+		Run: func(ctx *route.MessageContext) error {
+			logging.Info(fmt.Sprintf("Restarting request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
+			runState.TriggerShutdown()
+			timedOut := runState.WaitUntilAllComplete(time.Second * 10)
+			if timedOut {
+				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Finish timeout exceeded, forcibly stopping down")
+				logging.Warn("Finish timeout exceeded, forcibly stopping down")
+			} else {
+				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Finish successful, goodbye!")
+			}
+			fmt.Println("Restarting...")
+			os.Exit(1) // this relies on the Docker container restarting when a non-zero exit code is encountered.
 			return nil
 		},
 		Category: meta.CategoryAdminTools,

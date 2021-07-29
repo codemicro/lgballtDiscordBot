@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+* `<p>restart` command
+
 ## [4.8.5] - 2021-07-28
 ### Changed
 * Replaced old DB-based analytics with Prometheus-based monitoring
