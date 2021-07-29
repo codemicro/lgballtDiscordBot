@@ -162,6 +162,17 @@ func Init(kit *route.Kit, runState *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
+		Name: "Goroutine stacktrace",
+		CommandText: []string{"goroutinestack"},
+		Restrictions: []route.CommandRestriction{func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
+			return message.Author.ID != config.OwnerId, nil
+		}},
+		Run:       comp.GoroutineStack,
+		Invisible: true,
+		Category:  meta.CategoryAdminTools,
+	})
+
+	kit.AddCommand(&route.Command{
 		Name:        "uwuify",
 		CommandText: []string{"uwu"},
 		Arguments: []route.Argument{
