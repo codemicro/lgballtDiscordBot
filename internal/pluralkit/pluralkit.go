@@ -72,6 +72,13 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	}
 
 	resp, err := sendRequest(req)
+	defer func() {
+		if resp != nil {
+			if resp.Body != nil {
+				_ = resp.Body.Close() // goroutine leaks begone!
+			}
+		}
+	}()
 	if err != nil {
 		return err
 	}
@@ -84,7 +91,6 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	}
 
 	respBodyContent, err := ioutil.ReadAll(resp.Body)
-	_ = resp.Body.Close()
 	if err != nil {
 		return err
 	}
@@ -119,8 +125,7 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 // requestWorker is a function that should be run as a goroutine. This actually does HTTP request dispatch and
 // rate limiting.
 func requestWorker() {
-	for {
-		rq := <-requestQueue
+	for rq := range requestQueue {
 		rq.request.Header["User-Agent"] = userAgent
 		resp, err := client.Do(rq.request)
 		rq.responseNotifier <- completedRequest{

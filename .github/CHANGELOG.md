@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Fixed
+* Removed goroutine/memory leak from PluralKit API package
+  * In some cases when a HTTP request errored out, the response body would not be closed.
+  * For each response body, there are two goroutines that are run (`net/http.(*persistConn).readLoop`, `net/http.(*persistConn).writeLoop`).
+  * These will run forever and create a goroutine and memory leak unless explicitly stopped by `resp.Body.Close()`.
 
 ## [4.8.7] - 2021-07-29
 ### Fixed
