@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.8.8] - 2021-07-30
 ### Fixed
 * Removed goroutine/memory leak from PluralKit API package
   * In some cases when a HTTP request errored out, the response body would not be closed.
@@ -469,7 +471,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...HEAD
+[4.8.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...v4.8.8
 [4.8.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...v4.8.7
 [4.8.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...v4.8.6
 [4.8.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.4...v4.8.5
