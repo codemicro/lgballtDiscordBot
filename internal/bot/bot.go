@@ -144,7 +144,7 @@ func registerHandlers(kit *route.Kit, st *state.State) error {
 		Name: "Command analytics",
 		Run: func(i interface{}) error {
 			ctx := i.(*route.MessageContext)
-			go analytics.ReportCommandUse(ctx.Command.Name)
+			analytics.ReportCommandUse(ctx.Command.Name)
 			return nil
 		},
 		Trigger: route.MiddlewareTriggerValid,

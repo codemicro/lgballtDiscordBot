@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * In some cases when a HTTP request errored out, the response body would not be closed.
   * For each response body, there are two goroutines that are run (`net/http.(*persistConn).readLoop`, `net/http.(*persistConn).writeLoop`).
   * These will run forever and create a goroutine and memory leak unless explicitly stopped by `resp.Body.Close()`.
+* Prevent multiple goroutines being started when reporting analytics events instead of just a single goroutine
 
 ## [4.8.7] - 2021-07-29
 ### Fixed

@@ -49,7 +49,7 @@ func MembersBySystemId(sid string) (Members, error) {
 	if err != nil {
 		return nil, err
 	}
-	go analytics.ReportPluralKitRequest("Members by system ID")
+	analytics.ReportPluralKitRequest("Members by system ID")
 	return members, nil
 }
 
@@ -64,6 +64,6 @@ func MemberByMemberId(mid string) (*Member, error) {
 	if err != nil {
 		return nil, err
 	}
-	go analytics.ReportPluralKitRequest("Member by ID")
+	analytics.ReportPluralKitRequest("Member by ID")
 	return member, nil
 }

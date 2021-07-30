@@ -36,6 +36,6 @@ func MessageById(mid string) (*Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	go analytics.ReportPluralKitRequest("Message by ID")
+	analytics.ReportPluralKitRequest("Message by ID")
 	return sys, nil
 }
