@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ## Changed
 * Switch to different logging system (from a homebrew, pretty bad system to [Zerolog](https://github.com/rs/zerolog) and [Lumberjack](https://github.com/natefinch/lumberjack))
+## Fixed
+* Make edited PluralKit proxied messages show up in the action log
+  * Previously, since webhook messages are classed as being sent by bot accounts, they would be indiscriminately ignored.
 
 ## [4.8.8] - 2021-07-30
 ### Fixed

@@ -12,16 +12,15 @@ import (
 
 func messageUpdate(s *discordgo.Session, mu *discordgo.MessageUpdate) {
 
-	if wasBot(mu.Message) {
-		return
-	}
-
 	// ignore PK proxied things
 	pkMessage, err := pluralkit.MessageById(mu.ID)
 	if err != nil {
 		// err != nil
 		if !errors.Is(err, pluralkit.ErrorMessageNotFound) {
 			logger.Error().Err(err).Msg("messageUpdate handler")
+		} else if wasBot(mu.Message) { // if this message was NOT proxied by PK and it's a bot, we should ignore it
+			// if we get to this point, the error is guaranteed to be pluralkit.ErrorMessageNotFound
+			return
 		}
 	}
 
