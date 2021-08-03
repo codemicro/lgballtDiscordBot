@@ -6,9 +6,9 @@ import (
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pronouns"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/rs/zerolog/log"
 	"strings"
 	"time"
 )
@@ -117,7 +117,7 @@ func (*Verification) coreVerification(ctx *route.MessageContext, verificationTex
 	// Delete user's message
 	err = ctx.Session.ChannelMessageDelete(ctx.Message.ChannelID, ctx.Message.ID)
 	if err != nil {
-		logging.Error(err, "failed to delete message in verification")
+		log.Error().Err(err).Msg("failed to delete message in verification")
 	}
 
 	return nil
@@ -318,10 +318,10 @@ func (v *Verification) PurgeUnverifiedMembers(ctx *route.MessageContext) error {
 						kickLog.WriteString(" failed: ")
 						kickLog.WriteString(err.Error())
 						kickLog.WriteRune('\n')
-						logging.Warn(err.Error())
+						log.Warn().Err(err).Send()
 					}
 				} else {
-					logging.Info(fmt.Sprintf("KICK %s %s (debug mode enabled, no action performed)", member.User.ID, member.User.String()))
+					log.Debug().Msgf("KICK %s %s (no action performed)", member.User.ID, member.User.String())
 				}
 			}
 

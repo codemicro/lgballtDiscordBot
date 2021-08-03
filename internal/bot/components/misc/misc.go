@@ -7,9 +7,9 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/rs/zerolog/log"
 	"os"
 	"sync"
 	"time"
@@ -121,13 +121,13 @@ func Init(kit *route.Kit, runState *state.State) error {
 		CommandText:  []string{"shutdown"},
 		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
 		Run: func(ctx *route.MessageContext) error {
-			logging.Info(fmt.Sprintf("Shutting down by request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
+			log.Info().Msgf("Shutting down by request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String())
 			_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "***oh no what no A-[the earth stops rotating]***")
 			runState.TriggerShutdown()
 			timedOut := runState.WaitUntilAllComplete(time.Second * 10)
 			if timedOut {
 				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown timeout exceeded, forcibly shutting down")
-				logging.Warn("Shutdown timeout exceeded, forcibly shutting down")
+				log.Warn().Msg("Shutdown timeout exceeded, forcibly shutting down")
 			} else {
 				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Shutdown successful, goodbye!")
 			}
@@ -145,12 +145,12 @@ func Init(kit *route.Kit, runState *state.State) error {
 			return message.Author.ID == config.OwnerId, nil
 		}},
 		Run: func(ctx *route.MessageContext) error {
-			logging.Info(fmt.Sprintf("Restarting request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String()))
+			log.Info().Msgf("Restarting request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String())
 			runState.TriggerShutdown()
 			timedOut := runState.WaitUntilAllComplete(time.Second * 10)
 			if timedOut {
 				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Finish timeout exceeded, forcibly stopping down")
-				logging.Warn("Finish timeout exceeded, forcibly stopping down")
+				log.Warn().Msg("Finish timeout exceeded, forcibly stopping down")
 			} else {
 				_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "Finish successful, goodbye!")
 			}

@@ -3,17 +3,16 @@ package bios
 import (
 	"bytes"
 	_ "embed"
-	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/meta"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/markdown"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/rs/zerolog/log"
 	"strings"
 	"sync"
 	"text/template"
@@ -115,7 +114,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			for _, key := range toRemove {
 				err := kit.Session.MessageReactionsRemoveAll(comp.trackedEmbeds[key].channelId, key)
 				if err != nil {
-					logging.Error(err, fmt.Sprintf("unable to clear reactions from tracked message %s", key)) // TODO: zerolog
+					log.Error().Err(err).Msgf("unable to clear reactions from tracked message %s", key)
 				}
 				delete(comp.trackedEmbeds, key)
 			}

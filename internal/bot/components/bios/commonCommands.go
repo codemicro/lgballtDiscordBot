@@ -7,8 +7,8 @@ import (
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
+	"github.com/rs/zerolog/log"
 	"strconv"
 	"sync"
 	"time"
@@ -133,7 +133,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					targetMessageID := ctxb.Message.ID
 					pkMsg, err := pluralkit.MessageById(targetMessageID)
 					if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
-						logging.Warn(err.Error())
+						log.Warn().Err(err).Send()
 					} else if pkMsg != nil {
 						targetMessageID = pkMsg.Id
 					}
@@ -150,7 +150,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					}
 					err = ctx.Session.ChannelMessageDelete(m.ChannelID, m.ID)
 					if err != nil {
-						logging.Warn(err.Error())
+						log.Warn().Err(err).Send()
 					}
 					return
 				}
@@ -162,7 +162,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					}
 					err = ctx.Session.ChannelMessageDelete(m.ChannelID, m.ID)
 					if err != nil {
-						logging.Warn(err.Error())
+						log.Warn().Err(err).Send()
 					}
 					return
 				}

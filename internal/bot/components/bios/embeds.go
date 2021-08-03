@@ -6,8 +6,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
+	"github.com/rs/zerolog/log"
 	"strconv"
 	"sync"
 )
@@ -234,7 +234,7 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*discordg
 	// if any error is returned from the Name function, it will also affect the Avatar and Colour function, but will
 	// not be returned there.
 	if err != nil {
-		logging.Warn(err.Error())
+		log.Warn().Err(err).Send()
 		name = "<unknown name>"
 	} else {
 		avatar, _ = nd.Avatar()

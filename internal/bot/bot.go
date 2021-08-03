@@ -18,8 +18,8 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/components/verification"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
+	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func Start(state *state.State) error {
 	kit := route.NewKit(session, []string{config.Prefix})
 	kit.IsCaseSensitive = false
 	kit.DebugMode = config.DebugMode
-	kit.ErrorHandler = func(err error) { logging.Error(err) }
+	kit.ErrorHandler = func(err error) { log.Error().Err(err).Str("area", "dgo-toolkit").Send() }
 
 	if err = actionLog.Setup(session); err != nil {
 		return err
@@ -60,7 +60,7 @@ func Start(state *state.State) error {
 		f := func(text string) {
 			err := session.UpdateGameStatus(0, text)
 			if err != nil {
-				logging.Error(err)
+				log.Error().Err(err).Msg("unable to update status")
 			}
 		}
 

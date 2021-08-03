@@ -5,8 +5,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -18,6 +18,9 @@ type activePressF struct {
 }
 
 func (pf *PressF) newTracker(session *discordgo.Session, message *discordgo.Message, duration time.Duration) *activePressF {
+
+	logger := log.With().Str("area", "activePressF-runner").Logger()
+
 	apf := &activePressF{
 		Trigger: make(chan *discordgo.MessageReaction, 100),
 		Count:   0,
@@ -44,26 +47,26 @@ func (pf *PressF) newTracker(session *discordgo.Session, message *discordgo.Mess
 
 			name, _, err := common.GetNickname(session, v.UserID, v.GuildID)
 			if err != nil {
-				logging.Error(err, "activePressF runner (nickname get)")
+				logger.Error().Err(err).Msg("activePressF runner (nickname get)")
 				return
 			}
 			newText := fmt.Sprintf("%s\n**%s** has paid respects", message.Content, name)
 			_, err = session.ChannelMessageEdit(apf.Message.ChannelID, apf.Message.ID, newText)
 			apf.Message.Content = newText
 			if err != nil {
-				logging.Error(err, "activePressF runner")
+				logger.Error().Err(err).Msg("activePressF runner")
 				return
 			}
 			apf.Count += 1
 		}
 		_, err := session.ChannelMessageEdit(apf.Message.ChannelID, apf.Message.ID, fmt.Sprintf("%s\n**%d** people have paid respects", message.Content, apf.Count))
 		if err != nil {
-			logging.Error(err, "activePressF runner final edit")
+			logger.Error().Err(err).Msg("activePressF runner final edit")
 			return
 		}
 		err = session.MessageReactionsRemoveAll(apf.Message.ChannelID, apf.Message.ID)
 		if err != nil {
-			logging.Error(err, "activePressF runner clear all reactions")
+			logger.Error().Err(err).Msg("activePressF runner clear all reactions")
 			return
 		}
 	}()

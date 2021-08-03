@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
+	"github.com/rs/zerolog/log"
 	"github.com/wcharczuk/go-chart/v2"
 	"sort"
 	"strconv"
@@ -50,8 +50,6 @@ func makeSnowflakeAtTime(t time.Time) string {
 
 func (c *ChatChart) collectMessages(intent collectionIntent) {
 
-	// TODO: zerolog
-
 	channelId := intent.ChannelId
 	ctx := intent.Ctx
 
@@ -66,13 +64,13 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		// trigger typing
 		err := ctx.Session.ChannelTyping(channelId)
 		if err != nil {
-			logging.Warn(err.Error())
+			log.Warn().Err(err).Send()
 		}
 
 		messages, err := ctx.Session.ChannelMessages(channelId, 100, lastMessage, "", "")
 
 		if err != nil {
-			logging.Error(err, "unable to fetch messages for chatchart command")
+			log.Error().Err(err).Msg("unable to fetch messages for chatchart command")
 			return
 		}
 
@@ -135,7 +133,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	// get channel
 	crx, err := ctx.Session.Channel(channelId)
 	if err != nil {
-		logging.Error(err, "failed to fetch channel")
+		log.Error().Err(err).Msg("failed to fetch channel")
 	}
 
 	// make graph
@@ -159,7 +157,7 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 	buffer := bytes.NewBuffer([]byte{})
 	err = pie.Render(chart.PNG, buffer)
 	if err != nil {
-		logging.Error(err, "failed to render chart in collectMessages")
+		log.Error().Err(err).Msg("failed to render chart in collectMessages")
 		return
 	}
 
@@ -202,13 +200,13 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 		// because the buffer has been read, the chart will need to be re-rendered
 		err = pie.Render(chart.PNG, buffer)
 		if err != nil {
-			logging.Error(err, "failed to render chart in collectMessages after the first attempt to send a message")
+			log.Error().Err(err).Msg("failed to render chart in collectMessages after the first attempt to send a message")
 			return
 		}
 
 		_, err = ctx.Session.ChannelMessageSendComplex(ctx.Message.ChannelID, msend)
 		if err != nil {
-			logging.Error(err, "unable to send final chatchart message from collectMessages")
+			log.Error().Err(err).Msg("unable to send final chatchart message from collectMessages")
 			return
 		}
 	}

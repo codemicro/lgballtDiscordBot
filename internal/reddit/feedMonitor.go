@@ -7,10 +7,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"github.com/mmcdole/gofeed"
+	"github.com/rs/zerolog/log"
 	"regexp"
 	"strings"
 	"time"
@@ -58,6 +58,8 @@ var (
 
 func subMonitorAction(info config.RedditFeedInfo, idCache *[]string, ts *discordgo.Session) {
 
+	logger := log.With().Str("area", "redditSubMonitorAction").Str("rssUrl", info.IconUrl).Logger()
+
 	var hasRestarted bool
 
 ActionStart:
@@ -86,8 +88,8 @@ ActionStart:
 			}
 		}
 
-		logging.Error(err, fmt.Sprintf("failed to fetch RSS feed from URL %s within specified timeout",
-			info.RssUrl))
+		logger.Error().Err(err).Msgf("failed to fetch RSS feed from URL %s within specified timeout",
+			info.RssUrl)
 		return
 
 	}
@@ -154,7 +156,7 @@ ActionStart:
 			content := redditPost.Content
 			doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
 			if err != nil {
-				logging.Error(err, "goquery initialisation failed")
+				logger.Error().Err(err).Msg("goquery initialisation failed")
 				return
 			}
 			content = contentFilterRegex.ReplaceAllString(doc.Text(), "")
@@ -167,7 +169,7 @@ ActionStart:
 
 			mtx := webhookIdTokenRegex.FindStringSubmatch(info.Webhook)
 			if mtx == nil {
-				logging.Error(err, fmt.Sprintf("unable to extract webhook ID and token from URL %s", info.Webhook))
+				logger.Error().Err(err).Msg(fmt.Sprintf("unable to extract webhook ID and token from URL %s", info.Webhook))
 				return
 			}
 
@@ -179,7 +181,7 @@ ActionStart:
 			)
 
 			if err != nil {
-				logging.Error(err, fmt.Sprintf("unable to send to webhook URL %s", info.Webhook))
+				logger.Error().Err(err).Msg(fmt.Sprintf("unable to send to webhook URL %s", info.Webhook))
 				return
 			}
 

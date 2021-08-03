@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	"github.com/codemicro/lgballtDiscordBot/internal/tools"
 	"strings"
@@ -22,7 +21,7 @@ func messageUpdate(s *discordgo.Session, mu *discordgo.MessageUpdate) {
 	if err != nil {
 		// err != nil
 		if !errors.Is(err, pluralkit.ErrorMessageNotFound) {
-			logging.Error(err, "messageUpdate actionLog handler")
+			logger.Error().Err(err).Msg("messageUpdate handler")
 		}
 	}
 
@@ -86,8 +85,8 @@ func messageUpdate(s *discordgo.Session, mu *discordgo.MessageUpdate) {
 		}
 	}
 
-	if err = log(s, eventTypeMessageUpdate, sb.String(), files...); err != nil {
-		logging.Error(err, "messageDelete actionLog handler")
+	if err = logEvent(s, eventTypeMessageUpdate, sb.String(), files...); err != nil {
+		logger.Error().Err(err).Msg("messageDelete handler")
 	}
 
 }
@@ -113,7 +112,7 @@ func messageDelete(s *discordgo.Session, md *discordgo.MessageDelete) {
 	} else {
 		// err != nil
 		if !errors.Is(err, pluralkit.ErrorMessageNotFound) {
-			logging.Error(err, "messageDelete actionLog handler")
+			logger.Error().Err(err).Msg("messageDelete handler")
 		}
 	}
 
@@ -157,9 +156,9 @@ func messageDelete(s *discordgo.Session, md *discordgo.MessageDelete) {
 		}
 	}
 
-	err = log(s, eventTypeMessageDelete, sb.String(), files...)
+	err = logEvent(s, eventTypeMessageDelete, sb.String(), files...)
 	if err != nil {
-		logging.Error(err, "messageDelete actionLog handler")
+		logger.Error().Err(err).Msg("messageDelete handler")
 	}
 }
 
@@ -192,13 +191,13 @@ func messageDeleteBulk(s *discordgo.Session, mdb *discordgo.MessageDeleteBulk) {
 		fileBuilder.WriteRune('\n')
 	}
 
-	err := log(s, eventTypeMessageDelete, messageBuilder.String(), &discordgo.File{
+	err := logEvent(s, eventTypeMessageDelete, messageBuilder.String(), &discordgo.File{
 		Name:        "messages.txt",
 		ContentType: "text/plain",
 		Reader:      strings.NewReader(fileBuilder.String()),
 	})
 
 	if err != nil {
-		logging.Error(err, "messageDelete actionLog handler")
+		logger.Error().Err(err).Msg("messageDelete handler")
 	}
 }

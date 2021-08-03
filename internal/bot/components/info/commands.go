@@ -5,7 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
+	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -63,7 +63,7 @@ func (i *Info) Info(ctx *route.MessageContext) error {
 			emb.Color = rainbowColours[c]
 			_, err = ctx.Session.ChannelMessageEditEmbed(msg.ChannelID, msg.ID, emb)
 			if err != nil {
-				logging.Error(err, "info colours unable to update")
+				log.Error().Err(err).Msg("info colours unable to update")
 				return
 			}
 		}

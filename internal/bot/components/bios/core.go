@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
+	"github.com/rs/zerolog/log"
 )
 
 func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate bool, ctx *route.MessageContext) error {
@@ -49,7 +49,7 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 	targetMessageID := ctx.Message.ID
 	pkMsg, err := pluralkit.MessageById(targetMessageID)
 	if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
-		logging.Warn(err.Error())
+		log.Warn().Err(err).Send()
 	} else if pkMsg != nil {
 		targetMessageID = pkMsg.Id
 	}
@@ -92,7 +92,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 	targetMessageID := ctx.Message.ID
 	pkMsg, err := pluralkit.MessageById(targetMessageID)
 	if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
-		logging.Warn(err.Error())
+		log.Warn().Err(err).Send()
 	} else if pkMsg != nil {
 		targetMessageID = pkMsg.Id
 	}

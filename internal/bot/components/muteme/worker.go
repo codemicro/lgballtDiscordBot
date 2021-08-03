@@ -4,8 +4,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
-	"github.com/codemicro/lgballtDiscordBot/internal/logging"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
+	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -41,9 +41,12 @@ func (mm *MuteMe) startMuteRemovalWorker(session *discordgo.Session, st *state.S
 }
 
 func (mm *MuteMe) muteRemovalWorker(session *discordgo.Session) {
+	
+	logger := log.With().Str("area", "muteRemovalWorker").Logger()
+	
 	mutes, err := db.GetAllUserMutes()
 	if err != nil {
-		logging.Error(err, "muteRemovalWorker: failed to fetch all user mutes")
+		logger.Error().Err(err).Msg("failed to fetch all user mutes")
 		return
 	}
 
@@ -53,7 +56,7 @@ func (mm *MuteMe) muteRemovalWorker(session *discordgo.Session) {
 			// remove timeout role
 			err = session.GuildMemberRoleRemove(mute.GuildId, mute.UserId, config.MuteMe.TimeoutRole)
 			if err != nil {
-				logging.Error(err, "muteRemovalWorker: failed to remove timeout role")
+				logger.Error().Err(err).Msg("failed to remove timeout role")
 				continue
 			}
 
@@ -61,7 +64,7 @@ func (mm *MuteMe) muteRemovalWorker(session *discordgo.Session) {
 			for _, role := range mute.RemovedRoles {
 				err = session.GuildMemberRoleAdd(mute.GuildId, mute.UserId, role)
 				if err != nil {
-					logging.Error(err, "muteRemovalWorker: failed to add removed user role")
+					logger.Error().Err(err).Msg("failed to add removed user role")
 					continue
 				}
 			}
@@ -69,7 +72,7 @@ func (mm *MuteMe) muteRemovalWorker(session *discordgo.Session) {
 			// delete from database
 			err = mute.Delete()
 			if err != nil {
-				logging.Error(err, "muteRemovalWorker: failed to delete UserMute entry from DB")
+				logger.Error().Err(err).Msg("failed to delete UserMute entry from DB")
 				continue
 			}
 		}
