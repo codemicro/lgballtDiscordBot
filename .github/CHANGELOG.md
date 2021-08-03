@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Fixed
 * Make edited PluralKit proxied messages show up in the action log
   * Previously, since webhook messages are classed as being sent by bot accounts, they would be indiscriminately ignored.
+## Removed
+* Functionality to react to PK proxied messages in bio components
 
 ## [4.8.8] - 2021-07-30
 ### Fixed
