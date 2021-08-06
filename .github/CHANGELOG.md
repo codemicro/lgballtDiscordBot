@@ -6,16 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
-## Added
+
+## [4.9.0] - 2021-08-06
+### Added
 * `<p>emojify` command
-## Changed
+### Changed
 * Switch to different logging system (from a homebrew, pretty bad system to [Zerolog](https://github.com/rs/zerolog) and [Lumberjack](https://github.com/natefinch/lumberjack))
 * `<p>avatar` no longer outputs tiny avatars, and instead will produce avatars at a maximum of 2048x2048 pixels.
 * Emoji commands now produce images from the correct Discord domain (`discord.com`, not `discordapp.com`)
-## Fixed
+### Fixed
 * Make edited PluralKit proxied messages show up in the action log
   * Previously, since webhook messages are classed as being sent by bot accounts, they would be indiscriminately ignored.
-## Removed
+### Removed
 * Functionality to react to PK proxied messages in bio components
 
 ## [4.8.8] - 2021-07-30
@@ -483,6 +485,7 @@ Now it compiles!
 * Initial release with `bio` component
 
 [Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...HEAD
+[4.9.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...v4.9.0
 [4.8.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...v4.8.8
 [4.8.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...v4.8.7
 [4.8.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.5...v4.8.6
