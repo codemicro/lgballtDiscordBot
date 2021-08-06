@@ -39,6 +39,17 @@ func Init(kit *route.Kit, runState *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
+		Name:        "emojify",
+		Help:        "Supplement your mighty words with emojis... because why not",
+		CommandText: []string{"emojify"},
+		Arguments: []route.Argument{
+			{Name: "content", Type: route.RemainingString},
+		},
+		Run:      comp.Emojify,
+		Category: meta.CategoryFun,
+	})
+
+	kit.AddCommand(&route.Command{
 		Name:        "Emoji",
 		Help:        "Get an enlarged version of a custom emoji",
 		CommandText: []string{"emoji"},
@@ -162,7 +173,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
-		Name: "Goroutine stacktrace",
+		Name:        "Goroutine stacktrace",
 		CommandText: []string{"goroutinestack"},
 		Restrictions: []route.CommandRestriction{func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
 			return message.Author.ID == config.OwnerId, nil

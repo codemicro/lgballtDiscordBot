@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+## Added
+* `<p>emojify` command
 ## Changed
 * Switch to different logging system (from a homebrew, pretty bad system to [Zerolog](https://github.com/rs/zerolog) and [Lumberjack](https://github.com/natefinch/lumberjack))
 * `<p>avatar` no longer outputs tiny avatars, and instead will produce avatars at a maximum of 2048x2048 pixels.
