@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.9.1] - 2021-08-06
+### Removed
+* Remove "fuck" and words containing "fuck" from the the emojify dataset
+
 ## [4.9.0] - 2021-08-06
 ### Added
 * `<p>emojify` command
@@ -485,6 +489,7 @@ Now it compiles!
 * Initial release with `bio` component
 
 [Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...HEAD
+[4.9.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...v4.9.0
 [4.8.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...v4.8.8
 [4.8.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.6...v4.8.7
