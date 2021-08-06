@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ## Changed
 * Switch to different logging system (from a homebrew, pretty bad system to [Zerolog](https://github.com/rs/zerolog) and [Lumberjack](https://github.com/natefinch/lumberjack))
+* `<p>avatar` no longer outputs tiny avatars, and instead will produce avatars at a maximum of 2048x2048 pixels.
+* Emoji commands now produce images from the correct Discord domain (`discord.com`, not `discordapp.com`)
 ## Fixed
 * Make edited PluralKit proxied messages show up in the action log
   * Previously, since webhook messages are classed as being sent by bot accounts, they would be indiscriminately ignored.

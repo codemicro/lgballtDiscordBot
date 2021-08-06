@@ -30,7 +30,7 @@ func (s *Misc) Avatar(ctx *route.MessageContext) error {
 	}
 
 	// send message
-	_, err = ctx.SendMessageString(ctx.Message.ChannelID, user.AvatarURL(""))
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, user.AvatarURL("2048"))
 	return err
 }
 
@@ -42,14 +42,14 @@ func (s *Misc) coreEmojiCommand(ctx *route.MessageContext, emoji string) error {
 		return err
 	}
 
-	emojiUrl := "https://cdn.discordapp.com/emojis/" + emojiID
+	var emojiURL string
 	if animated {
-		emojiUrl += ".gif"
+		emojiURL = discordgo.EndpointEmojiAnimated(emojiID)
 	} else {
-		emojiUrl += ".png"
+		emojiURL = discordgo.EndpointEmoji(emojiID)
 	}
 
-	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("ID: `%s`\n%s", emojiID, emojiUrl))
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("ID: `%s`\n%s", emojiID, emojiURL))
 	return err
 }
 
