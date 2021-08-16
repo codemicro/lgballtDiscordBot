@@ -35,6 +35,7 @@ type ListenerInfo struct {
 type VerificationIds struct {
 	InputChannel         string   `json:"inputChannel"`
 	OutputChannel        string   `json:"outputChannel"`
+	ArchiveChannel       string   `json:"archiveChannel"`
 	RoleId               string   `json:"assignRoleId"`
 	ModlogChannel        string   `json:"modlogChannel"`
 	ExcludedPronounRoles []string `json:"excludedPronounRoles"`

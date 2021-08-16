@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Remove explicit words and food emojis from emojify dataset
 * Change density of added emojis to emojify messages
   * This means that only 80% of opportunities to add an emoji to a word will be taken instead of the former 100%
+* Verification now outputs pending requests in a separate channel to processed requests to make it easier to see all pending verification requests
+  * This now means that `MessageLink` fields of `db.VerificationFail` may be blank when stored in the database
+  * Adds the `verificationIds.archiveChannel` config parameter
 
 ## [4.9.1] - 2021-08-06
 ### Removed

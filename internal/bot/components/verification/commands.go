@@ -53,9 +53,15 @@ func (*Verification) coreVerification(ctx *route.MessageContext, verificationTex
 	if found, err := failure.Get(); err != nil {
 		return err
 	} else if found {
+
+		var messageLink string
+		if failure.MessageLink != "" {
+			messageLink = " See " + failure.MessageLink
+		}
+
 		emb.Fields = append(emb.Fields, &discordgo.MessageEmbedField{
 			Name:   "⚠️ Warning",
-			Value:  fmt.Sprintf("This user has failed verification before. See %s", failure.MessageLink),
+			Value:  fmt.Sprintf("This user has failed verification before.%s", messageLink),
 			Inline: false,
 		})
 	}
