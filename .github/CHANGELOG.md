@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+### Changed
+* Remove explicit words and food emojis from emojify dataset
+* 
 
 ## [4.9.1] - 2021-08-06
 ### Removed
