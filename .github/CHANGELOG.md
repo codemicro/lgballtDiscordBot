@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.9.3] - 2021-08-16
+### Changed
+* Revert changes made to verification system
+
 ## [4.9.2] - 2021-08-16
 ### Changed
 * Remove explicit words and food emojis from emojify dataset
@@ -497,7 +501,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.2...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.3...HEAD
+[4.9.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.2...v4.9.3
 [4.9.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...v4.9.0

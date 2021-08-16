@@ -55,8 +55,6 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 		return nil
 	}
 
-	hashedUserID := hashString(userID)
-
 	// Depending on the reaction, we should do different things...
 	var actionTaken string
 	var actionEmoji string
@@ -121,12 +119,12 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 		// add verification failure
 		var vf db.VerificationFail
-		vf.UserId = hashedUserID
+		vf.UserId = hashString(userID)
 		found, err := vf.Get()
 		if err != nil {
 			return err
 		}
-		vf.MessageLink = "" // explicitly clear in the event that one already exists in the DB
+		vf.MessageLink = tools.MakeMessageLink(ctx.Reaction.GuildID, ctx.Reaction.ChannelID, ctx.Reaction.MessageID)
 		if found {
 			err = vf.Save()
 		} else {
@@ -150,32 +148,16 @@ func (*Verification) DecisionReaction(ctx *route.ReactionContext) error {
 
 	m.Embeds[0].Footer = nil
 
-	archivedMessage, err := ctx.Session.ChannelMessageSendComplex(config.VerificationIDs.ArchiveChannel, &discordgo.MessageSend{
-		Embed:           m.Embeds[0],
+	var x string
+	_, err = ctx.Session.ChannelMessageEditComplex(&discordgo.MessageEdit{
+		Content: &x,
+		Embed:   m.Embeds[0],
+		ID:      m.ID,
+		Channel: m.ChannelID,
 	})
 	if err != nil {
 		return err
 	}
 
-	// update verification failure in database
-	{
-		var vf db.VerificationFail
-		vf.UserId = hashedUserID
-		found, err := vf.Get()
-		if err != nil {
-			return err
-		}
-		// using ctx.Reaction.GuildID because sent messages like archivedMessage don't include a guild ID
-		vf.MessageLink = tools.MakeMessageLink(ctx.Reaction.GuildID, archivedMessage.ChannelID, archivedMessage.ID)
-		if found {
-			err = vf.Save()
-		} else {
-			err = vf.Create()
-		}
-		if err != nil {
-			return err
-		}
-	}
-	
-	return ctx.Session.ChannelMessageDelete(ctx.Reaction.ChannelID, m.ID)
+	return ctx.Session.MessageReactionsRemoveAll(ctx.Reaction.ChannelID, m.ID)
 }
