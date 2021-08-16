@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 (Dates are in YYYY-MM-DD format. This message is mainly for my own sake.)
 
 ## [Unreleased]
+
+## [4.9.2] - 2021-08-16
 ### Changed
 * Remove explicit words and food emojis from emojify dataset
 * Change density of added emojis to emojify messages
@@ -495,7 +497,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.2...HEAD
+[4.9.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.8...v4.9.0
 [4.8.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.8.7...v4.8.8
