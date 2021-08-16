@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Changed
 * Remove explicit words and food emojis from emojify dataset
-* 
+* Change density of added emojis to emojify messages
+  * This means that only 80% of opportunities to add an emoji to a word will be taken instead of the former 100%
 
 ## [4.9.1] - 2021-08-06
 ### Removed

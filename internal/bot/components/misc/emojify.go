@@ -45,7 +45,7 @@ var emojifyFilterCharsRegexp = regexp.MustCompile(`[^0-9a-zA-Z]`)
 
 func addEmojisToString(input string, density int) string {
 
-	makeRandomChoice := func() bool { return rand.Intn(100) >= density }
+	makeRandomChoice := func() bool { return rand.Intn(100) <= density }
 	isCommonWord := func(word string) bool {
 		for _, cw := range emojifyCommonWords {
 			if strings.EqualFold(cw, word) {
@@ -91,6 +91,6 @@ func addEmojisToString(input string, density int) string {
 func (m *Misc) Emojify(ctx *route.MessageContext) error {
 	// args: content
 	content := ctx.Arguments["content"].(string)
-	_, err := ctx.SendMessageString(ctx.Message.ChannelID, addEmojisToString(content, 1))
+	_, err := ctx.SendMessageString(ctx.Message.ChannelID, addEmojisToString(content, 80))
 	return err
 }
