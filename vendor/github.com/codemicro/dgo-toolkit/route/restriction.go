@@ -23,11 +23,11 @@ func isStringInSlice(needle string, haystack []string) (found bool) {
 func RestrictionByRole(roleIds ...string) CommandRestriction {
 	return func(_ *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
 		for _, roleId := range roleIds {
-			if !isStringInSlice(roleId, message.Member.Roles) {
-				return false, nil
+			if isStringInSlice(roleId, message.Member.Roles) {
+				return true, nil
 			}
 		}
-		return true, nil
+		return false, nil
 	}
 }
 

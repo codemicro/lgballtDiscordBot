@@ -16,7 +16,7 @@ github.com/cespare/xxhash/v2
 ## explicit
 github.com/codemicro/alib-go/mage/exmg
 github.com/codemicro/alib-go/mage/exsh
-# github.com/codemicro/dgo-toolkit v0.8.2
+# github.com/codemicro/dgo-toolkit v0.8.3
 ## explicit
 github.com/codemicro/dgo-toolkit/route
 # github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
