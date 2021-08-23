@@ -113,7 +113,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Name:         "Reset days since last incident",
 		Help:         "Reset the number of days since the last incident to zero",
 		CommandText:  []string{"incidents", "reset"},
-		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRoles...)},
 		Run:          comp.ResetSinceLastIncident,
 		Category:     meta.CategoryAdminTools,
 	})
@@ -122,7 +122,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 		Name:         "Days since last incident",
 		Help:         "Show the number of days since the last incident",
 		CommandText:  []string{"incidents"},
-		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRoles...)},
 		Run:          comp.SinceLastIncident,
 		Category:     meta.CategoryAdminTools,
 	})
@@ -130,7 +130,7 @@ func Init(kit *route.Kit, runState *state.State) error {
 	kit.AddCommand(&route.Command{
 		Name:         "Shut down bot",
 		CommandText:  []string{"shutdown"},
-		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRole)},
+		Restrictions: []route.CommandRestriction{route.RestrictionByRole(config.AdminRoles...)},
 		Run: func(ctx *route.MessageContext) error {
 			log.Info().Msgf("Shutting down by request of %s %s", ctx.Message.Author.ID, ctx.Message.Author.String())
 			_, _ = ctx.SendMessageString(ctx.Message.ChannelID, "***oh no what no A-[the earth stops rotating]***")

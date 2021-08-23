@@ -14,7 +14,7 @@ type Info struct {
 	DbFileName                 string           `json:"dbFileName"`
 	DebugMode                  bool             `json:"debug"`
 	Statuses                   []string         `json:"statuses"`
-	AdminRole                  string           `json:"adminRole"`
+	AdminRoles                 []string           `json:"adminRoles"`
 	VerificationIDs            VerificationIds  `json:"verificationIds"`
 	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`
@@ -66,7 +66,7 @@ var (
 	DbFileName                 string
 	Statuses                   []string
 	DebugMode                  bool
-	AdminRole                  string
+	AdminRoles                 []string
 	VerificationIDs            VerificationIds
 	RedditFeeds                []RedditFeedInfo
 	ChatChartChannelExclusions []string
@@ -97,7 +97,7 @@ func init() {
 	DbFileName = cfg.DbFileName
 	Statuses = cfg.Statuses
 	DebugMode = cfg.DebugMode
-	AdminRole = cfg.AdminRole
+	AdminRoles = cfg.AdminRoles
 	VerificationIDs = cfg.VerificationIDs
 	RedditFeeds = cfg.RedditFeeds
 	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions

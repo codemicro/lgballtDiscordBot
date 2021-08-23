@@ -41,7 +41,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "description", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run:      comp.Create,
 		Category: meta.CategoryMisc,
@@ -54,7 +54,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "tag", Type: route.String},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run:      comp.Delete,
 		Category: meta.CategoryMisc,

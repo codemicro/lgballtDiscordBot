@@ -20,9 +20,14 @@ func isStringInSlice(needle string, haystack []string) (found bool) {
 }
 
 // RestrictionByRole creates a CommandRestriction that requires the commanding guild member to have a given role ID
-func RestrictionByRole(roleId string) CommandRestriction {
+func RestrictionByRole(roleIds ...string) CommandRestriction {
 	return func(_ *discordgo.Session, message *discordgo.MessageCreate) (bool, error) {
-		return isStringInSlice(roleId, message.Member.Roles), nil
+		for _, roleId := range roleIds {
+			if !isStringInSlice(roleId, message.Member.Roles) {
+				return false, nil
+			}
+		}
+		return true, nil
 	}
 }
 

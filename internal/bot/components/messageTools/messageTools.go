@@ -22,7 +22,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "message", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run: comp.Send,
 		Category: meta.CategoryAdminTools,
@@ -37,7 +37,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "newContent", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run: comp.Edit,
 		Category: meta.CategoryAdminTools,

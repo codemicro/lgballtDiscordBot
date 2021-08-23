@@ -36,7 +36,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		CommandText: []string{"verifyf"},
 		Restrictions: []route.CommandRestriction{
 			route.RestrictionByChannel(config.VerificationIDs.InputChannel),
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Arguments: []route.Argument{
 			{Name: "messageLink", Type: route.URL},
@@ -66,7 +66,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "reason", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run:       comp.TrackBan,
 		Invisible: true,
@@ -81,7 +81,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "reason", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run:       comp.TrackKick,
 		Invisible: true,
@@ -93,7 +93,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 		Help:        "Kick all users that have no assigned roles and joined more than 7 days ago",
 		CommandText: []string{"purgeUnverified"},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run:      comp.PurgeUnverifiedMembers,
 		Category: meta.CategoryAdminTools,

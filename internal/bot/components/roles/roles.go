@@ -23,7 +23,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "roleName", Type: route.RemainingString},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run: comp.Track,
 		Category: meta.CategoryAdminTools,
@@ -38,7 +38,7 @@ func Init(kit *route.Kit, _ *state.State) error {
 			{Name: "emoji", Type: route.String},
 		},
 		Restrictions: []route.CommandRestriction{
-			route.RestrictionByRole(config.AdminRole),
+			route.RestrictionByRole(config.AdminRoles...),
 		},
 		Run: comp.Untrack,
 		Category: meta.CategoryAdminTools,
