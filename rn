@@ -1,3 +1,0 @@
-## [4.9.4] - 2021-08-23
-### Changed
-* Changed the `adminRole` config parameter to `adminRoles` and make it accept a `[]string`
