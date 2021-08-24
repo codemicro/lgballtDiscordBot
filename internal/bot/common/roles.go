@@ -24,3 +24,7 @@ func IsAdmin(user *discordgo.Member) bool {
 	}
 	return false
 }
+
+func IsOwner(userID string) bool {
+	return isStringInSlice(userID, config.OwnerIds)
+}

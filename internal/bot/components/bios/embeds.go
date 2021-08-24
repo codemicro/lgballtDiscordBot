@@ -21,6 +21,7 @@ type nameDriver interface {
 	Name() (string, error)
 	Avatar() (string, error)
 	Colour() (int, error)
+	AccountID() string
 
 	SysMemberId() string
 	HasMultiple() bool
@@ -31,15 +32,17 @@ type systemName struct {
 	memberId  string
 	colour    int
 	plurality *pluralityInfo
+	accountId string
 
 	member *pluralkit.Member
 	once   *sync.Once
 }
 
-func newSystemName(memberId string, info *pluralityInfo) *systemName {
+func newSystemName(memberId string, info *pluralityInfo, accountId string) *systemName {
 	return &systemName{
 		memberId:  memberId,
 		plurality: info,
+		accountId: accountId,
 	}
 }
 
@@ -97,6 +100,10 @@ func (sn *systemName) Colour() (int, error) {
 		return 0, err
 	}
 	return sn.colour, nil
+}
+
+func (sn *systemName) AccountID() string {
+	return sn.accountId
 }
 
 func (sn *systemName) SysMemberId() string {
@@ -203,6 +210,10 @@ func (an *accountName) Avatar() (string, error) {
 	return an.avatar, nil
 }
 
+func (an *accountName) AccountID() string {
+	return an.accountId
+}
+
 func (an *accountName) SysMemberId() string {
 	return ""
 }
@@ -269,6 +280,10 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string, isAdmin bo
 	embedTitle := fmt.Sprintf("%s's bio", name)
 	if isAdmin {
 		embedTitle += " 👑"
+	}
+
+	if common.IsOwner(nd.AccountID()) {
+		embedTitle += " 🖥️"
 	}
 
 	e := discordgo.MessageEmbed{

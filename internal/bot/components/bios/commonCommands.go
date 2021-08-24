@@ -195,7 +195,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 
 				var nd nameDriver
 				if bios[selectedNumber].SysMemberID != "" { // account bios will have a blank system member ID
-					nd = newSystemName(bios[selectedNumber].SysMemberID, plurality)
+					nd = newSystemName(bios[selectedNumber].SysMemberID, plurality, targetUserId)
 				} else {
 					nd = newAccountName(targetUserId, ctx.Message.GuildID, plurality, ctx.Session)
 				}

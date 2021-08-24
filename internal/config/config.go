@@ -18,7 +18,7 @@ type Info struct {
 	VerificationIDs            VerificationIds  `json:"verificationIds"`
 	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`
-	OwnerId                    string           `json:"ownerId"`
+	OwnerIds                   []string         `json:"ownerIds"`
 	PkApi                      PkApiInfo        `json:"pkApi"`
 	Listeners                  ListenerInfo     `json:"listeners"`
 	MuteMe                     MuteMeInfo       `json:"muteMe"`
@@ -70,7 +70,7 @@ var (
 	VerificationIDs            VerificationIds
 	RedditFeeds                []RedditFeedInfo
 	ChatChartChannelExclusions []string
-	OwnerId                    string
+	OwnerIds                   []string
 	PkApi                      PkApiInfo
 	Listeners                  ListenerInfo
 	MuteMe                     MuteMeInfo
@@ -101,7 +101,7 @@ func init() {
 	VerificationIDs = cfg.VerificationIDs
 	RedditFeeds = cfg.RedditFeeds
 	ChatChartChannelExclusions = cfg.ChatChartChannelExclusions
-	OwnerId = cfg.OwnerId
+	OwnerIds = cfg.OwnerIds
 	PkApi = cfg.PkApi
 	Listeners = cfg.Listeners
 	MuteMe = cfg.MuteMe

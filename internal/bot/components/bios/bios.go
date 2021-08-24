@@ -86,7 +86,7 @@ func init() {
 
 	err = generateFields(syshelpMarkdown, struct {
 		Ping string
-	}{Ping: tools.MakePing(config.OwnerId)}, systemHelpEmbed)
+	}{Ping: tools.MakePing("289130374204751873")}, systemHelpEmbed)
 	if err != nil {
 		panic(err)
 	}

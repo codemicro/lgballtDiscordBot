@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [4.9.6] - 2021-08-24
 ### Changed
 * Server admins now have a crown next to their name on their bios
+* Bot owners now have a computer next to their name on their bios
+  * This also removes the `ownerId` config key and replaces it with `ownerIds`
 
 ## [4.9.5] - 2021-08-23
 ### Changed
@@ -513,7 +515,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.5...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.6...HEAD
+[4.9.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.5...v4.9.6
 [4.9.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.4...v4.9.5
 [4.9.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.3...v4.9.4
 [4.9.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.2...v4.9.3

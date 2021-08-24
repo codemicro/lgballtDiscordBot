@@ -48,7 +48,7 @@ func (b *Bios) PaginationReaction(ctx *route.ReactionContext) error {
 
 	var nd nameDriver
 	if tracked.bios[newBioIndex].SysMemberID != "" { // account bios will have a blank system member ID
-		nd = newSystemName(tracked.bios[newBioIndex].SysMemberID, plurality)
+		nd = newSystemName(tracked.bios[newBioIndex].SysMemberID, plurality, tracked.accountId)
 	} else {
 		nd = newAccountName(tracked.accountId, ctx.Reaction.GuildID, plurality, ctx.Session)
 	}
