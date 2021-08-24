@@ -226,7 +226,7 @@ func (an *accountName) CurrentAndTotalCount() (int, int) {
 }
 
 // formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*discordgo.MessageEmbed, error) {
+func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string, isAdmin bool) (*discordgo.MessageEmbed, error) {
 
 	name, err := nd.Name()
 	var avatar string
@@ -266,8 +266,13 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string) (*discordg
 		}
 	}
 
+	embedTitle := fmt.Sprintf("%s's bio", name)
+	if isAdmin {
+		embedTitle += " 👑"
+	}
+
 	e := discordgo.MessageEmbed{
-		Title:     fmt.Sprintf("%s's bio", name),
+		Title:     embedTitle,
 		Footer:    &discordgo.MessageEmbedFooter{Text: footerText},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: avatar},
 		Fields:    fields,

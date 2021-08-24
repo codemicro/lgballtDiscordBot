@@ -14,7 +14,7 @@ type Info struct {
 	DbFileName                 string           `json:"dbFileName"`
 	DebugMode                  bool             `json:"debug"`
 	Statuses                   []string         `json:"statuses"`
-	AdminRoles                 []string           `json:"adminRoles"`
+	AdminRoles                 []string         `json:"adminRoles"`
 	VerificationIDs            VerificationIds  `json:"verificationIds"`
 	RedditFeeds                []RedditFeedInfo `json:"redditFeeds"`
 	ChatChartChannelExclusions []string         `json:"ccExclusions"`

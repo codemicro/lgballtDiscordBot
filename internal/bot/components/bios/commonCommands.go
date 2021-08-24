@@ -28,9 +28,16 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		return err
 	}
 
+	guildMember, err := ctx.Session.GuildMember(ctx.Message.GuildID, targetUserId)
+	if err != nil {
+		return err
+	}
+
+	isAdminAccount := common.IsAdmin(guildMember)
+
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session), bios[0].BioData)
+		e, err := b.formBioEmbed(newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session), bios[0].BioData, isAdminAccount)
 		if err != nil {
 			return err
 		}
@@ -181,6 +188,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					timeoutAt:      time.Now().Add(bioTimeoutDuration),
 					requestingUser: ctx.Message.Author.ID,
 					current:        selectedNumber,
+					isAdmin:        isAdminAccount,
 				}
 
 				// send first bio
@@ -193,7 +201,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 				}
 
 				var e *discordgo.MessageEmbed
-				e, err = b.formBioEmbed(nd, bios[selectedNumber].BioData)
+				e, err = b.formBioEmbed(nd, bios[selectedNumber].BioData, isAdminAccount)
 				if err != nil {
 					return
 				}

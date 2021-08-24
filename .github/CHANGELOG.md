@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.9.6] - 2021-08-24
+### Changed
+* Server admins now have a crown next to their name on their bios
+
 ## [4.9.5] - 2021-08-23
 ### Changed
 * Update `dgo-toolkit` to fix a restrictions bug

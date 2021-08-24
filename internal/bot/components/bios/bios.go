@@ -31,6 +31,7 @@ type trackedEmbed struct {
 	bios           []db.UserBio
 	timeoutAt      time.Time
 	requestingUser string
+	isAdmin        bool
 }
 
 const (

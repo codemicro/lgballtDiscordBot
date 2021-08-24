@@ -53,7 +53,7 @@ func (b *Bios) PaginationReaction(ctx *route.ReactionContext) error {
 		nd = newAccountName(tracked.accountId, ctx.Reaction.GuildID, plurality, ctx.Session)
 	}
 
-	newEmbed, err := b.formBioEmbed(nd, tracked.bios[newBioIndex].BioData)
+	newEmbed, err := b.formBioEmbed(nd, tracked.bios[newBioIndex].BioData, tracked.isAdmin)
 	if err != nil {
 		return err
 	}
