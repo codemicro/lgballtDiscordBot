@@ -38,6 +38,29 @@ func (b *Bios) SystemClearField(ctx *route.MessageContext) error {
 	return b.clearBioField(bdt, field, ctx)
 }
 
+func (b *Bios) SystemSetImage(ctx *route.MessageContext) error {
+
+	memberId := ctx.Arguments["memberId"].(string)
+	imageURL := ctx.Arguments["imageURL"].(string)
+
+	bdt := new(db.UserBio)
+	bdt.UserId = ctx.Message.Author.ID
+	bdt.SysMemberID = memberId
+
+	return b.setBioImage(bdt, imageURL, true, ctx)
+}
+
+func (b *Bios) SystemClearImage(ctx *route.MessageContext) error {
+
+	memberId := ctx.Arguments["memberId"].(string)
+
+	bdt := new(db.UserBio)
+	bdt.UserId = ctx.Message.Author.ID
+	bdt.SysMemberID = memberId
+
+	return b.clearBioImage(bdt, ctx)
+}
+
 func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 
 	memberId := ctx.Arguments["memberId"].(string)

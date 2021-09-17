@@ -199,6 +199,57 @@ func Init(kit *route.Kit, _ *state.State) error {
 	})
 
 	kit.AddCommand(&route.Command{
+		Name:        "Bios set image (systems)",
+		Help:        "Set the image attached to your bio",
+		CommandText: []string{"bio", "setimg"},
+		Arguments: []route.Argument{
+			{Name: "memberId", Type: pluralkitMemberIdType{}},
+			{Name: "imageURL", Type: route.URL, Default: func(session *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error) {
+				return "", nil
+			}},
+		},
+		Run:              comp.SystemSetImage,
+		AllowOverloading: true,
+		Category:         meta.CategoryBios,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Bios set image",
+		Help:        "Set the image attached to your bio",
+		CommandText: []string{"bio", "setimg"},
+		Arguments: []route.Argument{
+			{Name: "imageURL", Type: route.URL, Default: func(session *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error) {
+				return "", nil
+			}},
+		},
+		Run:              comp.SingletSetImage,
+		AllowOverloading: true,
+		Category:         meta.CategoryBios,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:        "Bios clear image (systems)",
+		Help:        "Clear the image attached to a system member's bio",
+		CommandText: []string{"bio", "clearimg"},
+		Arguments: []route.Argument{
+			{Name: "memberId", Type: pluralkitMemberIdType{}},
+		},
+		Run:              comp.SystemClearImage,
+		AllowOverloading: true,
+		Category:         meta.CategoryBios,
+	})
+
+	kit.AddCommand(&route.Command{
+		Name:             "Bios clear image",
+		Help:             "Clear the image attached to your bio",
+		CommandText:      []string{"bio", "clearimg"},
+		Arguments:        []route.Argument{},
+		Run:              comp.SingletClearImage,
+		AllowOverloading: true,
+		Category:         meta.CategoryBios,
+	})
+
+	kit.AddCommand(&route.Command{
 		Name:        "Bios import PluralKit member (systems)",
 		Help:        "Import a PluralKit system member's profile to use with a bio",
 		CommandText: []string{"bio", "import"},

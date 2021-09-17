@@ -37,7 +37,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session), bios[0].BioData, isAdminAccount)
+		e, err := b.formBioEmbed(newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session), bios[0], isAdminAccount)
 		if err != nil {
 			return err
 		}
@@ -201,7 +201,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 				}
 
 				var e *discordgo.MessageEmbed
-				e, err = b.formBioEmbed(nd, bios[selectedNumber].BioData, isAdminAccount)
+				e, err = b.formBioEmbed(nd, bios[selectedNumber], isAdminAccount)
 				if err != nil {
 					return
 				}

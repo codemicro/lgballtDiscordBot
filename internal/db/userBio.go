@@ -10,8 +10,9 @@ type UserBio struct {
 	UserId      string `gorm:"primarykey"`
 	SysMemberID string `gorm:"primarykey"`
 	SystemID    string
-	RawBioData  string `json:"-"`
+	RawBioData  string            `json:"-"`
 	BioData     map[string]string `gorm:"-"`
+	ImageURL    string
 }
 
 func marshalBioData(raw map[string]string) (string, error) {
@@ -52,8 +53,9 @@ func (bio *UserBio) Save() error {
 
 func (bio *UserBio) SaveRaw() error {
 	return Conn.Exec(
-		"UPDATE `user_bios` SET `raw_bio_data` = ? WHERE (`user_bios`.`user_id`,`user_bios`.`sys_member_id`) IN (VALUES(?,?))",
+		"UPDATE `user_bios` SET `raw_bio_data` = ?, `image_url` = ? WHERE (`user_bios`.`user_id`,`user_bios`.`sys_member_id`) IN (VALUES(?,?))",
 		bio.RawBioData,
+		bio.ImageURL,
 		bio.UserId,
 		bio.SysMemberID,
 	).Error

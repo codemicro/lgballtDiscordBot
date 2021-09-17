@@ -30,3 +30,21 @@ func (b *Bios) SingletClearField(ctx *route.MessageContext) error {
 
 	return b.clearBioField(bdt, field, ctx)
 }
+
+func (b *Bios) SingletSetImage(ctx *route.MessageContext) error {
+
+	imageURL := ctx.Arguments["imageURL"].(string)
+
+	bdt := new(db.UserBio)
+	bdt.UserId = ctx.Message.Author.ID
+
+	return b.setBioImage(bdt, imageURL, false, ctx)
+}
+
+func (b *Bios) SingletClearImage(ctx *route.MessageContext) error {
+
+	bdt := new(db.UserBio)
+	bdt.UserId = ctx.Message.Author.ID
+
+	return b.clearBioImage(bdt, ctx)
+}

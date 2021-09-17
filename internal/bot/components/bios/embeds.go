@@ -6,6 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
+	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	"github.com/rs/zerolog/log"
 	"strconv"
@@ -184,7 +185,6 @@ func (an *accountName) fetchInformation() error {
 					}
 				}
 
-
 				if role == nil {
 					return
 				}
@@ -237,7 +237,9 @@ func (an *accountName) CurrentAndTotalCount() (int, int) {
 }
 
 // formBioEmbed creates an embed object based on a user's bio data
-func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string, isAdmin bool) (*discordgo.MessageEmbed, error) {
+func (b *Bios) formBioEmbed(nd nameDriver, bio db.UserBio, isAdmin bool) (*discordgo.MessageEmbed, error) {
+
+	bioData := bio.BioData
 
 	name, err := nd.Name()
 	var avatar string
@@ -286,12 +288,20 @@ func (b *Bios) formBioEmbed(nd nameDriver, bioData map[string]string, isAdmin bo
 		embedTitle += " 🖥️"
 	}
 
+	var embedImage *discordgo.MessageEmbedImage
+	if bio.ImageURL != "" {
+		embedImage = &discordgo.MessageEmbedImage{
+			URL:      bio.ImageURL,
+		}
+	}
+
 	e := discordgo.MessageEmbed{
 		Title:     embedTitle,
 		Footer:    &discordgo.MessageEmbedFooter{Text: footerText},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{URL: avatar},
 		Fields:    fields,
 		Color:     colour,
+		Image:     embedImage,
 	}
 
 	return &e, nil
