@@ -3,11 +3,26 @@ package db
 import (
 	"errors"
 	"gorm.io/gorm"
+	"sort"
 )
 
 type ToneTag struct {
 	Shorthand string `gorm:"primarykey"`
 	Description string
+}
+
+type ToneTagSlice []ToneTag
+
+func (ts ToneTagSlice) Less(i, j int) bool {
+	return ts[i].Shorthand < ts[j].Shorthand
+}
+
+func (ts ToneTagSlice) Swap(i, j int) {
+	ts[i], ts[j] = ts[j], ts[i]
+}
+
+func (ts ToneTagSlice) Len() int {
+	return len(ts)
 }
 
 func (t *ToneTag) Get() (bool, error) {
@@ -34,11 +49,12 @@ func (t *ToneTag) Delete() error {
 	return Conn.Where(t).Delete(t).Error
 }
 
-func GetAllToneTags() ([]ToneTag, error) {
-	var all []ToneTag
+func GetAllToneTags() (ToneTagSlice, error) {
+	var all ToneTagSlice
 	err := Conn.Where(&ToneTag{}).Find(&all).Error
 	if err != nil {
 		return nil, err
 	}
+	sort.Sort(all)
 	return all, nil
 }
