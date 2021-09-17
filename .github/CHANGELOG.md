@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.10.0] - 2021-09-17
 ### Added
 * The capability to add images to bios
 ### Changed
@@ -517,7 +519,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.6...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.10.0...HEAD
+[4.10.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.6...v.10.0
 [4.9.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.5...v4.9.6
 [4.9.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.4...v4.9.5
 [4.9.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.3...v4.9.4
