@@ -1,6 +1,8 @@
 # github.com/PuerkitoBio/goquery v1.6.0
 ## explicit
 github.com/PuerkitoBio/goquery
+# github.com/andybalholm/brotli v1.0.2
+github.com/andybalholm/brotli
 # github.com/andybalholm/cascadia v1.1.0
 github.com/andybalholm/cascadia
 # github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
@@ -19,6 +21,19 @@ github.com/codemicro/alib-go/mage/exsh
 # github.com/codemicro/dgo-toolkit v0.8.3
 ## explicit
 github.com/codemicro/dgo-toolkit/route
+# github.com/gofiber/fiber/v2 v2.18.0
+## explicit
+github.com/gofiber/fiber/v2
+github.com/gofiber/fiber/v2/internal/bytebufferpool
+github.com/gofiber/fiber/v2/internal/colorable
+github.com/gofiber/fiber/v2/internal/encoding/ascii
+github.com/gofiber/fiber/v2/internal/encoding/json
+github.com/gofiber/fiber/v2/internal/isatty
+github.com/gofiber/fiber/v2/internal/schema
+github.com/gofiber/fiber/v2/internal/storage/memory
+github.com/gofiber/fiber/v2/internal/uuid
+github.com/gofiber/fiber/v2/middleware/session
+github.com/gofiber/fiber/v2/utils
 # github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 ## explicit
 github.com/golang/freetype
@@ -45,6 +60,10 @@ github.com/jinzhu/inflection
 github.com/jinzhu/now
 # github.com/json-iterator/go v1.1.11
 github.com/json-iterator/go
+# github.com/klauspost/compress v1.13.4
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/zlib
 # github.com/magefile/mage v1.11.0
 ## explicit
 github.com/magefile/mage/mg
@@ -96,14 +115,22 @@ github.com/rs/zerolog
 github.com/rs/zerolog/internal/cbor
 github.com/rs/zerolog/internal/json
 github.com/rs/zerolog/log
+# github.com/valyala/bytebufferpool v1.0.0
+github.com/valyala/bytebufferpool
+# github.com/valyala/fasthttp v1.29.0
+github.com/valyala/fasthttp
+github.com/valyala/fasthttp/fasthttputil
+github.com/valyala/fasthttp/reuseport
+github.com/valyala/fasthttp/stackless
+# github.com/valyala/tcplisten v1.0.0
+github.com/valyala/tcplisten
 # github.com/wcharczuk/go-chart/v2 v2.1.0
 ## explicit
 github.com/wcharczuk/go-chart/v2
 github.com/wcharczuk/go-chart/v2/drawing
 github.com/wcharczuk/go-chart/v2/matrix
 github.com/wcharczuk/go-chart/v2/roboto
-# golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392
-## explicit
+# golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/poly1305
@@ -114,16 +141,22 @@ golang.org/x/image/draw
 golang.org/x/image/font
 golang.org/x/image/math/f64
 golang.org/x/image/math/fixed
-# golang.org/x/net v0.0.0-20201021035429-f5854403a974
+# golang.org/x/net v0.0.0-20210510120150-4163338589ed
+golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
+# golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
+## explicit
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
 # golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.3
+# golang.org/x/text v0.3.6
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
@@ -141,6 +174,14 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
+# google.golang.org/appengine v1.6.6
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch
 # google.golang.org/protobuf v1.26.0-rc.1
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire

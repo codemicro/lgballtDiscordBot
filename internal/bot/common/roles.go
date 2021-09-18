@@ -1,7 +1,6 @@
 package common
 
 import (
-	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"strings"
 )
@@ -16,9 +15,9 @@ func isStringInSlice(needle string, haystack []string) (found bool) {
 	return
 }
 
-func IsAdmin(user *discordgo.Member) bool {
+func IsAdmin(userRoles []string) bool {
 	for _, roleId := range config.AdminRoles {
-		if isStringInSlice(roleId, user.Roles) {
+		if isStringInSlice(roleId, userRoles) {
 			return true
 		}
 	}

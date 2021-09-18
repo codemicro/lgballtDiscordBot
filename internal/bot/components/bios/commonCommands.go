@@ -33,7 +33,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		return err
 	}
 
-	isAdminAccount := common.IsAdmin(guildMember)
+	isAdminAccount := common.IsAdmin(guildMember.Roles)
 
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed

@@ -9,6 +9,7 @@ import (
 const configFileName = "botConfig.json"
 
 type Info struct {
+	MainGuildID                string           `json:"mainGuildID"`
 	Token                      string           `json:"token"`
 	Prefix                     string           `json:"prefix"`
 	DbFileName                 string           `json:"dbFileName"`
@@ -25,6 +26,13 @@ type Info struct {
 	BioFields                  []string         `json:"bioFields"`
 	ActionLogChannel           string           `json:"actionLogChannel"`
 	PrometheusAddress          string           `json:"prometheusAddress"`
+	AdminWebsiteAddress        string           `json:"adminWebsiteAddress"`
+	AdminSite                  AdminInfo        `json:"adminSite"`
+}
+
+type AdminInfo struct {
+	ServeAddress string `json:"serveAddress"`
+	VisibleURL   string `json:"visibleURL"`
 }
 
 type ListenerInfo struct {
@@ -61,6 +69,7 @@ type MuteMeInfo struct {
 }
 
 var (
+	MainGuildID                string
 	Token                      string
 	Prefix                     string
 	DbFileName                 string
@@ -77,6 +86,7 @@ var (
 	BioFields                  []string
 	ActionLogChannel           string
 	PrometheusAddress          string
+	AdminSite                  AdminInfo
 )
 
 func init() {
@@ -92,6 +102,7 @@ func init() {
 		panic(fmt.Sprintf("Failed to parse %s: %v", configFileName, err))
 	}
 
+	MainGuildID = cfg.MainGuildID
 	Token = cfg.Token
 	Prefix = cfg.Prefix
 	DbFileName = cfg.DbFileName
@@ -108,6 +119,7 @@ func init() {
 	BioFields = cfg.BioFields
 	ActionLogChannel = cfg.ActionLogChannel
 	PrometheusAddress = cfg.PrometheusAddress
+	AdminSite = cfg.AdminSite
 
 	if PkApi.ApiUrl[len(PkApi.ApiUrl)-1] == '/' {
 		PkApi.ApiUrl = PkApi.ApiUrl[:len(PkApi.ApiUrl)-1]

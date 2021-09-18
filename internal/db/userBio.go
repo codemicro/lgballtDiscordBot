@@ -83,9 +83,9 @@ func (bio *UserBio) Delete() error {
 	).Error
 }
 
-func GetBiosForAccount(uid string) ([]UserBio, error) {
+func getBiosWhereQuery(query UserBio) ([]UserBio, error) {
 	var ubs []UserBio
-	err := Conn.Where(UserBio{UserId: uid}).Find(&ubs).Error
+	err := Conn.Where(query).Find(&ubs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -98,4 +98,16 @@ func GetBiosForAccount(uid string) ([]UserBio, error) {
 	}
 
 	return ubs, nil
+}
+
+func GetBiosForAccount(uid string) ([]UserBio, error) {
+	return getBiosWhereQuery(UserBio{UserId: uid})
+}
+
+func GetBiosForSystem(systemID string) ([]UserBio, error) {
+	return getBiosWhereQuery(UserBio{SystemID: systemID})
+}
+
+func GetBiosForMember(memberID string) ([]UserBio, error) {
+	return getBiosWhereQuery(UserBio{SysMemberID: memberID})
 }

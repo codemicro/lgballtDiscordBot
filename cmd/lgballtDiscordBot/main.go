@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/adminSite"
 	"github.com/codemicro/lgballtDiscordBot/internal/analytics"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
@@ -41,6 +42,12 @@ func main() {
 	err = analytics.Start(runState)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to start analytics service")
+		os.Exit(1)
+	}
+
+	err = adminSite.Start(runState)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to start admin site service")
 		os.Exit(1)
 	}
 
