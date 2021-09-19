@@ -1,17 +1,39 @@
+{% import "github.com/codemicro/lgballtDiscordBot/internal/db" %}
+
 {% code
 type BioSearchPage struct {
     BasePage
+    ShowSearchResults bool
+    SearchResults []db.UserBio
 }
 %}
 
 {% func (p *BioSearchPage) Body() %}
 <div>
 
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search query (user ID/system ID/system member ID" aria-label="Search query" aria-describedby="basic-addon2">
-        <span class="input-group-text" id="basic-addon2"><button type="button" class="btn btn-primary">Search</button></span>
-    </div>
+    <form action="">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="q" placeholder="Search query (user ID/system ID/system member ID)" aria-label="Search query">
+            <input type="submit" class="input-group-text btn btn-primary" value="Search">
+        </div>
+    </form>
 
-    <p>lolololol</p>
+    {% if p.ShowSearchResults %}
+
+        <p>Found {%d len(p.SearchResults) %} results</p>
+
+        {% for _, result := range p.SearchResults %}
+            <div class="search-result">
+                <a href="{%s= ViewURL(result) %}">User ID: {%s result.UserId %}
+                    {% if result.SysMemberID != "" %}
+                        - System member ID: {%s result.SysMemberID %} - System ID: {%s result.SystemID %}
+                    {% endif %}
+                </a>
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
 </div>
 {% endfunc %}

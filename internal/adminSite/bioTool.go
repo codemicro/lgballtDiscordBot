@@ -5,14 +5,12 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/gofiber/fiber/v2"
-	"net/url"
-	"strconv"
 	"strings"
 )
 
 func (w *webApp) bioUIDSearch(ctx *fiber.Ctx) error {
 
-	var resp strings.Builder
+	page := &templates.BioSearchPage{}
 
 	searchQuery := ctx.Query("q")
 	if searchQuery != "" {
@@ -33,38 +31,12 @@ func (w *webApp) bioUIDSearch(ctx *fiber.Ctx) error {
 		resultsList := append(biosByUser, biosByMember...)
 		resultsList = append(resultsList, biosBySystem...)
 
-		resp.WriteString("<p>You queried: ")
-		resp.WriteString(searchQuery)
-		resp.WriteString("</p><br>")
+		page.ShowSearchResults = true
+		page.SearchResults = resultsList
 
-		if len(resultsList) != 0 {
-			resp.WriteString("Found ")
-			resp.WriteString(strconv.Itoa(len(resultsList)))
-			resp.WriteString(" results<Br>")
-			for _, res := range resultsList {
-
-				viewURL := fmt.Sprintf("/bio/view?user=%s", url.PathEscape(res.UserId))
-
-				if res.SysMemberID != "" {
-					viewURL += "&member=" + url.PathEscape(res.SysMemberID)
-				}
-
-				resp.WriteString("<a href='")
-				resp.WriteString(viewURL)
-				resp.WriteString("'>")
-				resp.WriteString(res.UserId)
-				resp.WriteString(" - ")
-				resp.WriteString(res.SysMemberID)
-				resp.WriteString("</a><br>")
-			}
-		} else {
-			resp.WriteString("not found :(")
-		}
 	}
 
-	resp.WriteString("<br><form action=''>User/System/Member ID: <input type='text' name='q'><br><input type='submit'></form>")
-
-	return ctx.Type("html").SendString(templates.RenderPage(&templates.BioSearchPage{}))
+	return ctx.Type("html").SendString(templates.RenderPage(page))
 }
 
 func (w *webApp) bioView(ctx *fiber.Ctx) error {

@@ -3,6 +3,8 @@
 
 package templates
 
+import "github.com/codemicro/lgballtDiscordBot/internal/db"
+
 import (
 	qtio422016 "io"
 
@@ -16,18 +18,60 @@ var (
 
 type BioSearchPage struct {
 	BasePage
+	ShowSearchResults bool
+	SearchResults     []db.UserBio
 }
 
 func (p *BioSearchPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <div>
 
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search query (user ID/system ID/system member ID" aria-label="Search query" aria-describedby="basic-addon2">
-        <span class="input-group-text" id="basic-addon2"><button type="button" class="btn btn-primary">Search</button></span>
-    </div>
+    <form action="">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="q" placeholder="Search query (user ID/system ID/system member ID)" aria-label="Search query">
+            <input type="submit" class="input-group-text btn btn-primary" value="Search">
+        </div>
+    </form>
 
-    <p>lolololol</p>
+    `)
+	if p.ShowSearchResults {
+		qw422016.N().S(`
+
+        <p>Found `)
+		qw422016.N().D(len(p.SearchResults))
+		qw422016.N().S(` results</p>
+
+        `)
+		for _, result := range p.SearchResults {
+			qw422016.N().S(`
+            <div class="search-result">
+                <a href="`)
+			qw422016.N().S(ViewURL(result))
+			qw422016.N().S(`">User ID: `)
+			qw422016.E().S(result.UserId)
+			qw422016.N().S(`
+                    `)
+			if result.SysMemberID != "" {
+				qw422016.N().S(`
+                        - System member ID: `)
+				qw422016.E().S(result.SysMemberID)
+				qw422016.N().S(` - System ID: `)
+				qw422016.E().S(result.SystemID)
+				qw422016.N().S(`
+                    `)
+			}
+			qw422016.N().S(`
+                </a>
+            </div>
+
+        `)
+		}
+		qw422016.N().S(`
+
+    `)
+	}
+	qw422016.N().S(`
+
 </div>
 `)
 }

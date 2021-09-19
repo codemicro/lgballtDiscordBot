@@ -34,7 +34,7 @@ func (w *webApp) index(ctx *fiber.Ctx) error {
 	oauthURL := oauthConf.AuthCodeURL(
 		state,
 		oauth2.SetAuthURLParam("redirect_uri", redirectURI),
-		oauth2.SetAuthURLParam("prompt", "consent"),
+		oauth2.SetAuthURLParam("prompt", "none"),
 	)
 
 	ctx.Set(fiber.HeaderCacheControl, "no-store")
