@@ -33,6 +33,8 @@ type Info struct {
 type AdminInfo struct {
 	ServeAddress string `json:"serveAddress"`
 	VisibleURL   string `json:"visibleURL"`
+	ClientID     string `json:"clientID"`
+	ClientSecret string `json:"clientSecret"`
 }
 
 type ListenerInfo struct {

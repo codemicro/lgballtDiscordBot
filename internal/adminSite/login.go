@@ -2,6 +2,7 @@ package adminSite
 
 import (
 	"context"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/gofiber/fiber/v2"
@@ -9,8 +10,8 @@ import (
 )
 
 var oauthConf = &oauth2.Config{
-	ClientID:     "782596212338458654",
-	ClientSecret: "srVPTE_rf_pJoyDqhtQ3mymF5_p5VoVo", // TODO: GET THIS ***THE FUCK*** OUTTA HERE
+	ClientID:     config.AdminSite.ClientID,
+	ClientSecret: config.AdminSite.ClientSecret,
 	Scopes:       []string{"guilds", "identify"},
 	Endpoint: oauth2.Endpoint{
 		AuthURL:  "https://discord.com/api/oauth2/authorize",
@@ -18,7 +19,7 @@ var oauthConf = &oauth2.Config{
 	},
 }
 
-var redirectURI = "http://127.0.0.1:8081/auth/inbound"
+var redirectURI = fmt.Sprintf("%s/auth/inbound", config.AdminSite.VisibleURL)
 
 const stateKey = "oauth2.state"
 const requestCodeKey = "oauth2.code"
