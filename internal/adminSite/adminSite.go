@@ -110,19 +110,7 @@ func setupWebApp(app *fiber.App) {
 			return ctx.Redirect("/")
 		}
 
-		return ctx.Next()
-	})
-
-	app.Get("/services", wa.serviceListing)
-
-	app.Use(func(ctx *fiber.Ctx) error {
-		// user must be admin
-
-		sess, err := wa.session.Get(ctx)
-		if err != nil {
-			return err
-		}
-
+		sess := getSession(ctx)
 		var guildRoles []string
 		{
 			gri := sess.Get(guildRolesKey)
@@ -132,12 +120,24 @@ func setupWebApp(app *fiber.App) {
 			guildRoles = gri.([]string)
 		}
 
-		if !common.IsAdmin(guildRoles) {
+		if common.IsAdmin(guildRoles) {
+			auth.IsAdmin = true
+		}
+
+		return ctx.Next()
+	})
+
+	app.Get("/services", wa.serviceListing)
+
+	app.Use(func(ctx *fiber.Ctx) error {
+		// user must be admin
+
+		auth := getAuth(ctx)
+
+		if !auth.IsAdmin {
 			return fiber.ErrForbidden
 		}
 
-		ctx.Locals("auth").(*auth).IsAdmin = true
-		
 		return ctx.Next()
 	})
 

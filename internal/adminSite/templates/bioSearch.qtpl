@@ -1,0 +1,17 @@
+{% code
+type BioSearchPage struct {
+    BasePage
+}
+%}
+
+{% func (p *BioSearchPage) Body() %}
+<div>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search query (user ID/system ID/system member ID" aria-label="Search query" aria-describedby="basic-addon2">
+        <span class="input-group-text" id="basic-addon2"><button type="button" class="btn btn-primary">Search</button></span>
+    </div>
+
+    <p>lolololol</p>
+</div>
+{% endfunc %}

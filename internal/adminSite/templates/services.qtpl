@@ -1,0 +1,24 @@
+{% code
+
+type ActionButton struct {
+    Title string
+    Location string
+}
+
+type ServicesPage struct {
+    BasePage
+    Name string
+    Actions []ActionButton
+}
+%}
+
+{% func (p *ServicesPage) Body() %}
+<h2>Hello {%s p.Name %}!</h2>
+<div>
+    <p>Click a button to go to that service</p>
+
+    {% for _, action := range p.Actions %}
+        <a href="{%s= action.Location %}" class="btn btn-primary">{%s= action.Title %}</a>
+    {% endfor %}
+</div>
+{% endfunc %}

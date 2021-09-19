@@ -64,6 +64,7 @@ func InstallDeps() error {
 
 	mg.Deps(VendorDeps)
 	mg.Deps(EnsureGocloc)
+	mg.Deps(EnsureQTC)
 
 	return nil
 }
@@ -91,6 +92,25 @@ func EnsureGocloc() error {
 	} else {
 		if mg.Verbose() {
 			fmt.Fprintln(os.Stderr, "Skipping gocloc install (found in PATH)")
+		}
+	}
+
+	return nil
+}
+
+func EnsureQTC() error {
+	if !exsh.IsCmdAvail("qtc") {
+		if err := sh.RunWith(map[string]string{"GO111MODULE": "off"}, "go", "get", "-u", "github.com/valyala/quicktemplate/qtc"); err != nil {
+			return err
+		}
+
+		if !exsh.IsCmdAvail("qtc") {
+			return errors.New("qtc was installed, but cannot be found: is GOPATH/bin on PATH?")
+		}
+
+	} else {
+		if mg.Verbose() {
+			fmt.Fprintln(os.Stderr, "Skipping qtc install (found in PATH)")
 		}
 	}
 
@@ -130,6 +150,10 @@ func PreBuild() error {
 		return errors.New("gocloc must be installed on your PATH - run `mage installDeps` or see https://github.com/hhatto/gocloc")
 	}
 
+	if !exsh.IsCmdAvail("qtc") {
+		return errors.New("qtc must be installed on your PATH - run `mage installDeps` or see https://github.com/valyala/quicktemplate")
+	}
+
 	{
 		// gocloc --output-type=json --not-match-d=vendor . > internal/buildInfo/clocData
 		gcOut, err := sh.Output("gocloc", "--output-type=json", "--not-match-d=vendor", ".")
@@ -138,6 +162,14 @@ func PreBuild() error {
 		}
 
 		err = ioutil.WriteFile(path.Join("internal", "buildInfo", "clocData"), []byte(strings.TrimSpace(gcOut)), 0644)
+		if err != nil {
+			return err
+		}
+	}
+
+	{
+		// qtc -dir=internal/adminSite/templates -skipLineComments
+		err := sh.Run("qtc", "-dir=internal/adminSite/templates", "-skipLineComments")
 		if err != nil {
 			return err
 		}

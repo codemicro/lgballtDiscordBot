@@ -2,6 +2,7 @@ package adminSite
 
 import (
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/gofiber/fiber/v2"
 	"net/url"
@@ -63,7 +64,7 @@ func (w *webApp) bioUIDSearch(ctx *fiber.Ctx) error {
 
 	resp.WriteString("<br><form action=''>User/System/Member ID: <input type='text' name='q'><br><input type='submit'></form>")
 
-	return ctx.Type("html").SendString(resp.String())
+	return ctx.Type("html").SendString(templates.RenderPage(&templates.BioSearchPage{}))
 }
 
 func (w *webApp) bioView(ctx *fiber.Ctx) error {

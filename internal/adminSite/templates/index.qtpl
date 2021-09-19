@@ -1,0 +1,12 @@
+{% code
+type IndexPage struct {
+    BasePage
+    DiscordLoginURL string
+}
+%}
+
+{% func (p *IndexPage) Body() %}
+<div>
+    <a href="{%s p.DiscordLoginURL %}">Click here to log-in with Discord</a>
+</div>
+{% endfunc %}

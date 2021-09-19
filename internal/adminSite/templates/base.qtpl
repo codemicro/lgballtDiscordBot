@@ -1,0 +1,43 @@
+This is a base page template. All the other template pages implement this interface.
+
+{% interface
+Page {
+    Title()
+    Body()
+}
+%}
+
+Page prints a page implementing Page interface.
+{% func RenderPage(p Page) %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%= p.Title() %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1"><a class="navbar-brand" href="/">LGBallT bot</a></span>
+        </div>
+    </nav>
+
+    <div style="padding-top: 10px;"></div>
+
+    <div class="container">
+        {%= p.Body() %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+</body>
+</html>
+{% endfunc %}
+
+
+Base page implementation. Other pages may inherit from it if they need
+overriding only certain Page methods
+{% code type BasePage struct {} %}
+{% func (p *BasePage) Title() %}LGBallT bot{% endfunc %}

@@ -3,6 +3,7 @@ package adminSite
 import (
 	"crypto/sha256"
 	"fmt"
+	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
 )
@@ -38,16 +39,20 @@ func (w *webApp) index(ctx *fiber.Ctx) error {
 
 	ctx.Set(fiber.HeaderCacheControl, "no-store")
 
-	return ctx.Type("html").SendString(fmt.Sprintf("<a href='%s'>%s</a>", oauthURL, oauthURL))
+	return ctx.Type("html").SendString(templates.RenderPage(&templates.IndexPage{DiscordLoginURL: oauthURL}))
 }
 
 func (w *webApp) serviceListing(ctx *fiber.Ctx) error {
 	
 	sess := getSession(ctx)
+	auth := getAuth(ctx)
 
-	// TODO: don't show bio tool link if not admin
+	var links []templates.ActionButton
+	if auth.IsAdmin {
+		links = append(links, templates.ActionButton{Title: "Bio manager", Location: "/bio"})
+	}
 
 	username := sess.Get(userNameKey).(string)
 
-	return ctx.Type("html").SendString(fmt.Sprintf("<h1>Hello <b>%s</b></h1><br><a href='bio'>Bio tool</a>", username))
+	return ctx.Type("html").SendString(templates.RenderPage(&templates.ServicesPage{Name: username, Actions: links}))
 }
