@@ -2,6 +2,7 @@ package adminSite
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
@@ -33,6 +34,26 @@ const userNameKey = "user.name"
 
 const hasAuthKey = "auth.has"
 
+// for use in oauth2 interactions with Discord
+type oauthState struct {
+	NextURL string `json:"n"`
+	CheckValue string `json:"c"`
+}
+
+func (o *oauthState) String() string {
+	dat, _ := json.Marshal(o)
+	return string(dat)
+}
+
+func oauthStateFromString(x string) (*oauthState, error) {
+	o := new(oauthState)
+	err := json.Unmarshal([]byte(x), o)
+	if err != nil {
+		return nil, err
+	}
+	return o, nil
+}
+
 func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	sess := getSession(ctx)
@@ -49,6 +70,11 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	if receivedState != storedStateString {
 		return fiber.ErrBadRequest
+	}
+
+	decodedState, err := oauthStateFromString(storedStateString)
+	if err != nil {
+		return err
 	}
 
 	// all should be ok
@@ -121,6 +147,10 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	if err := sess.Save(); err != nil {
 		return err
+	}
+
+	if decodedState.NextURL != "" {
+		return ctx.Redirect(decodedState.NextURL)
 	}
 
 	return ctx.Redirect("/services")

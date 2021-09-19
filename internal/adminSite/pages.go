@@ -10,6 +10,8 @@ import (
 
 func (w *webApp) index(ctx *fiber.Ctx) error {
 
+	nextURL := ctx.Query("next")
+
 	sess := getSession(ctx)
 	auth := getAuth(ctx)
 
@@ -22,7 +24,11 @@ func (w *webApp) index(ctx *fiber.Ctx) error {
 	{
 		sessionID := sess.ID()
 		hashedBytes := sha256.Sum256([]byte(sessionID))
-		state = fmt.Sprintf("%x", hashedBytes)
+
+		s := oauthState{CheckValue: fmt.Sprintf("%x", hashedBytes), NextURL: nextURL}
+
+		state = s.String()
+		
 		sess.Set(stateKey, state)
 
 		if err := sess.Save(); err != nil {
@@ -38,6 +44,10 @@ func (w *webApp) index(ctx *fiber.Ctx) error {
 	)
 
 	ctx.Set(fiber.HeaderCacheControl, "no-store")
+
+	if nextURL != "" {
+		return ctx.Redirect(oauthURL)
+	}
 
 	return ctx.Type("html").SendString(templates.RenderPage(&templates.IndexPage{DiscordLoginURL: oauthURL}))
 }

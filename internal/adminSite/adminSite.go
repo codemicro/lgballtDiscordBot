@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
+	"net/url"
 )
 
 func Start(state *state.State) error {
@@ -52,6 +53,7 @@ func Start(state *state.State) error {
 	return nil
 }
 
+// for use within the API for managing authentication
 type auth struct {
 	HasAuth bool
 	IsAdmin bool
@@ -107,7 +109,7 @@ func setupWebApp(app *fiber.App) {
 
 		auth := getAuth(ctx)
 		if !auth.HasAuth {
-			return ctx.Redirect("/")
+			return ctx.Redirect("/?next=" + url.QueryEscape(ctx.OriginalURL()))
 		}
 
 		sess := getSession(ctx)
@@ -115,7 +117,7 @@ func setupWebApp(app *fiber.App) {
 		{
 			gri := sess.Get(guildRolesKey)
 			if gri == nil {
-				return ctx.Redirect("/")
+				return ctx.Redirect("/?next=" + url.QueryEscape(ctx.OriginalURL()))
 			}
 			guildRoles = gri.([]string)
 		}
