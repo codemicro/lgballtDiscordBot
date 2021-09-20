@@ -7,6 +7,6 @@ type IndexPage struct {
 
 {% func (p *IndexPage) Body() %}
 <div>
-    <a href="{%s p.DiscordLoginURL %}">Click here to log-in with Discord</a>
+    <a href="{%s p.DiscordLoginURL %}">Click here to login with Discord</a>
 </div>
 {% endfunc %}

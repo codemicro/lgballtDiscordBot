@@ -1,6 +1,7 @@
 package adminSite
 
 import (
+	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
@@ -29,7 +30,12 @@ func Start(state *state.State) error {
 				message = err.Error()
 			}
 
-			return ctx.Status(code).JSON(map[string]string{"status": "error", "message": message})
+			return ctx.Status(code).Type("html").SendString(templates.RenderPage(&templates.FeedbackPage{
+				WasSuccess:        false,
+				Message:           message,
+				NextURL:           "/",
+				RedirectTimeoutMs: 5000,
+			}))
 		},
 		DisableStartupMessage: !config.DebugMode,
 	})
@@ -69,6 +75,11 @@ func getAuth(ctx *fiber.Ctx) *auth {
 
 func getSession(ctx *fiber.Ctx) *session.Session {
 	return ctx.Locals("session").(*session.Session)
+}
+
+// dontCache sets the Cache-Control header to `no-store`
+func dontCache(ctx *fiber.Ctx) {
+	ctx.Set(fiber.HeaderCacheControl, "no-store")
 }
 
 func setupWebApp(app *fiber.App) {
@@ -145,4 +156,8 @@ func setupWebApp(app *fiber.App) {
 
 	app.Get("/bio", wa.bioUIDSearch)
 	app.Get("/bio/view", wa.bioView)
+	app.Get("/bio/edit/field", wa.bioEditField)
+	app.Post("/bio/edit/field", wa.bioEditField)
+	app.Get("/bio/edit/image", wa.bioEditImage)
+	app.Post("/bio/edit/image", wa.bioEditImage)
 }

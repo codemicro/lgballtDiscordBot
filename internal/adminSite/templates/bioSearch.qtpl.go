@@ -26,18 +26,23 @@ func (p *BioSearchPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <div>
 
+    <h2>Bio search</h2>
+
+    <p class="text-secondary"><i>Enter a user ID, system ID or system member ID.</i></p>
+
     <form action="">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" name="q" placeholder="Search query (user ID/system ID/system member ID)" aria-label="Search query">
-            <input type="submit" class="input-group-text btn btn-primary" value="Search">
+        <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Search query" aria-label="Search query">
+            <input type="submit" class="input-group-text btn btn-primary d-none d-md-block" value="Search">
         </div>
+        <input type="submit" class="input-group-text btn btn-primary d-md-none" style="width: 100%;" value="Search">
     </form>
 
     `)
 	if p.ShowSearchResults {
 		qw422016.N().S(`
 
-        <p>Found `)
+        <p class="mt-4">Found `)
 		qw422016.N().D(len(p.SearchResults))
 		qw422016.N().S(` results</p>
 

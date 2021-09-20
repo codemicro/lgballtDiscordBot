@@ -1,0 +1,32 @@
+{% import "strings" %}
+
+{% code
+type BioEditPage struct {
+    BasePage
+    FieldName string
+    InitialContent string
+}
+%}
+
+{% func (p *BioEditPage) Body() %}
+<div>
+
+    <h2>Editing {%s strings.ToLower(string(p.FieldName[0])) + p.FieldName[1:len(p.FieldName)] %}</h2>
+
+    <p class="text-secondary"><i>Leave this box empty and save to delete the entry.</i></p>
+
+    <form action="" method="POST">
+        <div class="input-group">
+            <textarea class="form-control" name="new" rows="20" aria-label="Edit content" id="editBox"></textarea>
+            <input type="submit" class="input-group-text btn btn-primary d-none d-md-block" value="Save">
+        </div>
+        <input type="submit" class="input-group-text btn btn-primary d-md-none" style="width: 100%;" value="Save">
+    </form>
+
+    <script>
+        const content = "{%j= p.InitialContent %}";
+        document.getElementById("editBox").value = content;
+    </script>
+
+</div>
+{% endfunc %}

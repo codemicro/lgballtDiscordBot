@@ -1,0 +1,55 @@
+{% import "github.com/codemicro/lgballtDiscordBot/internal/db" %}
+{% import "github.com/codemicro/lgballtDiscordBot/internal/config" %}
+{% import "strings" %}
+
+{% code
+type BioViewPage struct {
+    BasePage
+    Bio db.UserBio
+}
+%}
+
+{% func (p *BioViewPage) Body() %}
+<div>
+
+    <h2>Bio for {%s p.Bio.UserId %}
+        {% if p.Bio.SysMemberID != "" %}
+            - {%s p.Bio.SysMemberID %}
+        {% endif %}
+    </h2>
+
+    <p class="text-secondary"><i>Click a category name to edit that category's value.</i></p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Value</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            {% for _, fieldName := range config.BioFields %}
+                <tr>
+                    <th scope="row"><a href="/bio/edit/field?user={%u p.Bio.UserId %}&member={%u p.Bio.SysMemberID %}&field={%u fieldName %}">{%s fieldName %}</a></th>
+                    <td>
+                        {% for _, line := range strings.Split(p.Bio.BioData[fieldName], "\n") %}
+                            {%s line %}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            <tr class="border-top">
+                <th scope="row"><a href="/bio/edit/image?user={%u p.Bio.UserId %}&member={%u p.Bio.SysMemberID %}">Image</a></th>
+                <td>
+                    {%s p.Bio.ImageURL %}
+                    <br><img class="border pt-1" src="{%s p.Bio.ImageURL %}" alt="Bio image preview" style="max-width: 500px">
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+{% endfunc %}

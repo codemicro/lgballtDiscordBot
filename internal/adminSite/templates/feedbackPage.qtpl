@@ -1,0 +1,35 @@
+{% code
+type FeedbackPage struct {
+    BasePage
+
+    WasSuccess bool
+    Message string
+
+    NextURL string
+    RedirectTimeoutMs int
+}
+
+func (p *FeedbackPage) alertType() string {
+    if p.WasSuccess {
+        return "alert-success"
+    } else {
+        return "alert-danger"
+    }
+}
+%}
+
+{% func (p *FeedbackPage) Body() %}
+<div>
+
+    <div class="alert {%s= p.alertType() %}" role="alert">
+        {%s p.Message %}
+    </div>
+
+    <p>If you're not redirected automatically in the next few seconds, <a href="{%s p.NextURL %}">click here</a>.</p>
+
+    <script>
+        setTimeout(function(){window.location.replace("{%j= p.NextURL %}");}, {%d p.RedirectTimeoutMs %});
+    </script>
+
+</div>
+{% endfunc %}

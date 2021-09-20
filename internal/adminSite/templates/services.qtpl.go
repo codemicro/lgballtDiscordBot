@@ -31,7 +31,7 @@ func (p *ServicesPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.E().S(p.Name)
 	qw422016.N().S(`!</h2>
 <div>
-    <p>Click a button to go to that service</p>
+    <p class="text-secondary"><i>Click a button to go to that service.</i></p>
 
     `)
 	for _, action := range p.Actions {

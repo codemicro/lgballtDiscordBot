@@ -43,7 +43,7 @@ func (w *webApp) index(ctx *fiber.Ctx) error {
 		oauth2.SetAuthURLParam("prompt", "none"),
 	)
 
-	ctx.Set(fiber.HeaderCacheControl, "no-store")
+	dontCache(ctx)
 
 	if nextURL != "" {
 		return ctx.Redirect(oauthURL)

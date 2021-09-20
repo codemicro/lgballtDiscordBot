@@ -24,7 +24,7 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 <div>
     <a href="`)
 	qw422016.E().S(p.DiscordLoginURL)
-	qw422016.N().S(`">Click here to log-in with Discord</a>
+	qw422016.N().S(`">Click here to login with Discord</a>
 </div>
 `)
 }

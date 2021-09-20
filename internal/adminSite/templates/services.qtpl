@@ -15,7 +15,7 @@ type ServicesPage struct {
 {% func (p *ServicesPage) Body() %}
 <h2>Hello {%s p.Name %}!</h2>
 <div>
-    <p>Click a button to go to that service</p>
+    <p class="text-secondary"><i>Click a button to go to that service.</i></p>
 
     {% for _, action := range p.Actions %}
         <a href="{%s= action.Location %}" class="btn btn-primary">{%s= action.Title %}</a>
