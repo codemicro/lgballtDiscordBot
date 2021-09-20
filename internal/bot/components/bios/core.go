@@ -6,6 +6,10 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 )
 
+func ShouldRemoveBio(bdt *db.UserBio) bool {
+	return len(bdt.BioData) == 0 && bdt.ImageURL == ""
+}
+
 var sysmateNotRegisteredMessage = "This member is not registered to your Discord account with the bot. Please import " +
 	"this member using `$bio import %s`"
 
@@ -62,7 +66,7 @@ func (b *Bios) clearBioField(bdt *db.UserBio, fieldName string, ctx *route.Messa
 
 	delete(bdt.BioData, fieldName)
 
-	if len(bdt.BioData) == 0 && bdt.ImageURL != "" {
+	if ShouldRemoveBio(bdt) {
 		// There's no fields and no image left in the bio, so we shall delete it
 		err = bdt.Delete()
 	} else {
@@ -151,7 +155,7 @@ func (b *Bios) clearBioImage(bdt *db.UserBio, ctx *route.MessageContext) error {
 
 	bdt.ImageURL = ""
 
-	if len(bdt.BioData) == 0 && bdt.ImageURL != "" {
+	if ShouldRemoveBio(bdt) {
 		// There's no fields and no image left in the bio, so we shall delete it
 		err = bdt.Delete()
 	} else {
