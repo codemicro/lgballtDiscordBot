@@ -159,7 +159,18 @@ func (w *webApp) bioEditImage(ctx *fiber.Ctx) error {
 	if ctx.Method() == "POST" {
 		// do something
 		newContent := ctx.FormValue("new")
-		// TODO: Validate URL
+
+		// validate URL
+		_, err := url.ParseRequestURI(newContent)
+		if err != nil {
+			return ctx.Type("html").SendString(templates.RenderPage(&templates.FeedbackPage{
+				WasSuccess:        false,
+				Message:           "Invalid URL format.",
+				NextURL:           ctx.OriginalURL(),
+				RedirectTimeoutMs: 3000,
+			}))
+		}
+
 		ub.ImageURL = newContent
 
 		if bios.ShouldRemoveBio(ub) {
