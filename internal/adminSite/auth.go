@@ -8,6 +8,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
 )
 
@@ -64,12 +65,14 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	storedState := sess.Get(stateKey)
 	if storedState == nil || code == "" || receivedState == "" {
+		log.Info().Msgf("Bad request: storedState: %v, code: %v, receivedState: %v", storedState, code, receivedState)
 		return fiber.ErrBadRequest
 	}
 
 	storedStateString := storedState.(string)
 
 	if receivedState != storedStateString {
+		log.Info().Msgf("stored state does not match received state: storedStateString: %v, receivedState: %v", storedStateString, receivedState)
 		return fiber.ErrBadRequest
 	}
 

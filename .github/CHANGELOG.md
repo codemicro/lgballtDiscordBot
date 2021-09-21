@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.11.1] - 2021-09-21
+### Added
+* Debugging statements to check admin site functionality
+
 ## [4.11.0] - 2021-09-21
 ### Added
 * Administrator site
@@ -526,7 +530,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.1...HEAD
+[4.11.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.0...v4.11.1
 [4.11.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.10.0...v4.11.0
 [4.10.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.6...v4.10.0
 [4.9.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.5...v4.9.6
