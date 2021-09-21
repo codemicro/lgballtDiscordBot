@@ -277,6 +277,7 @@ func (Docker) Build() error {
 	}
 
 	mg.Deps(EnsureGocloc)
+	mg.Deps(EnsureQTC)
 	mg.Deps(PreBuild)
 
 	if mg.Verbose() {
