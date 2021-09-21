@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.11.2] - 2021-09-21
+### Fixed
+* Prevent requests to favicon.ico breaking authentication
+### Removed
+* Debug statements from v[4.11.1]
+
 ## [4.11.1] - 2021-09-21
 ### Added
 * Debugging statements to check admin site functionality
@@ -530,7 +536,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.1...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.2...HEAD
+[4.11.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.1...v4.11.2
 [4.11.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.0...v4.11.1
 [4.11.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.10.0...v4.11.0
 [4.10.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.9.6...v4.10.0

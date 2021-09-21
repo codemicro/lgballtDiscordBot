@@ -90,6 +90,11 @@ func setupWebApp(app *fiber.App) {
 	})
 	wa.session.RegisterType(oauth2.Token{})
 
+	app.Get("/favicon.ico", func(ctx *fiber.Ctx) error {
+		ctx.Status(fiber.StatusNotFound)
+		return nil
+	})
+
 	app.Use(func(ctx *fiber.Ctx) error {
 
 		au := &auth{}
