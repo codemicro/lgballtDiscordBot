@@ -193,7 +193,7 @@ func (w *webApp) bioEditImage(ctx *fiber.Ctx) error {
 			WasSuccess:        true,
 			Message:           "Saved successfully!",
 			NextURL:           nextURL,
-			RedirectTimeoutMs: 3000,
+			RedirectTimeoutMs: 1000,
 		}))
 	}
 

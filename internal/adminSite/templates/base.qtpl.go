@@ -51,7 +51,7 @@ func StreamRenderPage(qw422016 *qt422016.Writer, p Page) {
 
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1"><a class="navbar-brand" href="/">LGBallT bot</a></span>
+            <a class="navbar-brand h1" href="/">LGBallT bot</a>
         </div>
     </nav>
 

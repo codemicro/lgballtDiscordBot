@@ -3,6 +3,14 @@
 type ActionButton struct {
     Title string
     Location string
+    Type string
+}
+
+func (a ActionButton) ButtonType() string {
+    if a.Type == "" {
+        return "btn-primary"
+    }
+    return "btn-" + a.Type
 }
 
 type ServicesPage struct {
@@ -15,10 +23,10 @@ type ServicesPage struct {
 {% func (p *ServicesPage) Body() %}
 <h2>Hello {%s p.Name %}!</h2>
 <div>
-    <p class="text-secondary"><i>Click a button to go to that service.</i></p>
+    <p class="text-secondary"><i>Click a button!</i></p>
 
     {% for _, action := range p.Actions %}
-        <a href="{%s= action.Location %}" class="btn btn-primary">{%s= action.Title %}</a>
+        <a href="{%s= action.Location %}" class="btn {%s action.ButtonType() %}">{%s= action.Title %}</a>
     {% endfor %}
 </div>
 {% endfunc %}

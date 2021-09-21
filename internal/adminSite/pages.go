@@ -62,6 +62,8 @@ func (w *webApp) serviceListing(ctx *fiber.Ctx) error {
 		links = append(links, templates.ActionButton{Title: "Bio manager", Location: "/bio"})
 	}
 
+	links = append(links, templates.ActionButton{Title: "Log out", Location: "/auth/logout", Type: "danger"})
+
 	username := sess.Get(userNameKey).(string)
 
 	return ctx.Type("html").SendString(templates.RenderPage(&templates.ServicesPage{Name: username, Actions: links}))

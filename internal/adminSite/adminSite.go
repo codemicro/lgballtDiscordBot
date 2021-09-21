@@ -113,6 +113,7 @@ func setupWebApp(app *fiber.App) {
 
 	app.Get("/", wa.index)
 	app.Get("/auth/inbound", wa.authInbound)
+	app.Get("/auth/logout", wa.authLogout)
 
 	app.Use(func(ctx *fiber.Ctx) error {
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/oauth2"
@@ -154,4 +155,18 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Redirect("/services")
+}
+
+func (w* webApp) authLogout(ctx *fiber.Ctx) error {
+	sess := getSession(ctx)
+	err := sess.Destroy()
+	if err != nil {
+		return err
+	}
+	return ctx.Type("html").SendString(templates.RenderPage(&templates.FeedbackPage{
+		WasSuccess:        true,
+		Message:           "Signed out!",
+		NextURL:           "/",
+		RedirectTimeoutMs: 1000,
+	}))
 }

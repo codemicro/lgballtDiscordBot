@@ -17,6 +17,14 @@ var (
 type ActionButton struct {
 	Title    string
 	Location string
+	Type     string
+}
+
+func (a ActionButton) ButtonType() string {
+	if a.Type == "" {
+		return "btn-primary"
+	}
+	return "btn-" + a.Type
 }
 
 type ServicesPage struct {
@@ -31,14 +39,16 @@ func (p *ServicesPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.E().S(p.Name)
 	qw422016.N().S(`!</h2>
 <div>
-    <p class="text-secondary"><i>Click a button to go to that service.</i></p>
+    <p class="text-secondary"><i>Click a button!</i></p>
 
     `)
 	for _, action := range p.Actions {
 		qw422016.N().S(`
         <a href="`)
 		qw422016.N().S(action.Location)
-		qw422016.N().S(`" class="btn btn-primary">`)
+		qw422016.N().S(`" class="btn `)
+		qw422016.E().S(action.ButtonType())
+		qw422016.N().S(`">`)
 		qw422016.N().S(action.Title)
 		qw422016.N().S(`</a>
     `)

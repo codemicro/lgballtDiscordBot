@@ -29,6 +29,9 @@ func (p *BioViewPage) StreamBody(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 <div>
 
+    <a href="/bio">Return to search</a>
+    <br>
+    
     <h2>Bio for `)
 	qw422016.E().S(p.Bio.UserId)
 	qw422016.N().S(`

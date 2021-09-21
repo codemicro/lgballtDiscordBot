@@ -12,6 +12,9 @@ type BioViewPage struct {
 {% func (p *BioViewPage) Body() %}
 <div>
 
+    <a href="/bio">Return to search</a>
+    <br>
+    
     <h2>Bio for {%s p.Bio.UserId %}
         {% if p.Bio.SysMemberID != "" %}
             - {%s p.Bio.SysMemberID %}
