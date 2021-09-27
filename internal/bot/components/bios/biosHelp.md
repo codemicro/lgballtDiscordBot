@@ -18,6 +18,12 @@ The current fields are:
 {{ .Fields }}
 ```
 
+# I heard something about bio images?
+
+You can add an image to your bio with the `$bio setimg` command. If you attach a file to your message, that'll be used as your bio image. If you include a URL with the command (like `$bio setimg https://www.example.com/myimage.jpg`), that URL will be used as your bio image. To overwrite the image you set, just re-run the command.
+
+You can clear the image that was added to your bio with `$bio clearimg`.
+
 # What about bios for systems?
 
 I'm glad you asked! Run `$bio syshelp` for more information about bios for systems.

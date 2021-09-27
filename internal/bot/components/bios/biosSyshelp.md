@@ -10,6 +10,10 @@ You can update and remove bio fields in a very similar fashion to bios for singl
 
 To delete a system member bio, simply remove every field that's present in it using `$bio clear <member ID> <field>`. This will trigger the bot to automatically delete the bio entry from the database.
 
+# System member bio images
+
+System member bios get images too! The commands to use are `$bio setimg <member ID> [url or attachment]` and `$bio clearimg <member ID>`.
+
 # Viewing system member bios
 
 System member bios can be viewed using the same command as you would use to view singlet bios, namely `$bio [ping or user ID]`. If a user account has multiple bios associated with it, it will ask which bio you would like to view first, afterwards showing a carousel-type interface that will allowing you to scroll between bios.

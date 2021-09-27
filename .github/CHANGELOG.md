@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+* References to bio images in bio help texts
 ### Fixed
 * Changed the maximum upload size limit to 8MB as opposed to 7MB in the `<p>spoiler` command
 
