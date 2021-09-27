@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-const maxUploadSize = 7 * 1000 * 1000 // 7MB
+const maxUploadSize = 8 * 1000 * 1000 // 8MB
 
 func (*Misc) SpoilerThis(ctx *route.MessageContext) error {
 
