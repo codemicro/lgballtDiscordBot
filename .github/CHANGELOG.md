@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.11.4] - 2021-10-01
 ### Fixed
 * Bio images can now be removed with the bio site tool
 
@@ -544,7 +546,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.3...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.4...HEAD
+[4.11.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.3...v4.11.4
 [4.11.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.2...v4.11.3
 [4.11.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.1...v4.11.2
 [4.11.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.0...v4.11.1
