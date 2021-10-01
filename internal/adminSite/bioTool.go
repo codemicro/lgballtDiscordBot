@@ -160,15 +160,17 @@ func (w *webApp) bioEditImage(ctx *fiber.Ctx) error {
 		// do something
 		newContent := ctx.FormValue("new")
 
-		// validate URL
-		_, err := url.ParseRequestURI(newContent)
-		if err != nil {
-			return ctx.Type("html").SendString(templates.RenderPage(&templates.FeedbackPage{
-				WasSuccess:        false,
-				Message:           "Invalid URL format.",
-				NextURL:           ctx.OriginalURL(),
-				RedirectTimeoutMs: 3000,
-			}))
+		// validate URL (empty strings will not parse, but the app as a whole considers them valid input)
+		if newContent != "" {
+			_, err := url.ParseRequestURI(newContent)
+			if err != nil {
+				return ctx.Type("html").SendString(templates.RenderPage(&templates.FeedbackPage{
+					WasSuccess:        false,
+					Message:           "Invalid URL format.",
+					NextURL:           ctx.OriginalURL(),
+					RedirectTimeoutMs: 3000,
+				}))
+			}
 		}
 
 		ub.ImageURL = newContent
