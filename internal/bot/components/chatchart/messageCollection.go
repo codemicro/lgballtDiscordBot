@@ -113,22 +113,25 @@ func (c *ChatChart) collectMessages(intent collectionIntent) {
 
 	// find percentages
 	var messageUserPercentages []percentageWithLabel
-	var chartValues []chart.Value
 	for user, val := range messageUserCount {
 		percentage := (float64(val) / float64(messageCount)) * 100
 		messageUserPercentages = append(messageUserPercentages, percentageWithLabel{
 			Label:      user,
 			Percentage: percentage,
 		})
-		chartValues = append(chartValues, chart.Value{
-			Label: magicalUsernameTrim(user),
-			Value: percentage,
-		})
 	}
 
 	sort.Slice(messageUserPercentages, func(i, j int) bool {
 		return messageUserPercentages[i].Percentage > messageUserPercentages[j].Percentage
 	})
+
+	var chartValues []chart.Value
+	for _, muppet := range messageUserPercentages {
+		chartValues = append(chartValues, chart.Value{
+			Label: magicalUsernameTrim(muppet.Label),
+			Value: muppet.Percentage,
+		})
+	}
 
 	// get channel
 	crx, err := ctx.Session.Channel(channelId)
