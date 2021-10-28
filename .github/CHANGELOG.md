@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [4.11.7] - 2021-10-28
+### Changed
+* Changed the duration that a status given is shown for from a fixed time to a random value
+
 ## [4.11.6] - 2021-10-18
 ### Changed
 * Changed base builder image in `Dockerfile` from `golang:1.16` to `golang:1`
@@ -554,7 +558,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.6...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.7...HEAD
+[4.11.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.6...v4.11.7
 [4.11.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.5...v4.11.6
 [4.11.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.4...v4.11.5
 [4.11.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.3...v4.11.4
