@@ -20,6 +20,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/codemicro/lgballtDiscordBot/internal/state"
 	"github.com/rs/zerolog/log"
+	"math/rand"
 	"time"
 )
 
@@ -72,7 +73,7 @@ func Start(state *state.State) error {
 		for {
 			for _, text := range config.Statuses {
 				f(fmt.Sprintf(text, buildInfo.Version))
-				time.Sleep(time.Second * 15)
+				time.Sleep(time.Minute * time.Duration(10 + rand.Intn(20)))
 			}
 		}
 	}()
