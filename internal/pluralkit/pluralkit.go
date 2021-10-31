@@ -6,6 +6,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/patrickmn/go-cache"
+	"github.com/rs/zerolog/log"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -71,6 +72,8 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 		return err
 	}
 
+	log.Debug().Str("url", url).Msg("sending")
+
 	resp, err := sendRequest(req)
 	defer func() {
 		if resp != nil {
@@ -94,6 +97,8 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	if err != nil {
 		return err
 	}
+
+	log.Debug().Str("body", string(respBodyContent)).Int("status", resp.StatusCode).Str("url", url).Send()
 
 	// check status function
 	if !isStatusCodeOk(resp.StatusCode) {

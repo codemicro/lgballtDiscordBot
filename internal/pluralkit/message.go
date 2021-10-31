@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	messageByIdUrl = config.PkApi.ApiUrl + "/msg/%s"
+	messageByIdUrl = config.PkApi.ApiUrl + "/messages/%s"
 
 	ErrorMessageNotFound = errors.New("pluralkit: message with specified ID not found (PK API returned a 404)")
 )
