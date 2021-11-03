@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var pronounRegexp = regexp.MustCompile(`(?mi)(?:(?:[A-Za-z]+/[A-Za-z]+)|any pronouns|no pronouns)`)
+var pronounRegexp = regexp.MustCompile(`(?mi)(?:[A-Za-z]+/(?:[A-Za-z]+/?)+|any pronouns|no pronouns)`)
 
 type PronounRole struct {
 	Name   string

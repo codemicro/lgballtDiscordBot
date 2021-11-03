@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Changed
 * Message reference are now carried forwards when using the `<p>spoiler` command
+* Improve pronoun detection in cases such as:
+  * `he/she/it`, where there are more than two items in the input string
+  * `(any|all|no) pronouns`
 
 ## [4.11.7] - 2021-10-28
 ### Changed
