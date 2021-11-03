@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [4.11.8] - 2021-11-03
 ### Changed
 * Message reference are now carried forwards when using the `<p>spoiler` command
 * Improve pronoun detection in cases such as:
@@ -563,7 +565,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.7...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.8...HEAD
+[4.11.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.7...v4.11.8
 [4.11.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.6...v4.11.7
 [4.11.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.5...v4.11.6
 [4.11.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.4...v4.11.5
