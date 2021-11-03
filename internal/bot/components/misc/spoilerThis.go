@@ -24,7 +24,7 @@ func (*Misc) SpoilerThis(ctx *route.MessageContext) error {
 	for _, attachment := range ctx.Message.Attachments {
 
 		if totalFileSize+attachment.Size > maxUploadSize {
-			return ctx.SendErrorMessage("attachments are too large and cannot be re-uploaded (greater than 7MB)")
+			return ctx.SendErrorMessage("attachments are too large and cannot be re-uploaded (greater than 8MB)")
 		}
 
 		fileBody, err := downloadFile(attachment.URL)
@@ -58,6 +58,7 @@ func (*Misc) SpoilerThis(ctx *route.MessageContext) error {
 		Content:         "From " + ctx.Message.Author.Mention(),
 		Files:           nf,
 		AllowedMentions: ctx.DefaultAllowedMentions(),
+		Reference:       ctx.Message.MessageReference,
 	})
 
 	if err != nil {
