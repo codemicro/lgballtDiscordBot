@@ -14,6 +14,20 @@ func Init(kit *route.Kit, _ *state.State) error {
 	comp := new(MessageTools)
 
 	kit.AddCommand(&route.Command{
+		Name:        "Send message sequence",
+		Help:        "Send a message sequence in a specific channel - must attach a Markdown file",
+		CommandText: []string{"m", "sendseq"},
+		Arguments: []route.Argument{
+			{Name: "channelID", Type: route.DiscordSnowflake},
+		},
+		Restrictions: []route.CommandRestriction{
+			route.RestrictionByRole(config.AdminRoles...),
+		},
+		Run: comp.SendSequence,
+		Category: meta.CategoryAdminTools,
+	})
+
+	kit.AddCommand(&route.Command{
 		Name:        "Send message",
 		Help:        "Send a message in a specific channel",
 		CommandText: []string{"m", "send"},

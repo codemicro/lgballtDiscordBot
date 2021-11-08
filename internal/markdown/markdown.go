@@ -49,7 +49,7 @@ func SplitByHeader(input string) []*Block {
 
 		nx = append(nx, &Block{
 			Title: title,
-			Content: strings.Join(content, "\n"),
+			Content: strings.TrimSpace(strings.Join(content, "\n")),
 		})
 	}
 
