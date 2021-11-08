@@ -17,6 +17,7 @@ var (
 )
 
 type Member struct {
+	UUID        string `json:"uuid"`
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Nickname    string `json:"display_name"`

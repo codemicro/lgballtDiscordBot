@@ -17,6 +17,7 @@ var (
 
 // System represents a system object from the PluralKit API
 type System struct {
+	UUID        string `json:"uuid"`
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
