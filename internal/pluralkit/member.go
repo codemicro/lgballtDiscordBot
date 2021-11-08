@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	membersBySystemIdUrl = config.PkApi.ApiUrl + "/s/%s/members"
-	memberByMemberIdUrl  = config.PkApi.ApiUrl + "/m/%s"
+	membersBySystemIdUrl = config.PkApi.ApiUrl + "/systems/%s/members"
+	memberByMemberIdUrl  = config.PkApi.ApiUrl + "/members/%s"
 
 	ErrorMemberNotFound    = errors.New("pluralkit: member with specified ID not found (PK API returned a 404)")
 	ErrorMemberListPrivate = errors.New("pluralkit: target system found but member list is private (PK API " +
@@ -17,6 +17,7 @@ var (
 )
 
 type Member struct {
+	UUID        string `json:"uuid"`
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Nickname    string `json:"display_name"`

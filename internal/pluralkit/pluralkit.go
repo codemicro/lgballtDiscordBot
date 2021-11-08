@@ -6,6 +6,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/patrickmn/go-cache"
+	"github.com/rs/zerolog/log"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -126,6 +127,7 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 // rate limiting.
 func requestWorker() {
 	for rq := range requestQueue {
+		log.Debug().Str("url", rq.request.URL.String()).Msg("running PK API request")
 		rq.request.Header["User-Agent"] = userAgent
 		resp, err := client.Do(rq.request)
 		rq.responseNotifier <- completedRequest{

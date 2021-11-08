@@ -8,8 +8,7 @@ import (
 )
 
 var (
-	systemByIdUrl               = config.PkApi.ApiUrl + "/s/%s"
-	systemByDiscordAccountIdUrl = config.PkApi.ApiUrl + "/a/%s"
+	systemByIdUrl = config.PkApi.ApiUrl + "/systems/%s"
 
 	ErrorSystemNotFound     = errors.New("pluralkit: system with specified ID not found (PK API returned a 404)")
 	ErrorAccountHasNoSystem = errors.New("pluralkit: account with specified ID has no systems or does not exist " +
@@ -18,6 +17,7 @@ var (
 
 // System represents a system object from the PluralKit API
 type System struct {
+	UUID        string `json:"uuid"`
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -45,7 +45,7 @@ func SystemById(sid string) (*System, error) {
 func SystemByDiscordAccount(discordUid string) (*System, error) {
 	sys := new(System)
 	err := orchestrateRequest(
-		fmt.Sprintf(systemByDiscordAccountIdUrl, discordUid),
+		fmt.Sprintf(systemByIdUrl, discordUid),
 		sys,
 		func(i int) bool { return i == 200 },
 		map[int]error{404: ErrorAccountHasNoSystem},
