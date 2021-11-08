@@ -41,6 +41,7 @@ Now just run `$bio [UserID]` to view their Bio. For example, `$bio 5169627334977
 
 - You don't need to wipe a field to put in new info. Just run `$bio set [field] [text]` to overwrite it.
 - If you end up in a situation where you have no fields left in your bio because you've removed them all, your entire bio is deleted.
+- You can add links to your bio by writing something like `[link text](https://www.example.com)`. Links [look like this](https://www.youtube.com/watch?v=dQw4w9WgXcQ), and you can click them (go on, click it!).
 
 # TL;DR/Commands
 
