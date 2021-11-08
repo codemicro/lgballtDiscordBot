@@ -139,7 +139,7 @@ func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 	bdt := new(db.UserBio)
 	bdt.UserId = ctx.Message.Author.ID
 	bdt.SysMemberID = memberId
-	bdt.SystemID = systemInfo.Id
+	bdt.SystemID = systemInfo.UUID
 	bdt.BioData = make(map[string]string)
 
 	if otherText != "" {
