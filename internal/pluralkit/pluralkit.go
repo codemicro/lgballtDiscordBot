@@ -72,8 +72,6 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 		return err
 	}
 
-	log.Debug().Str("url", url).Msg("sending")
-
 	resp, err := sendRequest(req)
 	defer func() {
 		if resp != nil {
@@ -97,8 +95,6 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	if err != nil {
 		return err
 	}
-
-	log.Debug().Str("body", string(respBodyContent)).Int("status", resp.StatusCode).Str("url", url).Send()
 
 	// check status function
 	if !isStatusCodeOk(resp.StatusCode) {
@@ -131,6 +127,7 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 // rate limiting.
 func requestWorker() {
 	for rq := range requestQueue {
+		log.Debug().Str("url", rq.request.URL.String()).Msg("running PK API request")
 		rq.request.Header["User-Agent"] = userAgent
 		resp, err := client.Do(rq.request)
 		rq.responseNotifier <- completedRequest{
