@@ -1,12 +1,13 @@
 package pronouns
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"regexp"
 	"strings"
 )
 
-var pronounRegexp = regexp.MustCompile(`(?mi)(?:[A-Za-z]+/(?:[A-Za-z]+/?)+|any pronouns|no pronouns)`)
+var pronounRegexp = regexp.MustCompile(`(?mi)(?:[A-Za-z]+/(?:[A-Za-z]+/?)+|any pronouns|all pronouns|no pronouns)`)
 
 type PronounRole struct {
 	Name   string
@@ -37,9 +38,29 @@ func FindPronounsInString(in string, possiblePronouns []PronounRole) (o []Pronou
 
 	addedPronouns := make(map[string]struct{})
 
+	{ // this makes "any pronouns" and "all pronouns" be treated identically
+		var add string
+		for _, match := range matches {
+			if strings.EqualFold(match, "all pronouns") {
+				add = "any pronouns"
+			} else if strings.EqualFold(match, "any pronouns") {
+				add = "all pronouns"
+			}
+		}
+		if add != "" {
+			matches = append(matches, add)
+		}
+	}
+
 	for _, match := range matches {
 
 		splitMatch := strings.Split(match, "/")
+
+		if strings.EqualFold(match, "all pronouns") {
+			splitMatch = append(splitMatch, "any pronouns")
+		} else if strings.EqualFold(match, "any pronouns") {
+			splitMatch = append(splitMatch, "all pronouns")
+		}
 
 		for _, matchPart := range splitMatch {
 

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Changed
 * Switch to using rich PKAPIv2 errors
+### Fixed
+* `any pronouns` and `all pronouns` are now treated as synonymous
 
 ## [5.1.0] - 2021-11-08
 ### Added
