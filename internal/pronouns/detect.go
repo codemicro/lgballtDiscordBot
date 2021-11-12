@@ -1,7 +1,6 @@
 package pronouns
 
 import (
-	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"regexp"
 	"strings"
