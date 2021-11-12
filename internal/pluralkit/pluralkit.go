@@ -2,67 +2,45 @@ package pluralkit
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
+	"go.uber.org/ratelimit"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
 
 var (
-	userAgent    = []string{fmt.Sprintf("r/LGBallT Discord bot v%s (%s)", buildInfo.Version, config.PkApi.ContactEmail)}
-	requestQueue = make(chan trackedRequest, 1024)
+	userAgent   = []string{fmt.Sprintf("r/LGBallT Discord bot v%s (%s)", buildInfo.Version, config.PkApi.ContactEmail)}
+	client      = new(http.Client)
+	ratelimiter = ratelimit.New(2) // per second
 
-	client = new(http.Client)
+	ErrorCouldNotUnmarshal = errors.New("pluralkit: could not unmarshal error response")
 )
 
-func init() {
-	for i := 0; i < config.PkApi.NumWorkers; i += 1 {
-		go requestWorker()
-	}
-}
-
-// trackedRequest represents a pending request
-type trackedRequest struct {
-	responseNotifier chan completedRequest
-	request          *http.Request
-}
-
-// completedRequest represents a response and corresponding error as a result of a HTTP request
-type completedRequest struct {
-	response *http.Response
-	err      error
-}
-
 type Error struct {
-	StatusCode   int
-	ResponseBody []byte
+	Code           ErrorCode `json:"code"`
+	Message        string    `json:"message"`
+	RetryAfter     int       `json:"retry_after,omitempty"`
+	HTTPStatusCode int       `json:"-"`
 }
 
 func (err *Error) Error() string {
-	return fmt.Sprintf("pluralkit: the PK API returned a non-okay status code, %d", err.StatusCode)
-}
-
-func newApiError(statusCode int, responseBody []byte) *Error {
-	return &Error{
-		StatusCode:   statusCode,
-		ResponseBody: responseBody,
-	}
+	return fmt.Sprintf("pluralkit: the PK API returned an error response: %s (status: %d, HTTP: %d)", err.Message, err.Code, err.HTTPStatusCode)
 }
 
 var responseCache = cache.New(3*time.Minute, 5*time.Minute)
 
-// orchestrateRequest takes various parameters, makes a request and returns an error. output should be a variable that
-// can be used to unmarshal response JSON into. isStatusCode should be a function that returns true if a status code is
-// received that does not indicate a failed request. errorsByStatusCode is a map of errors that should be returned in
-// the event a specific status code is returned from the API.
-func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int) bool,
-	errorsByStatusCode map[int]error) error {
+// orchestrateRequest sends a request to the PluralKit API and unmarshals the response, returning a *pluralkit.Error if
+// required.
+func orchestrateRequest(url string, output interface{}) error {
 
 	if x, found := responseCache.Get(url); found {
+		log.Debug().Str("url", url).Msg("PK API cache hit")
 		apiResp := x.(*[]byte)
 		return json.Unmarshal(*apiResp, output)
 	}
@@ -84,21 +62,19 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 		return err
 	}
 
-	// check status code map
-	for code, err := range errorsByStatusCode {
-		if resp.StatusCode == code {
-			return err
-		}
-	}
-
 	respBodyContent, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
 
-	// check status function
-	if !isStatusCodeOk(resp.StatusCode) {
-		return newApiError(resp.StatusCode, respBodyContent)
+	if resp.StatusCode != 200 { // TODO: This could cause problems in cases where the API returns codes like 204, which it does do. We don't use that at the moment, so I'm taking the lazy option.
+		e := new(Error)
+		err := json.Unmarshal(respBodyContent, e)
+		if err != nil {
+			return ErrorCouldNotUnmarshal
+		}
+		e.HTTPStatusCode = resp.StatusCode
+		return e
 	}
 
 	// if we get here, that means we probably got a request we can use back
@@ -109,31 +85,10 @@ func orchestrateRequest(url string, output interface{}, isStatusCodeOk func(int)
 	return json.Unmarshal(respBodyContent, output)
 }
 
-// sendRequest adds a http.Request to the request queue and returns a response and corresponding error when the response
-// is received.
+// sendRequest sends an HTTP request while obeying a rate limit.
 func sendRequest(req *http.Request) (*http.Response, error) {
-	responseNotifier := make(chan completedRequest)
-
-	requestQueue <- trackedRequest{
-		responseNotifier: responseNotifier,
-		request:          req,
-	}
-
-	completed := <-responseNotifier
-	return completed.response, completed.err
-}
-
-// requestWorker is a function that should be run as a goroutine. This actually does HTTP request dispatch and
-// rate limiting.
-func requestWorker() {
-	for rq := range requestQueue {
-		log.Debug().Str("url", rq.request.URL.String()).Msg("running PK API request")
-		rq.request.Header["User-Agent"] = userAgent
-		resp, err := client.Do(rq.request)
-		rq.responseNotifier <- completedRequest{
-			response: resp,
-			err:      err,
-		}
-		time.Sleep(time.Millisecond * time.Duration(config.PkApi.MinRequestDelay))
-	}
+	_ = ratelimiter.Take()
+	log.Debug().Str("url", req.URL.String()).Msg("running PK API request")
+	req.Header["User-Agent"] = userAgent
+	return client.Do(req)
 }

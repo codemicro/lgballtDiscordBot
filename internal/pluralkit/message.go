@@ -1,7 +1,6 @@
 package pluralkit
 
 import (
-	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/analytics"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
@@ -9,8 +8,6 @@ import (
 
 var (
 	messageByIdUrl = config.PkApi.ApiUrl + "/messages/%s"
-
-	ErrorMessageNotFound = errors.New("pluralkit: message with specified ID not found (PK API returned a 404)")
 )
 
 // Message represents a message object returned from the PluralKit API
@@ -27,15 +24,15 @@ type Message struct {
 // MessageById fetches information about a source or proxied message from the PluralKit API
 func MessageById(mid string) (*Message, error) {
 	sys := new(Message)
-	err := orchestrateRequest(
+
+	if err := orchestrateRequest(
 		fmt.Sprintf(messageByIdUrl, mid),
 		sys,
-		func(i int) bool { return i == 200 },
-		map[int]error{404: ErrorMessageNotFound},
-	)
-	if err != nil {
-		return nil, err
-	}
+	); err != nil {
+        return nil, err
+    }
+	// Can return MessageNotFound
+
 	analytics.ReportPluralKitRequest("Message by ID")
 	return sys, nil
 }

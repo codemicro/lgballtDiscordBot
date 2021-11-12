@@ -1,7 +1,6 @@
 package pluralkit
 
 import (
-	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/analytics"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
@@ -10,10 +9,6 @@ import (
 var (
 	membersBySystemIdUrl = config.PkApi.ApiUrl + "/systems/%s/members"
 	memberByMemberIdUrl  = config.PkApi.ApiUrl + "/members/%s"
-
-	ErrorMemberNotFound    = errors.New("pluralkit: member with specified ID not found (PK API returned a 404)")
-	ErrorMemberListPrivate = errors.New("pluralkit: target system found but member list is private (PK API " +
-		"returned a 403)")
 )
 
 type Member struct {
@@ -41,30 +36,29 @@ func (m Members) Get(memberID string) *Member {
 
 func MembersBySystemId(sid string) (Members, error) {
 	var members Members
-	err := orchestrateRequest(
+
+	if err := orchestrateRequest(
 		fmt.Sprintf(membersBySystemIdUrl, sid),
 		&members,
-		func(i int) bool { return i == 200 },
-		map[int]error{404: ErrorSystemNotFound, 403: ErrorMemberListPrivate},
-	)
-	if err != nil {
+	); err != nil {
 		return nil, err
 	}
+	// Can return SystemNotFound or MemberListPrivate
+
 	analytics.ReportPluralKitRequest("Members by system ID")
 	return members, nil
 }
 
 func MemberByMemberId(mid string) (*Member, error) {
 	member := new(Member)
-	err := orchestrateRequest(
+	if err := orchestrateRequest(
 		fmt.Sprintf(memberByMemberIdUrl, mid),
-		member,
-		func(i int) bool { return i == 200 },
-		map[int]error{404: ErrorMemberNotFound},
-	)
-	if err != nil {
+		&member,
+	); err != nil {
 		return nil, err
 	}
+	// Can return MemberNotFound
+
 	analytics.ReportPluralKitRequest("Member by ID")
 	return member, nil
 }

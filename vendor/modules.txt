@@ -1,6 +1,8 @@
 # github.com/PuerkitoBio/goquery v1.6.0
 ## explicit
 github.com/PuerkitoBio/goquery
+# github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
+github.com/andres-erbsen/clock
 # github.com/andybalholm/brotli v1.0.3
 github.com/andybalholm/brotli
 # github.com/andybalholm/cascadia v1.1.0
@@ -133,6 +135,9 @@ github.com/wcharczuk/go-chart/v2
 github.com/wcharczuk/go-chart/v2/drawing
 github.com/wcharczuk/go-chart/v2/matrix
 github.com/wcharczuk/go-chart/v2/roboto
+# go.uber.org/ratelimit v0.2.0
+## explicit
+go.uber.org/ratelimit
 # golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox

@@ -4,7 +4,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
 	_ "github.com/mattn/go-sqlite3"
@@ -63,10 +62,14 @@ func main() {
 
 		system, err := pluralkit.SystemById(systemID)
 		if err != nil {
-			if errors.Is(err, pluralkit.ErrorSystemNotFound) {
-				missingSystems = append(missingSystems, systemID)
-				continue
+
+			if e, ok := err.(*pluralkit.Error); ok {
+				if e.Code == pluralkit.ErrorCodeSystemNotFound {
+					missingSystems = append(missingSystems, systemID)
+                    continue
+				}
 			}
+
 			log.Fatal().Err(err).Msgf("cannot get PK system ID %s", systemID)
 		}
 
