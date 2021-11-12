@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.1.1] - 2021-11-12
 ### Changed
 * Switch to using rich PKAPIv2 errors
 ### Fixed
@@ -581,7 +583,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.1...HEAD
+[5.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.8...v5.0.0
 [4.11.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v4.11.7...v4.11.8
