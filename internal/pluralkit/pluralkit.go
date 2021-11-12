@@ -37,17 +37,17 @@ type completedRequest struct {
 	err      error
 }
 
-type ApiError struct {
+type Error struct {
 	StatusCode   int
 	ResponseBody []byte
 }
 
-func (err *ApiError) Error() string {
+func (err *Error) Error() string {
 	return fmt.Sprintf("pluralkit: the PK API returned a non-okay status code, %d", err.StatusCode)
 }
 
-func newApiError(statusCode int, responseBody []byte) *ApiError {
-	return &ApiError{
+func newApiError(statusCode int, responseBody []byte) *Error {
+	return &Error{
 		StatusCode:   statusCode,
 		ResponseBody: responseBody,
 	}
