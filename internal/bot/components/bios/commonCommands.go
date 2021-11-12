@@ -1,7 +1,6 @@
 package bios
 
 import (
-	"errors"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/dgo-toolkit/route"
@@ -65,10 +64,16 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 		// Fetch detailed system member info
 		members, err := pluralkit.MembersBySystemId(systemID)
 		if err != nil {
-			if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
-				warning = "\n⚠ Cannot retrieve system member names - member list is private"
-			} else if errors.Is(err, pluralkit.ErrorSystemNotFound) {
-				warning = "\n⚠ Cannot retrieve system member names - system not found"
+
+			if e, ok := err.(*pluralkit.Error); ok {
+				switch e.Code {
+				case pluralkit.ErrorCodeUnauthorizedMemberList:
+					warning = "\n⚠ Cannot retrieve system member names - member list is private"
+				case pluralkit.ErrorCodeSystemNotFound:
+					warning = "\n⚠ Cannot retrieve system member names - system not found"
+				default:
+					return err
+				}
 			} else {
 				return err
 			}
@@ -139,7 +144,7 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 					// TODO: turn this into a standalone function
 					targetMessageID := ctxb.Message.ID
 					pkMsg, err := pluralkit.MessageById(targetMessageID)
-					if err != nil && !errors.Is(err, pluralkit.ErrorMessageNotFound) {
+					if err != nil && !pluralkit.DoesErrMatchCode(err, pluralkit.ErrorCodeMessageNotFound) {
 						log.Warn().Err(err).Send()
 					} else if pkMsg != nil {
 						targetMessageID = pkMsg.Id

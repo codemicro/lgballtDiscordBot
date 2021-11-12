@@ -1,7 +1,7 @@
 package bios
 
 import (
-	"errors"
+	"fmt"
 	"github.com/codemicro/dgo-toolkit/route"
 	"github.com/codemicro/lgballtDiscordBot/internal/db"
 	"github.com/codemicro/lgballtDiscordBot/internal/pluralkit"
@@ -79,23 +79,29 @@ func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 	}
 
 	// check to see if account has a system
-	systemInfo, err := pluralkit.SystemByDiscordAccount(ctx.Message.Author.ID)
+	systemInfo, err := pluralkit.SystemById(ctx.Message.Author.ID)
 	if err != nil {
-		if errors.Is(err, pluralkit.ErrorAccountHasNoSystem) {
-			err = ctx.SendErrorMessage("Your Discord account has no PluralKit systems associated with it.")
-			return err
+		if e, ok := err.(*pluralkit.Error); ok {
+			if e.Code == pluralkit.ErrorCodeSystemNotFound {
+				return ctx.SendErrorMessage("Your Discord account has no PluralKit systems associated with it.")
+			}
 		}
 		return err
 	}
 
 	// check system has the specified member ID as a listed member
+
 	systemMembers, err := pluralkit.MembersBySystemId(systemInfo.Id)
 	if err != nil {
-		if errors.Is(err, pluralkit.ErrorMemberListPrivate) {
-			err = ctx.SendErrorMessage("Your system has the member list set to **private**. Please set this " +
-				"to public and try again (you can set it to private again afterwards)")
-			return err
+
+		if e, ok := err.(*pluralkit.Error); ok {
+			if e.Code == pluralkit.ErrorCodeUnauthorizedMemberList {
+				return ctx.SendErrorMessage("Your system has the member list set to **private**. Please set " +
+					"this to public (`pk;s privacy members public`) and try again (you can set the member list to " +
+					"private again afterwards)")
+			}
 		}
+
 		return err
 	}
 
@@ -108,9 +114,9 @@ func (b *Bios) SystemImportMember(ctx *route.MessageContext) error {
 	}
 
 	if pkMember == nil {
-		err = ctx.SendErrorMessage("Your system has has no member with the given ID. If you're sure there's " +
-			"a registered member with this ID, make sure the member visibility privacy level is set to **public**.")
-		return err
+		return ctx.SendErrorMessage(fmt.Sprintf("Your system has has no member with the given ID. If you're " +
+			"sure there's a registered member with this ID, make sure the member visibility privacy level is set " +
+			"to **public** (`pk;m %s privacy visibility public`). ", memberId))
 	}
 
 	// make bio

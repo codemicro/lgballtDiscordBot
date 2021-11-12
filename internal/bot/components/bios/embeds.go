@@ -1,7 +1,6 @@
 package bios
 
 import (
-	"errors"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/codemicro/lgballtDiscordBot/internal/bot/common"
@@ -258,8 +257,10 @@ func (b *Bios) formBioEmbed(nd nameDriver, bio db.UserBio, isAdmin bool) (*disco
 
 	if nd.HasMultiple() {
 
-		if errors.Is(err, pluralkit.ErrorMemberNotFound) {
-			footerText += "⚠ This member appears to have been deleted from PluralKit ⚠\n"
+		if e, ok := err.(*pluralkit.Error); ok {
+			if e.Code == pluralkit.ErrorCodeMemberNotFound {
+				footerText += "⚠ This member appears to have been deleted from PluralKit ⚠\n"
+			}
 		}
 
 		footerText += "This account has multiple bios associated with it.\n"
