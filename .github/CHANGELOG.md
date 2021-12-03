@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [5.1.3] - 2021-12-03
+### Fixed
+* Fixed typo in verification success message
+
 ## [5.1.2] - 2021-11-12
 ### Fixed
 * Removed unused `fmt` import
@@ -587,7 +591,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.2...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.3...HEAD
+[5.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.2...v5.1.3
 [5.1.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.0.0...v5.1.0

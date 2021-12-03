@@ -147,7 +147,7 @@ func (v *Verification) Verify(ctx *route.MessageContext) error {
 
 	// Send confirmation message to user
 	_, err = ctx.SendMessageString(ctx.Message.ChannelID, fmt.Sprintf("Thanks %s - your verification request has been "+
-		"recieved. We'll check it as soon as possible.", tools.MakePing(ctx.Message.Author.ID)))
+		"received. We'll check it as soon as possible.", tools.MakePing(ctx.Message.Author.ID)))
 	return err
 }
 
