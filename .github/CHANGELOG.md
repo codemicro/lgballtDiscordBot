@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.1.4] - 2021-12-11
 ### Fixed
 * Fixed single PK bios being shown as account bios when no account bio exists
 * Fixed collusion between account bios and system bios
@@ -594,7 +596,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.3...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.4...HEAD
+[5.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.3...v5.1.4
 [5.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.2...v5.1.3
 [5.1.2]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.0...v5.1.1
