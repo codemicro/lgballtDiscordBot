@@ -27,7 +27,7 @@ func (*Bios) setBioField(bdt *db.UserBio, fieldName, newValue string, isSysmate 
 	}
 
 	// horrendous hackery
-	if bdt.SysMemberID != "" {
+	if bdt.SysMemberID != "" && !isSysmate {
 		bdt.BioData = make(map[string]string)
 		bdt.ImageURL = ""
 		bdt.RawBioData = ""
@@ -107,7 +107,7 @@ func (b *Bios) setBioImage(bdt *db.UserBio, imageURL string, isSysmate bool, ctx
 	}
 
 	// horrendous hackery
-	if bdt.SysMemberID != "" {
+	if bdt.SysMemberID != "" && !isSysmate {
 		bdt.BioData = make(map[string]string)
 		bdt.RawBioData = ""
 		bdt.ImageURL = ""
