@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Fixed
 * Fixed single PK bios being shown as account bios when no account bio exists
+* Fixed collusion between account bios and system bios
 
 ## [5.1.3] - 2021-12-03
 ### Fixed
