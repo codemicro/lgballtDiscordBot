@@ -266,10 +266,10 @@ func (b *Bios) formBioEmbed(nd nameDriver, bio db.UserBio, isAdmin bool) (*disco
 		footerText += "This account has multiple bios associated with it.\n"
 		curr, total := nd.CurrentAndTotalCount()
 		footerText += fmt.Sprintf("Currently viewing No. %d of %d", curr, total)
+	}
 
-		if nd.SysMemberId() != "" {
-			footerText += fmt.Sprintf("\nPluralKit member ID: %s", nd.SysMemberId())
-		}
+	if nd.SysMemberId() != "" {
+		footerText += fmt.Sprintf("\nPluralKit member ID: %s", nd.SysMemberId())
 	}
 
 	var fields []*discordgo.MessageEmbedField

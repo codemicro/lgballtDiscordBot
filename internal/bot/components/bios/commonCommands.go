@@ -36,7 +36,16 @@ func (b *Bios) ReadBio(ctx *route.MessageContext) error {
 
 	if len(bios) == 1 {
 		// Found a bio, now to form an embed
-		e, err := b.formBioEmbed(newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session), bios[0], isAdminAccount)
+		bio := bios[0]
+
+		var nd nameDriver
+		if bios[0].SysMemberID != "" {
+			nd = newSystemName(bio.SysMemberID, nil, ctx.Message.Author.ID)
+		} else {
+			nd = newAccountName(targetUserId, ctx.Message.GuildID, nil, ctx.Session)
+		}
+
+		e, err := b.formBioEmbed(nd, bio, isAdminAccount)
 		if err != nil {
 			return err
 		}
