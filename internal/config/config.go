@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 )
 
+// TODO: Switch this file to being generated instead of manually updated
+
 const configFileName = "botConfig.json"
 
 type Info struct {
