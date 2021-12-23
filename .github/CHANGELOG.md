@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [5.1.6] - 2021-12-23
+
+*Debug release*
+
 ## [5.1.5] - 2021-12-11
 ### Fixed
 * System member bios can now be edited (that was a fuckup and a half)
@@ -600,7 +604,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.5...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.6...HEAD
+[5.1.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.5...v5.1.6
 [5.1.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.4...v5.1.5
 [5.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.3...v5.1.4
 [5.1.3]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.2...v5.1.3

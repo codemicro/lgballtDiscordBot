@@ -8,6 +8,7 @@ import (
 	"github.com/codemicro/lgballtDiscordBot/internal/adminSite/templates"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
 )
 
@@ -57,6 +58,8 @@ func oauthStateFromString(x string) (*oauthState, error) {
 
 func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
+	log.Debug().Msg("Authentication inbound")
+
 	sess := getSession(ctx)
 
 	code := ctx.Query("code")
@@ -64,14 +67,14 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	storedState := sess.Get(stateKey)
 	if storedState == nil || code == "" || receivedState == "" {
-		// log.Info().Msgf("Bad request: storedState: %v, code: %v, receivedState: %v", storedState, code, receivedState)
+		log.Debug().Msgf("Bad request: storedState: %v, code: %v, receivedState: %v", storedState, code, receivedState)
 		return fiber.ErrBadRequest
 	}
 
 	storedStateString := storedState.(string)
 
 	if receivedState != storedStateString {
-		// log.Info().Msgf("stored state does not match received state: storedStateString: %v, receivedState: %v", storedStateString, receivedState)
+		log.Debug().Msgf("stored state does not match received state: storedStateString: %v, receivedState: %v", storedStateString, receivedState)
 		return fiber.ErrBadRequest
 	}
 
@@ -79,6 +82,8 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+
+	log.Debug().Msg("Inbound auth ok")
 
 	// all should be ok
 	sess.Set(requestCodeKey, code)
@@ -98,6 +103,8 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 
 	sess.Set(oauthTokenKey, token)
 
+	log.Debug().Msgf("oauth exchange OK, token is %s", token)
+
 	// get guild listing
 	var guildIDs []string
 	var guildRoles []string
@@ -116,6 +123,8 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
+
+		log.Debug().Msgf("User is %s %s", me.String(), me.ID)
 
 		sess.Set(userIDKey, me.ID)
 		sess.Set(userNameKey, me.Username)
@@ -151,6 +160,8 @@ func (w *webApp) authInbound(ctx *fiber.Ctx) error {
 	if err := sess.Save(); err != nil {
 		return err
 	}
+
+	log.Debug().Msg("session saved")
 
 	if decodedState.NextURL != "" {
 		return ctx.Redirect(decodedState.NextURL)
