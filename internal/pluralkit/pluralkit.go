@@ -1,21 +1,23 @@
 package pluralkit
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"time"
+
+	"github.com/carlmjohnson/requests"
 	"github.com/codemicro/lgballtDiscordBot/internal/buildInfo"
 	"github.com/codemicro/lgballtDiscordBot/internal/config"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
 	"go.uber.org/ratelimit"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 var (
-	userAgent   = []string{fmt.Sprintf("r/LGBallT Discord bot v%s (%s)", buildInfo.Version, config.PkApi.ContactEmail)}
+	userAgent   = fmt.Sprintf("r/LGBallT Discord bot v%s (%s)", buildInfo.Version, config.PkApi.ContactEmail)
 	client      = new(http.Client)
 	ratelimiter = ratelimit.New(2) // per second
 
@@ -41,40 +43,44 @@ func orchestrateRequest(url string, output interface{}) error {
 
 	if x, found := responseCache.Get(url); found {
 		log.Debug().Str("url", url).Msg("PK API cache hit")
-		apiResp := x.(*[]byte)
-		return json.Unmarshal(*apiResp, output)
+		apiResp := x.(*string)
+		return json.Unmarshal([]byte(*apiResp), output)
 	}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return err
-	}
+	_ = ratelimiter.Take()
 
-	resp, err := sendRequest(req)
-	defer func() {
-		if resp != nil {
-			if resp.Body != nil {
-				_ = resp.Body.Close() // goroutine leaks begone!
+	log.Debug().Str("url", url).Msg("running PK API request")
+
+	var respBodyContent string
+
+	err := requests.URL(url).
+		AddValidator(func(resp *http.Response) error {
+			if int(resp.StatusCode/100) != 2 { // if status code != 2xx
+
+				var responseBody string
+				if err := requests.ToString(&responseBody)(resp); err != nil {
+					return err
+				}
+
+				e := new(Error)
+				err := json.Unmarshal([]byte(responseBody), e)
+				if err != nil {
+					return ErrorCouldNotUnmarshal
+				}
+				e.HTTPStatusCode = resp.StatusCode
+
+				log.Debug().Err(e).Msg("PK error response")
+
+				return e
 			}
-		}
-	}()
+			return nil
+		}).
+		UserAgent(userAgent).
+		ToString(&respBodyContent).
+		Fetch(context.Background())
+
 	if err != nil {
 		return err
-	}
-
-	respBodyContent, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != 200 { // TODO: This could cause problems in cases where the API returns codes like 204, which it does do. We don't use that at the moment, so I'm taking the lazy option.
-		e := new(Error)
-		err := json.Unmarshal(respBodyContent, e)
-		if err != nil {
-			return ErrorCouldNotUnmarshal
-		}
-		e.HTTPStatusCode = resp.StatusCode
-		return e
 	}
 
 	// if we get here, that means we probably got a request we can use back
@@ -82,13 +88,5 @@ func orchestrateRequest(url string, output interface{}) error {
 	responseCache.Set(url, &respBodyContent, cache.DefaultExpiration)
 
 	// parse response and return error or nil
-	return json.Unmarshal(respBodyContent, output)
-}
-
-// sendRequest sends an HTTP request while obeying a rate limit.
-func sendRequest(req *http.Request) (*http.Response, error) {
-	_ = ratelimiter.Take()
-	log.Debug().Str("url", req.URL.String()).Msg("running PK API request")
-	req.Header["User-Agent"] = userAgent
-	return client.Do(req)
+	return json.Unmarshal([]byte(respBodyContent), output)
 }

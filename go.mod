@@ -6,6 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.6.0
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/bwmarrin/discordgo v0.23.2
+	github.com/carlmjohnson/requests v0.21.13
 	github.com/codemicro/alib-go v0.1.0
 	github.com/codemicro/dgo-toolkit v0.8.3
 	github.com/gofiber/fiber/v2 v2.23.0

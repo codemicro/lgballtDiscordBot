@@ -15,6 +15,9 @@ github.com/beorn7/perks/quantile
 # github.com/bwmarrin/discordgo v0.23.2
 ## explicit
 github.com/bwmarrin/discordgo
+# github.com/carlmjohnson/requests v0.21.13
+## explicit
+github.com/carlmjohnson/requests
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
 # github.com/codemicro/alib-go v0.1.0
@@ -158,12 +161,13 @@ golang.org/x/image/draw
 golang.org/x/image/font
 golang.org/x/image/math/f64
 golang.org/x/image/math/fixed
-# golang.org/x/net v0.0.0-20210510120150-4163338589ed
+# golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
+golang.org/x/net/publicsuffix
 # golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
 ## explicit
 golang.org/x/oauth2
