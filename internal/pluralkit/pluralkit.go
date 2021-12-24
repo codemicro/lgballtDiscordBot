@@ -18,7 +18,6 @@ import (
 
 var (
 	userAgent   = fmt.Sprintf("r/LGBallT Discord bot v%s (%s)", buildInfo.Version, config.PkApi.ContactEmail)
-	client      = new(http.Client)
 	ratelimiter = ratelimit.New(2) // per second
 
 	ErrorCouldNotUnmarshal = errors.New("pluralkit: could not unmarshal error response")
