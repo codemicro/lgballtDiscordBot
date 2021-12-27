@@ -21,24 +21,21 @@ func SplitByHeader(input string) []*Block {
 
 		y := strings.Split(item, "\n")
 
-		{
-			// filter out blank segments
-			var n int
-			for _, val := range y {
-				if val != "" {
-					y[n] = val
-					n += 1
-				}
-			}
-			y = y[:n]
-		}
+		//{
+		//	// filter out blank segments
+		//	var n int
+		//	for _, val := range y {
+		//		if val != "" {
+		//			y[n] = val
+		//			n += 1
+		//		}
+		//	}
+		//	y = y[:n]
+		//}
 
 		var title string
 		var content []string
 		for i, subitem := range y {
-			if subitem == "" {
-				continue
-			}
 			if i == 0 {
 				// assume the first line is the header
 				title = strings.TrimSpace(subitem)

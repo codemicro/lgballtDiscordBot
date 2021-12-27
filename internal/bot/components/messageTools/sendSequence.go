@@ -35,7 +35,7 @@ func (m *MessageTools) SendSequence(ctx *route.MessageContext) error {
 	markdownSections := markdown.SplitByHeader(string(contents))
 
 	for _, section := range markdownSections {
-		_, err := ctx.SendMessageString(channelID, fmt.Sprintf("**%s**\n%s", section.Title, section.Content))
+		_, err := ctx.SendMessageString(channelID, fmt.Sprintf("**__%s__**\n%s", section.Title, section.Content))
 		if err != nil {
 			return err
 		}
