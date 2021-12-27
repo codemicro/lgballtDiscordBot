@@ -4,8 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.1.7] - 2021-12-27
 ### Changed
 * Switch to using [`github.com/carlmjohnson/requests`](https://github.com/carlmjohnson/requests) for PK requests
+* Tweak formatting of messages sent with `<p>m sendseq`
 
 ## [5.1.6] - 2021-12-23
 
@@ -606,7 +609,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.6...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.7...HEAD
+[5.1.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.6...v5.1.7
 [5.1.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.5...v5.1.6
 [5.1.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.4...v5.1.5
 [5.1.4]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.3...v5.1.4
