@@ -29,8 +29,13 @@ func (s *Misc) Avatar(ctx *route.MessageContext) error {
 		return err
 	}
 
+	message := user.AvatarURL("2048")
+	if id == "782596212338458654" {
+		message = "(my picrew is this one <https://picrew.me/image_maker/420388>)\n" + message
+	}
+	
 	// send message
-	_, err = ctx.SendMessageString(ctx.Message.ChannelID, user.AvatarURL("2048"))
+	_, err = ctx.SendMessageString(ctx.Message.ChannelID, message)
 	return err
 }
 
