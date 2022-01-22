@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [5.1.9] - 2022-01-22
+### Fixed
+* Tone tag list no-longer hits Discord embed length limit
+  * It has been switched to using a paginated display
+
+## [5.1.8] - 2022-01-20
+### Changed
+* Includes a link to the Picrew used to generate the bot's profile photo when using the `<p>avatar` command on the bot
+
 ## [5.1.7] - 2021-12-27
 ### Changed
 * Switch to using [`github.com/carlmjohnson/requests`](https://github.com/carlmjohnson/requests) for PK requests
@@ -609,7 +618,9 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.7...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.9...HEAD
+[5.1.9]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.8...v5.1.9
+[5.1.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.7...v5.1.8
 [5.1.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.6...v5.1.7
 [5.1.6]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.5...v5.1.6
 [5.1.5]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.4...v5.1.5
