@@ -30,5 +30,5 @@ require (
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/sqlite v1.1.4
-	gorm.io/gorm v1.20.11
+	gorm.io/gorm v1.23.3
 )

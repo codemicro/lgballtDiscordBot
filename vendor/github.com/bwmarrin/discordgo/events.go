@@ -260,8 +260,6 @@ type MessageDeleteBulk struct {
 	Messages  []string `json:"ids"`
 	ChannelID string   `json:"channel_id"`
 	GuildID   string   `json:"guild_id"`
-
-	BeforeDelete map[string]*Message `json:"-"`
 }
 
 // WebhooksUpdate is the data for a WebhooksUpdate event

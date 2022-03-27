@@ -69,7 +69,7 @@ github.com/hashicorp/errwrap
 github.com/hashicorp/go-multierror
 # github.com/jinzhu/inflection v1.0.0
 github.com/jinzhu/inflection
-# github.com/jinzhu/now v1.1.1
+# github.com/jinzhu/now v1.1.4
 github.com/jinzhu/now
 # github.com/json-iterator/go v1.1.11
 github.com/json-iterator/go
@@ -239,7 +239,7 @@ gopkg.in/natefinch/lumberjack.v2
 # gorm.io/driver/sqlite v1.1.4
 ## explicit
 gorm.io/driver/sqlite
-# gorm.io/gorm v1.20.11
+# gorm.io/gorm v1.23.3
 ## explicit
 gorm.io/gorm
 gorm.io/gorm/callbacks
