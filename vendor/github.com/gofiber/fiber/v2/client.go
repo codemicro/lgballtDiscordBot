@@ -48,6 +48,11 @@ type Response = fasthttp.Response
 // Copy from fasthttp
 type Args = fasthttp.Args
 
+// RetryIfFunc signature of retry if function
+// Request argument passed to RetryIfFunc, if there are any request errors.
+// Copy from fasthttp
+type RetryIfFunc = fasthttp.RetryIfFunc
+
 var defaultClient Client
 
 // Client implements http client.
@@ -656,7 +661,7 @@ func (a *Agent) Reuse() *Agent {
 func (a *Agent) InsecureSkipVerify() *Agent {
 	if a.HostClient.TLSConfig == nil {
 		/* #nosec G402 */
-		a.HostClient.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+		a.HostClient.TLSConfig = &tls.Config{InsecureSkipVerify: true} // #nosec G402
 	} else {
 		/* #nosec G402 */
 		a.HostClient.TLSConfig.InsecureSkipVerify = true
@@ -715,6 +720,14 @@ func (a *Agent) SetResponse(customResp *Response) *Agent {
 func (a *Agent) Dest(dest []byte) *Agent {
 	a.dest = dest
 
+	return a
+}
+
+// RetryIf controls whether a retry should be attempted after an error.
+//
+// By default, will use isIdempotent function from fasthttp
+func (a *Agent) RetryIf(retryIf RetryIfFunc) *Agent {
+	a.HostClient.RetryIf = retryIf
 	return a
 }
 

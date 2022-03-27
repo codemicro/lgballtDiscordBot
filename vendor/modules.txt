@@ -4,7 +4,6 @@ github.com/PuerkitoBio/goquery
 # github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
 github.com/andres-erbsen/clock
 # github.com/andybalholm/brotli v1.0.4
-## explicit
 github.com/andybalholm/brotli
 # github.com/andybalholm/cascadia v1.1.0
 github.com/andybalholm/cascadia
@@ -27,11 +26,13 @@ github.com/codemicro/alib-go/mage/exsh
 # github.com/codemicro/dgo-toolkit v0.8.3
 ## explicit
 github.com/codemicro/dgo-toolkit/route
-# github.com/gofiber/fiber/v2 v2.23.0
+# github.com/gofiber/fiber/v2 v2.30.0
 ## explicit
 github.com/gofiber/fiber/v2
 github.com/gofiber/fiber/v2/internal/bytebufferpool
 github.com/gofiber/fiber/v2/internal/colorable
+github.com/gofiber/fiber/v2/internal/dictpool
+github.com/gofiber/fiber/v2/internal/fwd
 github.com/gofiber/fiber/v2/internal/go-json
 github.com/gofiber/fiber/v2/internal/go-json/decoder
 github.com/gofiber/fiber/v2/internal/go-json/encoder
@@ -42,6 +43,7 @@ github.com/gofiber/fiber/v2/internal/go-json/encoder/vm_indent
 github.com/gofiber/fiber/v2/internal/go-json/errors
 github.com/gofiber/fiber/v2/internal/go-json/runtime
 github.com/gofiber/fiber/v2/internal/isatty
+github.com/gofiber/fiber/v2/internal/msgp
 github.com/gofiber/fiber/v2/internal/schema
 github.com/gofiber/fiber/v2/internal/storage/memory
 github.com/gofiber/fiber/v2/internal/uuid
@@ -73,8 +75,7 @@ github.com/jinzhu/inflection
 github.com/jinzhu/now
 # github.com/json-iterator/go v1.1.11
 github.com/json-iterator/go
-# github.com/klauspost/compress v1.13.6
-## explicit
+# github.com/klauspost/compress v1.15.0
 github.com/klauspost/compress/flate
 github.com/klauspost/compress/gzip
 github.com/klauspost/compress/zlib
@@ -131,7 +132,7 @@ github.com/rs/zerolog/internal/json
 github.com/rs/zerolog/log
 # github.com/valyala/bytebufferpool v1.0.0
 github.com/valyala/bytebufferpool
-# github.com/valyala/fasthttp v1.31.0
+# github.com/valyala/fasthttp v1.34.0
 github.com/valyala/fasthttp
 github.com/valyala/fasthttp/fasthttputil
 github.com/valyala/fasthttp/reuseport
@@ -150,10 +151,10 @@ github.com/wcharczuk/go-chart/v2/roboto
 # go.uber.org/ratelimit v0.2.0
 ## explicit
 go.uber.org/ratelimit
-# golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
+# golang.org/x/crypto v0.0.0-20220214200702-86341886e292
+golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
-golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
 # golang.org/x/image v0.0.0-20210504121937-7319ad40d33e
 ## explicit
@@ -161,7 +162,7 @@ golang.org/x/image/draw
 golang.org/x/image/font
 golang.org/x/image/math/f64
 golang.org/x/image/math/fixed
-# golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
+# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/html
@@ -172,13 +173,12 @@ golang.org/x/net/publicsuffix
 ## explicit
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
-## explicit
+# golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.6
+# golang.org/x/text v0.3.7
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
