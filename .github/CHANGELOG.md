@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [5.1.10] - 2022-03-27
+### Changed
+* Security: update Fiber to v2.30.0 to update Fasthttp dependency.
+
 ## [5.1.9] - 2022-01-22
 ### Fixed
 * Tone tag list no-longer hits Discord embed length limit
@@ -618,7 +622,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.9...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.10...HEAD
+[5.1.10]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.9...v5.1.10
 [5.1.9]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.8...v5.1.9
 [5.1.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.7...v5.1.8
 [5.1.7]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.6...v5.1.7
