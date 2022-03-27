@@ -20,7 +20,7 @@ require (
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.11.0
-	github.com/rotisserie/eris v0.5.1
+	github.com/rotisserie/eris v0.5.2
 	github.com/rs/zerolog v1.23.0
 	github.com/valyala/quicktemplate v1.7.0
 	github.com/wcharczuk/go-chart/v2 v2.1.0

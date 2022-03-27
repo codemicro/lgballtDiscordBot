@@ -931,15 +931,7 @@ func (s *State) OnInterface(se *Session, i interface{}) (err error) {
 		}
 	case *MessageDeleteBulk:
 		if s.MaxMessageCount != 0 {
-			t.BeforeDelete = make(map[string]*Message)
 			for _, mID := range t.Messages {
-				// shadowing of err avoided here since this isn't an error that needs to be handled
-				old, ex := s.Message(t.ChannelID, mID)
-				if ex == nil {
-					oldCopy := *old
-					t.BeforeDelete[mID] = &oldCopy
-				}
-
 				s.messageRemoveByID(t.ChannelID, mID)
 			}
 		}

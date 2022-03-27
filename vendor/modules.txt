@@ -120,7 +120,7 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
-# github.com/rotisserie/eris v0.5.1
+# github.com/rotisserie/eris v0.5.2
 ## explicit
 github.com/rotisserie/eris
 # github.com/rs/zerolog v1.23.0
