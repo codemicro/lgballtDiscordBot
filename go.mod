@@ -16,7 +16,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/magefile/mage v1.12.1
-	github.com/mattn/go-sqlite3 v1.14.6
+	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.11.0
@@ -29,6 +29,6 @@ require (
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	gorm.io/driver/sqlite v1.1.4
-	gorm.io/gorm v1.20.11
+	gorm.io/driver/sqlite v1.3.1
+	gorm.io/gorm v1.23.1
 )
