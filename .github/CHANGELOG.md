@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [5.1.11] - 2022-05-04
+### Removed
+* `emojify` command - it's caused way too many issues with NSFW stuff, race, etc. on account of it's somewhat awful dataset
+
 ## [5.1.10] - 2022-03-27
 ### Changed
 * Security: update Fiber to v2.30.0 to update Fasthttp dependency.
@@ -622,7 +626,8 @@ Now it compiles!
 ## [1.0.0] - 2020-11-30
 * Initial release with `bio` component
 
-[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.10...HEAD
+[Unreleased]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.11...HEAD
+[5.1.11]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.10...v5.1.11
 [5.1.10]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.9...v5.1.10
 [5.1.9]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.8...v5.1.9
 [5.1.8]: https://github.com/codemicro/lgballtDiscordBot/compare/v5.1.7...v5.1.8
